@@ -1,6 +1,6 @@
 class PerfilAvancado extends Perfil {
-    constructor(apelido: string, email: string) {
-        super(apelido, email)
+    constructor(apelido: string, email: string, foto: string) {
+        super(apelido, email, foto)
 
         this.stats = true
         this.amigos = []

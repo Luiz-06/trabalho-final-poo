@@ -4,13 +4,15 @@ class Perfil {
     private _email: string
     private _stats: boolean
     private _amigos: Perfil[]
+    private _foto: string
     //private _postagens: Publicacao[]
 
-    constructor(apelido: string, email: string) {
+    constructor(apelido: string, email: string, foto: string) {
         this._apelido = apelido
         this._email = email
         this._stats = true
         this._amigos = []
+        this._foto = foto
     }
 
     public set id(id: number) {
@@ -65,7 +67,7 @@ class Perfil {
         let copiaDeAmigos: Perfil[] = []
 
         for(let amigo of this._amigos) {
-            let perfilCopiado = new Perfil(amigo._apelido, amigo._email)
+            let perfilCopiado = new Perfil(amigo._apelido, amigo._email, amigo._foto)
             perfilCopiado.id = amigo.id
             copiaDeAmigos.push(perfilCopiado)
         }
