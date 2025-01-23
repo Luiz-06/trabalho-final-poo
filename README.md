@@ -65,7 +65,7 @@ Bem-vindo ao repositório do **Projeto Rede Social Interativa**! Este projeto te
 
 ```bash
 # Clone este repositório
-https://github.com/Luiz-06/trabalho-final-poo
+git clone https://github.com/Luiz-06/trabalho-final-poo
 
 # Acesse o diretório do projeto
 cd trabalho-final-poo
