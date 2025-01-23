@@ -1,9 +1,10 @@
 import { Interacao } from "./interacao";
 import { Perfil } from "./perfil";
 import { Publicacao } from "./publicacao";
+import { TipoInteracao } from "./tipoInteracao";
 
 export class PublicacaoAvancada extends Publicacao {
-  private _listaInteracoes: Interacao[];
+  private _listaInteracoes: TipoInteracao[];
 
   constructor(
     id: number,
@@ -15,12 +16,12 @@ export class PublicacaoAvancada extends Publicacao {
     this._listaInteracoes = [];
   }
 
-  public adicionarInteracao(interacao: Interacao): void {
+  public adicionarInteracao(interacao: TipoInteracao): void {
     this._listaInteracoes.push(interacao);
   }
 
   public listarInteracoes(): void {
-    this._listaInteracoes.forEach((interacao: Interacao) => {
+    this._listaInteracoes.forEach((interacao: TipoInteracao) => {
       console.log(interacao);
     });
   }
