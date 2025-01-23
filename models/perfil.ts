@@ -1,3 +1,5 @@
+export {Perfil}
+
 class Perfil {
     private _idUnico: number
     private _apelido: string
@@ -79,3 +81,4 @@ class Perfil {
 
     //public listarPublicacao(){}
 }
+
