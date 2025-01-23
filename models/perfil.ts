@@ -90,7 +90,7 @@ export class Perfil {
     );
   }
 
-  public listarPublicacao(): Publicacao[] {
+  public listarPublicacoes(): Publicacao[] {
     let publicacoesCopiadas: Publicacao[] = [];
 
     for (let publicacao of this._publicacoes) {
