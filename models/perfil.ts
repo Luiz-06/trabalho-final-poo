@@ -3,8 +3,8 @@ class Perfil {
     private _apelido: string
     private _foto
     private _stats: boolean
-    private _amigos: Amigo[]
-    private _postagens: Postagens[]
+    private _amigos: Perfil[]
+    private _postagens: Publicacao[]
 
     public set id(id: number){
         this._idUnico = id
