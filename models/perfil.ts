@@ -54,6 +54,13 @@ export class Perfil {
     this._amigos = value;
   }
 
+  public get foto(): string {
+    return this._foto;
+  }
+  public set foto(value: string) {
+    this._foto = value;
+  }
+
   public adicionarAmigo(amigo: Perfil): void {
     this._amigos.push(amigo);
   }

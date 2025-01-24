@@ -1,6 +1,6 @@
 import { Perfil } from "./perfil.ts";
 
-class PerfilAvancado extends Perfil {
+export class PerfilAvancado extends Perfil {
   constructor(id: number, apelido: string, email: string, foto: string) {
     super(id, apelido, email, foto);
 
