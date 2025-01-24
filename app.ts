@@ -1,11 +1,9 @@
 import { clear, getData, print } from "./utils/auxFunctions";
 
 class App {
-  // private _redeSocial: RedeSocial;
   private isLoggedIn: boolean;
 
   constructor() {
-    // this._redeSocial = new RedeSocial();
     this.isLoggedIn = false;
   }
 
@@ -34,20 +32,19 @@ Por favor, escolha uma das opções abaixo para continuar:
           break;
         case "0":
           print("Aplicação encerrada!");
-          return; // Encerra o programa
+          return;
         default:
           print("Opção inválida! Tente novamente.");
       }
     }
 
-    this.menuPrincipal(); // Se logado, acessa o menu principal
+    this.menuPrincipal();
   }
 
   private login(): void {
     const username = getData("Digite seu nome de usuário: ");
     const password = getData("Digite sua senha: ");
 
-    // Aqui você pode implementar a validação do login com o banco de dados
     if (username === "admin" && password === "1234") {
       print("Login realizado com sucesso!");
       this.isLoggedIn = true;
@@ -60,12 +57,11 @@ Por favor, escolha uma das opções abaixo para continuar:
     const username = getData("Escolha um nome de usuário: ");
     const password = getData("Escolha uma senha: ");
     print(`Conta criada com sucesso! Bem-vindo, ${username}!`);
-    this.isLoggedIn = true; // Após criar a conta, o usuário é automaticamente logado
+    this.isLoggedIn = true;
   }
 
   private recuperarSenha(): void {
     const email = getData("Digite o e-mail associado à sua conta: ");
-    // Simula envio de e-mail para redefinir senha
     print(
       `Um e-mail de recuperação foi enviado para ${email}. Verifique sua caixa de entrada!`
     );
@@ -79,57 +75,23 @@ Por favor, escolha uma das opções abaixo para continuar:
       clear();
       console.log(`
 \nMenu Principal:
---------- Perfis -----------
-1 - Acessar Perfil
-2 - Alterar Perfil
-3 - Deletar Perfil
-
---------- Publicação -----------
-11 - Visualizar Publicação
-12 - Criar Publicação
-13 - Alterar Publicação
-14 - Deletar Publicação
-
----------- Solicitações ------------
-21 - Visualizar Solicitações
-22 - Aceitar Solicitação
-23 - Recusar Solicitação
-
+1 - Configurações do Perfil
+2 - Publicações
+3 - Solicitações
 0 - Sair
       `);
 
-      let opcao = getData("Digite a opção desejada: ");
+      opcao = getData("Digite a opção desejada: ");
 
       switch (opcao) {
         case "1":
-          this.acessarPerfil();
+          this.menuPerfil();
           break;
         case "2":
-          this.alterarPerfil();
+          this.menuPublicacoes();
           break;
         case "3":
-          //   this.deletarPerfil();
-          break;
-        case "11":
-          this.visualizarPublicacao();
-          break;
-        case "12":
-          this.criarPublicacao();
-          break;
-        case "13":
-          this.alterarPublicacao();
-          break;
-        case "14":
-          this.deletarPublicacao();
-          break;
-        case "21":
-          this.visualizarSolicitacoes();
-          break;
-        case "22":
-          this.aceitarSolicitacao();
-          break;
-        case "23":
-          this.recusarSolicitacao();
+          this.menuSolicitacoes();
           break;
         case "0":
           print("Você saiu do sistema. Até logo!");
@@ -142,12 +104,118 @@ Por favor, escolha uma das opções abaixo para continuar:
     } while (appOn === true);
   }
 
-  private acessarPerfil(): void {
-    print("Acessando perfil...");
+  private menuPerfil(): void {
+    let opcao: string = "";
+
+    do {
+      clear();
+      console.log(`
+\nConfigurações do Perfil:
+1 - Visualizar Perfil
+2 - Alterar Perfil
+3 - Deletar Perfil
+0 - Voltar ao Menu Principal
+      `);
+
+      opcao = getData("Digite a opção desejada: ");
+
+      switch (opcao) {
+        case "1":
+          this.acessarPerfil();
+          break;
+        case "2":
+          this.alterarPerfil();
+          break;
+        case "3":
+          print("Deletando perfil...");
+          this.isLoggedIn = false;
+          return;
+        case "0":
+          print("Voltando ao Menu Principal...");
+          break;
+        default:
+          print("Opção inválida! Tente novamente.");
+          break;
+      }
+    } while (opcao !== "0");
   }
 
-  private criarPerfil(): void {
-    print("Criando perfil...");
+  private menuPublicacoes(): void {
+    let opcao: string = "";
+
+    do {
+      clear();
+      console.log(`
+\nPublicações:
+1 - Visualizar Publicação
+2 - Criar Publicação
+3 - Alterar Publicação
+4 - Deletar Publicação
+0 - Voltar ao Menu Principal
+      `);
+
+      opcao = getData("Digite a opção desejada: ");
+
+      switch (opcao) {
+        case "1":
+          this.visualizarPublicacao();
+          break;
+        case "2":
+          this.criarPublicacao();
+          break;
+        case "3":
+          this.alterarPublicacao();
+          break;
+        case "4":
+          this.deletarPublicacao();
+          break;
+        case "0":
+          print("Voltando ao Menu Principal...");
+          break;
+        default:
+          print("Opção inválida! Tente novamente.");
+          break;
+      }
+    } while (opcao !== "0");
+  }
+
+  private menuSolicitacoes(): void {
+    let opcao: string = "";
+
+    do {
+      clear();
+      console.log(`
+\nSolicitações:
+1 - Visualizar Solicitações
+2 - Aceitar Solicitação
+3 - Recusar Solicitação
+0 - Voltar ao Menu Principal
+      `);
+
+      opcao = getData("Digite a opção desejada: ");
+
+      switch (opcao) {
+        case "1":
+          this.visualizarSolicitacoes();
+          break;
+        case "2":
+          this.aceitarSolicitacao();
+          break;
+        case "3":
+          this.recusarSolicitacao();
+          break;
+        case "0":
+          print("Voltando ao Menu Principal...");
+          break;
+        default:
+          print("Opção inválida! Tente novamente.");
+          break;
+      }
+    } while (opcao !== "0");
+  }
+
+  private acessarPerfil(): void {
+    print("Acessando perfil...");
   }
 
   private alterarPerfil(): void {
