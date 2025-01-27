@@ -5,13 +5,14 @@ import { PublicacaoAvancada } from "./publicacaoAvancada";
 export class RedeSocial {
   private _perfisCadastrados: Perfil[];
   private _publicacoesPostadas: Publicacao[];
-  private _solicitacoesAmizade: Map<Perfil, Perfil>;
+  //private _solicitacoesAmizade: Map<Perfil, Perfil>;
 
   constructor() {
     this._perfisCadastrados = [];
     this._publicacoesPostadas = [];
   }
 
+  //PERFIL
   public buscarPerfil(apelidoProcurado: string): Perfil | undefined {
     return this._perfisCadastrados.find(
       (perfil) => perfil.apelido === apelidoProcurado
@@ -34,17 +35,24 @@ export class RedeSocial {
     if (indexPerfil !== -1) {
       let perfilRemovido: Perfil = this._perfisCadastrados[indexPerfil];
 
-      this._publicacoesPostadas = this._publicacoesPostadas.filter(
-        (publicacao) => publicacao.perfilAssociado.id !== perfilRemovido.id
-      );
+      this.deletarPublicacao(perfilRemovido)
 
-      for (let perfil of this._perfisCadastrados) {
-        perfil.removerAmigo(apelidoProcurado);
-      }
+      this.deletarPerfilDeAmigos(perfilRemovido)
 
       this._perfisCadastrados.splice(indexPerfil, 1);
     } else {
       console.log("Perfil não encontrado.");
+    }
+  }
+
+  //PUBLICACOES
+  private deletarPublicacao(perfilRemovido: Perfil): void {
+    this._publicacoesPostadas.filter((postagem) => postagem.perfilAssociado.id !== perfilRemovido.id)
+  }
+
+  private deletarPerfilDeAmigos(perfilRemovido: Perfil): void{
+    for (let perfil of this._perfisCadastrados) {
+      perfil.removerAmigo(perfilRemovido.apelido);
     }
   }
 
@@ -70,7 +78,7 @@ export class RedeSocial {
     if(perfilProcurado?.stats == false){
         perfilProcurado.stats = true
     }else {
-        console.log("Perfil já se encontra desativado.")
+        console.log("Perfil já se encontra ativado.")
     }
   }
 
@@ -80,9 +88,17 @@ export class RedeSocial {
     if(perfilProcurado?.stats == false){
         perfilProcurado.stats = true
     }else {
-        console.log("Perfil já se encontra ativado.")
+        console.log("Perfil já se encontra desativado.")
     }
   }
 
-  //...
+  //SOLICITACOES
+  public enviarSolicitacaoAmizade(apelidoRemetente: string, apelidoDestinatario: string): void{
+    let perfilRemetente = this.buscarPerfil(apelidoRemetente);
+    let perfilDestinatario = this.buscarPerfil(apelidoDestinatario);
+
+    if (perfilRemetente && perfilDestinatario){
+      perfilDestinatario.addCaixaDeSolicitacoes(perfilRemetente)
+    }
+  }
 }

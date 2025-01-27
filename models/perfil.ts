@@ -8,6 +8,7 @@ export class Perfil {
   private _amigos: Perfil[];
   private _foto: string;
   private _publicacoes: Publicacao[];
+  private _solicitacoesAmizade: Perfil[];
 
   constructor(id: number, apelido: string, email: string, foto: string) {
     this._idUnico = id;
@@ -17,6 +18,7 @@ export class Perfil {
     this._stats = true;
     this._amigos = [];
     this._publicacoes = [];
+    this._solicitacoesAmizade = [];
   }
 
   public get id(): number {
@@ -61,6 +63,7 @@ export class Perfil {
     this._foto = value;
   }
 
+  //PERFIL
   public adicionarAmigo(amigo: Perfil): void {
     this._amigos.push(amigo);
   }
@@ -87,6 +90,7 @@ export class Perfil {
     return copiaDeAmigos;
   }
 
+  //PUBLICACOES
   public adicionarPublicacao(publicacao: Publicacao): void {
     this._publicacoes.push(publicacao);
   }
@@ -111,5 +115,18 @@ export class Perfil {
     }
 
     return publicacoesCopiadas;
+  }
+
+  //SOLICITACOES
+  public addCaixaDeSolicitacoes(perfil: Perfil): void {
+    this._solicitacoesAmizade.push(perfil)
+  }
+  
+  public aceitarSolicitacao(perfil:Perfil, aceitar: boolean){
+    this._solicitacoesAmizade = this._solicitacoesAmizade.filter((perfilAtual) => perfilAtual.id !== perfil.id)
+    
+    if (aceitar) {
+      this.adicionarAmigo(perfil)
+    }
   }
 }
