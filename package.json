@@ -1,5 +1,11 @@
 {
   "dependencies": {
-    "readline-sync": "^1.4.10"
+    "readline-sync": "^1.4.10",
+    "ulid": "^2.3.0"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "@types/readline-sync": "^1.4.8"
   }
 }

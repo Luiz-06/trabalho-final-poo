@@ -1,0 +1,47 @@
+{
+  "data": {
+    "perfil": [
+      {
+        "_id": "01JJSH5BE6TJH7FAJD30MDE0WM",
+        "_apelido": "1",
+        "_email": "1",
+        "_foto": "😀",
+        "_senha": "1",
+        "_stats": true,
+        "_amigos": [],
+        "_publicacoes": [],
+        "_solicitacoesAmizade": []
+      },
+      {
+        "_id": "01JJSJ32ZCFTV2SDDHYDRTSTGQ",
+        "_apelido": "2",
+        "_email": "2",
+        "_foto": "😃",
+        "_senha": "2",
+        "_stats": true,
+        "_amigos": [],
+        "_publicacoes": [],
+        "_solicitacoesAmizade": []
+      },
+      {
+        "_id": "01JJSJN4WJ1259A9CZCR1VARHY",
+        "_apelido": "3",
+        "_email": "3",
+        "_foto": "🙂",
+        "_senha": "3",
+        "_stats": true,
+        "_amigos": [],
+        "_publicacoes": [],
+        "_solicitacoesAmizade": []
+      }
+    ],
+    "publicacao": [
+      {
+        "id": 1,
+        "conteudo": "Primeira publicacao",
+        "dataHora": "2024-01-01",
+        "perfilAssociado": "apelido1"
+      }
+    ]
+  }
+}

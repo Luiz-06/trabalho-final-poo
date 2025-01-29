@@ -18,12 +18,14 @@ export class Interacao {
   public set id(value: number) {
     this._id = value;
   }
+
   public get tipoInteracao(): TipoInteracao {
     return this._tipoInteracao;
   }
   public set tipoInteracao(value: TipoInteracao) {
     this._tipoInteracao = value;
   }
+  
   public get perfilAutor(): Perfil {
     return this._perfilAutor;
   }
