@@ -1,14 +1,29 @@
-import { clear, getData, print } from "./utils/auxFunctions";
+import { log } from "console";
+import { Perfil } from "./models/perfil";
+import { RedeSocial } from "./models/redeSocial";
+import {
+  choosePhoto,
+  clear,
+  getData,
+  getNumber,
+  print,
+  salvarDadosPerfis,
+} from "./utils/auxFunctions";
+import { ulid } from "ulid";
 
 class App {
-  private isLoggedIn: boolean;
+  private _isLoggedIn: boolean;
+  private _perfilAtual: Perfil | null;
+  private _redeSocial: RedeSocial;
 
   constructor() {
-    this.isLoggedIn = false;
+    this._isLoggedIn = false;
+    this._perfilAtual = null;
+    this._redeSocial = new RedeSocial();
   }
 
   public start(): void {
-    while (!this.isLoggedIn) {
+    while (!this._isLoggedIn) {
       console.log(`
 Bem vindo à Rede Social!
 Por favor, escolha uma das opções abaixo para continuar:
@@ -17,7 +32,6 @@ Por favor, escolha uma das opções abaixo para continuar:
 3 - Recuperar Senha
 0 - Sair
       `);
-
       const opcao = getData("Digite a opção desejada: ");
 
       switch (opcao) {
@@ -26,6 +40,7 @@ Por favor, escolha uma das opções abaixo para continuar:
           break;
         case "2":
           this.criarConta();
+          salvarDadosPerfis(this._redeSocial.listarPerfis());
           break;
         case "3":
           this.recuperarSenha();
@@ -42,29 +57,66 @@ Por favor, escolha uma das opções abaixo para continuar:
   }
 
   private login(): void {
-    const username = getData("Digite seu nome de usuário: ");
-    const password = getData("Digite sua senha: ");
+    const apelido = getData("Digite seu nome de usuário: ");
+    const senha = getData("Digite sua senha: ");
+    const perfil: Perfil | undefined = this._redeSocial.buscarPerfil(apelido);
 
-    if (username === "admin" && password === "1234") {
-      print("Login realizado com sucesso!");
-      this.isLoggedIn = true;
-    } else {
-      print("Usuário ou senha inválidos. Tente novamente.");
+    if (perfil) {
+      if (apelido === perfil.apelido && senha === perfil.senha) {
+        print("Login realizado com sucesso!");
+        this._perfilAtual = perfil;
+        this._isLoggedIn = true;
+      } else {
+        print("Usuário ou senha inválidos. Tente novamente.");
+      }
     }
   }
 
   private criarConta(): void {
-    const username = getData("Escolha um nome de usuário: ");
-    const password = getData("Escolha uma senha: ");
-    print(`Conta criada com sucesso! Bem-vindo, ${username}!`);
-    this.isLoggedIn = true;
+    const apelido = getData("Escolha um nome de usuário: ");
+    const senha = getData("Escolha uma senha: ");
+    const email = getData("Digite seu email: ");
+    const foto = choosePhoto();
+
+    const novoPerfil: Perfil = new Perfil(
+      ulid(),
+      apelido,
+      email,
+      foto,
+      senha,
+      true,
+      [],
+      [],
+      []
+    );
+    this._redeSocial.adicionarPerfil(novoPerfil);
+
+    print(`Conta criada com sucesso! Bem-vindo, ${apelido}!`);
+    this._isLoggedIn = true;
+    this._perfilAtual = novoPerfil;
   }
 
   private recuperarSenha(): void {
-    const email = getData("Digite o e-mail associado à sua conta: ");
-    print(
-      `Um e-mail de recuperação foi enviado para ${email}. Verifique sua caixa de entrada!`
-    );
+    const apelido = getData("Digite o seu apelido: ");
+    const perfilDesejado = this._redeSocial.buscarPerfil(apelido);
+
+    if (perfilDesejado) {
+      const emailAssociado = perfilDesejado?.email;
+      print(
+        `Um e-mail de recuperação foi enviado para ${emailAssociado}. Verifique sua caixa de entrada!`
+      );
+
+      const codRecuperacao = getData(
+        "Digite o código que foi enviado para seu email: "
+      );
+
+      if (codRecuperacao === "1234") {
+        const novaSenha = getData("Insira sua nova senha: ");
+        perfilDesejado.senha = novaSenha;
+      } else {
+        print("Código inserido inválido!");
+      }
+    }
   }
 
   private menuPrincipal(): void {
@@ -74,7 +126,8 @@ Por favor, escolha uma das opções abaixo para continuar:
     do {
       clear();
       console.log(`
-\nMenu Principal:
+\nBem vindo ${this._perfilAtual?.apelido}
+Menu Principal:
 1 - Configurações do Perfil
 2 - Publicações
 3 - Solicitações
@@ -124,11 +177,13 @@ Por favor, escolha uma das opções abaixo para continuar:
           this.acessarPerfil();
           break;
         case "2":
-          this.alterarPerfil();
+          this.menuAlterarPerfil();
           break;
         case "3":
           print("Deletando perfil...");
-          this.isLoggedIn = false;
+          this._redeSocial.desativarPerfil(this._perfilAtual!.apelido);
+          this._perfilAtual = null;
+          this._isLoggedIn = false;
           return;
         case "0":
           print("Voltando ao Menu Principal...");
@@ -215,11 +270,57 @@ Por favor, escolha uma das opções abaixo para continuar:
   }
 
   private acessarPerfil(): void {
-    print("Acessando perfil...");
+    if (this._perfilAtual) {
+      print(this._perfilAtual.toString());
+    }
   }
 
-  private alterarPerfil(): void {
-    print("Alterando perfil...");
+  private alterarPerfil(): void {}
+
+  private menuAlterarPerfil(): void {
+    let opcao: string = "";
+
+    do {
+      clear();
+      print(`
+O que deseja alterar?
+1 - Apelido
+2 - Email
+3 - Foto
+4 - Senha
+5 - Desativar conta
+0 - Voltar
+      `);
+
+      opcao = getData("Digite a opção desejada: ");
+
+      switch (opcao) {
+        case "1":
+          const novoApelido = getData("Insira o novo apelido: ");
+          this._perfilAtual!.apelido = novoApelido;
+          break;
+        case "2":
+          const novoEmail = getData("Insira o novo email: ");
+          this._perfilAtual!.email = novoEmail;
+          break;
+        case "3":
+          const novaFoto = choosePhoto();
+          this._perfilAtual!.foto = novaFoto;
+          break;
+        case "4":
+          // this._perfilAtual!.trocarSenha();
+          break;
+        case "4":
+          // this._perfilAtual!.desativarConta();
+          break;
+        case "0":
+          print("Voltando ao Menu Principal...");
+          break;
+        default:
+          print("Opção inválida! Tente novamente.");
+          break;
+      }
+    } while (opcao !== "0");
   }
 
   private visualizarPublicacao(): void {
