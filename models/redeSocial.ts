@@ -45,9 +45,8 @@ export class RedeSocial {
     }
   }
 
-  //PUBLICACOES
   private deletarPublicacao(perfilRemovido: Perfil): void {
-    this._publicacoesPostadas.filter((postagem) => postagem.perfilAssociado.id !== perfilRemovido.id)
+    this._publicacoesPostadas = this._publicacoesPostadas.filter((postagem) => postagem.perfilAssociado.id !== perfilRemovido.id);
   }
 
   private deletarPerfilDeAmigos(perfilRemovido: Perfil): void{
@@ -85,20 +84,39 @@ export class RedeSocial {
   public desativarPerfil(apelido:string): void {
     let perfilProcurado = this.buscarPerfil(apelido)
 
-    if(perfilProcurado?.stats == false){
-        perfilProcurado.stats = true
+    if(perfilProcurado?.stats == true){
+        perfilProcurado.stats = false
     }else {
         console.log("Perfil já se encontra desativado.")
     }
   }
 
-  //SOLICITACOES
-  public enviarSolicitacaoAmizade(apelidoRemetente: string, apelidoDestinatario: string): void{
-    let perfilRemetente = this.buscarPerfil(apelidoRemetente);
-    let perfilDestinatario = this.buscarPerfil(apelidoDestinatario);
+  //PUBLICACOES
+  
 
-    if (perfilRemetente && perfilDestinatario){
-      perfilDestinatario.addCaixaDeSolicitacoes(perfilRemetente)
+  // SOLICITAÇÕES DE AMIZADE
+  public enviarSolicitacaoAmizade(
+    apelidoRemetente: string,
+    apelidoDestinatario: string
+  ): void {
+    let remetente = this.buscarPerfil(apelidoRemetente);
+    let destinatario = this.buscarPerfil(apelidoDestinatario);
+
+    if (remetente && destinatario) {
+      destinatario.addCaixaDeSolicitacoes(remetente);
+    }
+  }
+
+  public aceitarSolicitacaoAmizade(
+    apelidoRemetente: string,
+    apelidoDestinatario: string,
+    aceitar: boolean
+  ): void {
+    let destinatario = this.buscarPerfil(apelidoDestinatario);
+    let remetente = this.buscarPerfil(apelidoRemetente);
+
+    if (remetente && destinatario) {
+      destinatario.aceitarSolicitacao(remetente, aceitar);
     }
   }
 }

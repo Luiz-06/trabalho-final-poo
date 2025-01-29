@@ -123,7 +123,7 @@ export class Perfil {
   }
   
   public aceitarSolicitacao(perfil:Perfil, aceitar: boolean){
-    this._solicitacoesAmizade = this._solicitacoesAmizade.filter((perfilAtual) => perfilAtual.id !== perfil.id)
+    this._solicitacoesAmizade = this._solicitacoesAmizade.filter((outrosPerfis) => outrosPerfis.id !== perfil.id)
     
     if (aceitar) {
       this.adicionarAmigo(perfil)
