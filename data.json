@@ -33,6 +33,28 @@
         "_amigos": [],
         "_publicacoes": [],
         "_solicitacoesAmizade": []
+      },
+      {
+        "_id": "01JJT5FW6PJJ4S0WQK7HH7J5P4",
+        "_apelido": "4",
+        "_email": "4",
+        "_foto": "😃",
+        "_senha": "4",
+        "_stats": true,
+        "_amigos": [],
+        "_publicacoes": [],
+        "_solicitacoesAmizade": []
+      },
+      {
+        "_id": "01JJTC9AH49FY1Z42FTW248YBG",
+        "_apelido": "5",
+        "_email": "5",
+        "_foto": "🫠",
+        "_senha": "5",
+        "_stats": true,
+        "_amigos": [],
+        "_publicacoes": [],
+        "_solicitacoesAmizade": []
       }
     ],
     "publicacao": [

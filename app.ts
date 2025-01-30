@@ -8,7 +8,10 @@ import {
   getNumber,
   print,
   salvarDadosPerfis,
+  lerDadosPerfis
 } from "./utils/auxFunctions";
+import * as validations from "./validations/validations";
+
 import { ulid } from "ulid";
 
 class App {
@@ -74,6 +77,7 @@ Por favor, escolha uma das opções abaixo para continuar:
 
   private criarConta(): void {
     const apelido = getData("Escolha um nome de usuário: ");
+    validations.possiveisErrosUsername(apelido)
     const senha = getData("Escolha uma senha: ");
     const email = getData("Digite seu email: ");
     const foto = choosePhoto();
@@ -297,21 +301,33 @@ O que deseja alterar?
       switch (opcao) {
         case "1":
           const novoApelido = getData("Insira o novo apelido: ");
-          this._perfilAtual!.apelido = novoApelido;
-          break;
+          if (validations.validationTrocarApelido(novoApelido)){
+            this._perfilAtual!.apelido = novoApelido
+            salvarDadosPerfis(this._redeSocial.listarPerfis());
+            print("Apelido trocado com sucesso")
+          }break
         case "2":
           const novoEmail = getData("Insira o novo email: ");
-          this._perfilAtual!.email = novoEmail;
-          break;
+          if (validations.validationEmail(novoEmail)){
+            this._perfilAtual!.apelido = novoEmail
+            salvarDadosPerfis(this._redeSocial.listarPerfis());
+            print("Email trocado com sucesso")
+          }break
         case "3":
           const novaFoto = choosePhoto();
           this._perfilAtual!.foto = novaFoto;
+          salvarDadosPerfis(this._redeSocial.listarPerfis());
           break;
         case "4":
-          // this._perfilAtual!.trocarSenha();
-          break;
-        case "4":
-          // this._perfilAtual!.desativarConta();
+          if(validations.validationTrocarSenha(this._perfilAtual!.senha)){
+            const novaSenha = getData("Insira o nova senha: ");
+            this._perfilAtual!.senha = novaSenha
+            salvarDadosPerfis(this._redeSocial.listarPerfis());
+            print("Senha alterada com sucesso")
+          }break;
+        case "5":
+          this._perfilAtual!.stats = false
+          print("Status alterado para falso")
           break;
         case "0":
           print("Voltando ao Menu Principal...");
