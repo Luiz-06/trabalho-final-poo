@@ -4,7 +4,7 @@ import * as path from "path";
 import { log } from "console";
 import { Perfil } from "../models/perfil";
 
-function print(mensagem: string): void {
+function print(mensagem: any): void {
   console.log(mensagem);
 }
 
@@ -122,6 +122,20 @@ const salvarDadosPerfis = (perfis: Perfil[]) => {
   fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), "utf-8");
 };
 
+function lerDadosPerfis(): Perfil[] {
+  try {
+    const dados = fs.readFileSync('data.json', 'utf-8'); // Lê o arquivo JSON
+    const parsedData = JSON.parse(dados);  // Converte a string JSON em um objeto JavaScript
+
+    // Retorna a lista de perfis contida em parsedData.data.perfil
+    return parsedData.data.perfil;
+  } catch (error) {
+    console.log('Erro ao ler os dados: ', error);
+    return [];  // Se houver erro, retorna um array vazio
+  }
+}
+
+
 const salvarDadosPublicacoes = (perfis: Perfil[]) => {
   const filePath = path.join(process.cwd(), "data.json");
 
@@ -150,4 +164,5 @@ export {
   carregarDadosPerfis,
   carregarDadosPublicacoes,
   salvarDadosPerfis,
+  lerDadosPerfis,
 };
