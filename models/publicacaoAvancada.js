@@ -14,6 +14,15 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 exports.__esModule = true;
 exports.PublicacaoAvancada = void 0;
 var publicacao_1 = require("./publicacao");
@@ -28,9 +37,7 @@ var PublicacaoAvancada = /** @class */ (function (_super) {
         this._listaInteracoes.push(interacao);
     };
     PublicacaoAvancada.prototype.listarInteracoes = function () {
-        this._listaInteracoes.forEach(function (interacao) {
-            console.log(interacao);
-        });
+        return __spreadArray([], this._listaInteracoes, true);
     };
     return PublicacaoAvancada;
 }(publicacao_1.Publicacao));

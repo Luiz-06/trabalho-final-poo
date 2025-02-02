@@ -78,10 +78,11 @@ Por favor, escolha uma das opções abaixo para continuar:
         print("Login realizado com sucesso!");
         this._perfilAtual = perfil;
         this._isLoggedIn = true;
-      } 
-    } else {
-      console.log("Usuário ou senha inválidos. Tente novamente.");
-    } // fiz isso para que quando nao haja perfil, o usuário não saiba disso, porque se ele soubesse ele poderia testar ate descobrir usuários que existem 
+        return
+      }
+    } 
+    console.log("Usuário ou senha inválidos. Tente novamente.");
+     // fiz isso para que quando nao haja perfil, o usuário não saiba disso, porque se ele soubesse ele poderia testar ate descobrir usuários que existem 
   }
 
   private criarConta(): void {

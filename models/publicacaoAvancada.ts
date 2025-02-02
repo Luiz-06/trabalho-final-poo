@@ -21,9 +21,7 @@ export class PublicacaoAvancada extends Publicacao {
     this._listaInteracoes.push(interacao);
   }
 
-  public listarInteracoes(): void {
-    this._listaInteracoes.forEach((interacao: TipoInteracao) => {
-      console.log(interacao);
-    });
+  public listarInteracoes(): TipoInteracao[] {
+    return [...this._listaInteracoes];
   }
 }

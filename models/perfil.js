@@ -104,7 +104,6 @@ var Perfil = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    //PERFIL
     Perfil.prototype.adicionarAmigo = function (amigo) {
         this._amigos.push(amigo);
     };
@@ -120,7 +119,6 @@ var Perfil = /** @class */ (function () {
         }
         return copiaDeAmigos;
     };
-    //PUBLICACOES
     Perfil.prototype.adicionarPublicacao = function (publicacao) {
         this._publicacoes.push(publicacao);
     };
@@ -136,7 +134,6 @@ var Perfil = /** @class */ (function () {
         }
         return publicacoesCopiadas;
     };
-    //SOLICITACOES
     Perfil.prototype.addCaixaDeSolicitacoes = function (perfil) {
         this._solicitacoesAmizade.push(perfil);
     };

@@ -98,7 +98,6 @@ export class Perfil {
     this._solicitacoesAmizade = value;
   }
 
-  //PERFIL
   public adicionarAmigo(amigo: Perfil): void {
     this._amigos.push(amigo);
   }
@@ -130,7 +129,6 @@ export class Perfil {
     return copiaDeAmigos;
   }
 
-  //PUBLICACOES
   public adicionarPublicacao(publicacao: Publicacao): void {
     this._publicacoes.push(publicacao);
   }
@@ -157,7 +155,6 @@ export class Perfil {
     return publicacoesCopiadas;
   }
 
-  //SOLICITACOES
   public addCaixaDeSolicitacoes(perfil: Perfil): void {
     this._solicitacoesAmizade.push(perfil);
   }
