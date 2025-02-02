@@ -8,6 +8,7 @@ import {
   getNumber,
   print,
   salvarDadosPerfis,
+  salvarDadosPublicacoes,
   lerDadosPerfis
 } from "./utils/auxFunctions";
 import * as validations from "./validations/validations";
@@ -48,6 +49,14 @@ Por favor, escolha uma das opções abaixo para continuar:
         case "3":
           this.recuperarSenha();
           break;
+        case "4": // remover essa merda, so ta pq sou preguiçoso
+          const perfil: Perfil | undefined = this._redeSocial.buscarPerfil("1");
+          if (perfil){
+            print("Login realizado com sucesso!");
+            this._perfilAtual = perfil;
+            this._isLoggedIn = true;
+          }
+          break
         case "0":
           print("Aplicação encerrada!");
           return;
@@ -64,15 +73,15 @@ Por favor, escolha uma das opções abaixo para continuar:
     const senha = getData("Digite sua senha: ");
     const perfil: Perfil | undefined = this._redeSocial.buscarPerfil(apelido);
 
-    if (perfil) {
+    if (perfil && perfil.stats) {
       if (apelido === perfil.apelido && senha === perfil.senha) {
         print("Login realizado com sucesso!");
         this._perfilAtual = perfil;
         this._isLoggedIn = true;
-      } else {
-        print("Usuário ou senha inválidos. Tente novamente.");
-      }
-    }
+      } 
+    } else {
+      console.log("Usuário ou senha inválidos. Tente novamente.");
+    } // fiz isso para que quando nao haja perfil, o usuário não saiba disso, porque se ele soubesse ele poderia testar ate descobrir usuários que existem 
   }
 
   private criarConta(): void {
@@ -184,10 +193,18 @@ Menu Principal:
           this.menuAlterarPerfil();
           break;
         case "3":
-          print("Deletando perfil...");
-          this._redeSocial.desativarPerfil(this._perfilAtual!.apelido);
-          this._perfilAtual = null;
-          this._isLoggedIn = false;
+          if(validations.validationTrocarSenha(this._perfilAtual!.senha)){
+            print("Deletando perfil...");
+            this._redeSocial.desativarPerfil(this._perfilAtual!.apelido);
+            this._perfilAtual = null;
+            this._isLoggedIn = false;
+            salvarDadosPerfis(this._redeSocial.listarPerfis());
+            print("...");
+            print("...");
+            print("Perfil Deletado!\n");
+            clear();
+            this.start();
+          }
           return;
         case "0":
           print("Voltando ao Menu Principal...");
@@ -210,6 +227,8 @@ Menu Principal:
 2 - Criar Publicação
 3 - Alterar Publicação
 4 - Deletar Publicação
+5 - Visualizar Minhas Publicações
+
 0 - Voltar ao Menu Principal
       `);
 
@@ -227,6 +246,9 @@ Menu Principal:
           break;
         case "4":
           this.deletarPublicacao();
+          break;
+        case "5":
+          this.visualizarMinhasPublicacoes();
           break;
         case "0":
           print("Voltando ao Menu Principal...");
@@ -311,7 +333,7 @@ O que deseja alterar?
           if (validations.validationEmail(novoEmail)){
             this._perfilAtual!.apelido = novoEmail
             salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("Email trocado com sucesso")
+            print("Email alterado com sucesso")
           }break
         case "3":
           const novaFoto = choosePhoto();
@@ -327,7 +349,7 @@ O que deseja alterar?
           }break;
         case "5":
           this._perfilAtual!.stats = false
-          print("Status alterado para falso")
+          print("Perfil desativado!")
           break;
         case "0":
           print("Voltando ao Menu Principal...");
@@ -340,11 +362,19 @@ O que deseja alterar?
   }
 
   private visualizarPublicacao(): void {
+    this._redeSocial.listarTodasPublicacoes()
+  }
+
+  private visualizarMinhasPublicacoes(): void {
+    print(this._redeSocial.listarPublicacoes(this._perfilAtual!.apelido))
     print("Visualizando publicação...");
   }
 
   private criarPublicacao(): void {
     print("Criando publicação...");
+    let pub = this._redeSocial.criarPublicacao(this._perfilAtual!.apelido)
+    if (pub) salvarDadosPublicacoes(pub)
+    salvarDadosPerfis(this._redeSocial.listarPerfis())
   }
 
   private alterarPublicacao(): void {

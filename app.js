@@ -26,6 +26,14 @@ var App = /** @class */ (function () {
                 case "3":
                     this.recuperarSenha();
                     break;
+                case "4": // remover essa merda, so ta pq sou preguiçoso
+                    var perfil = this._redeSocial.buscarPerfil("1");
+                    if (perfil) {
+                        (0, auxFunctions_1.print)("Login realizado com sucesso!");
+                        this._perfilAtual = perfil;
+                        this._isLoggedIn = true;
+                    }
+                    break;
                 case "0":
                     (0, auxFunctions_1.print)("Aplicação encerrada!");
                     return;
@@ -39,16 +47,16 @@ var App = /** @class */ (function () {
         var apelido = (0, auxFunctions_1.getData)("Digite seu nome de usuário: ");
         var senha = (0, auxFunctions_1.getData)("Digite sua senha: ");
         var perfil = this._redeSocial.buscarPerfil(apelido);
-        if (perfil) {
+        if (perfil && perfil.stats) {
             if (apelido === perfil.apelido && senha === perfil.senha) {
                 (0, auxFunctions_1.print)("Login realizado com sucesso!");
                 this._perfilAtual = perfil;
                 this._isLoggedIn = true;
             }
-            else {
-                (0, auxFunctions_1.print)("Usuário ou senha inválidos. Tente novamente.");
-            }
         }
+        else {
+            console.log("Usuário ou senha inválidos. Tente novamente.");
+        } // fiz isso para que quando nao haja perfil, o usuário não saiba disso, porque se ele soubesse ele poderia testar ate descobrir usuários que existem 
     };
     App.prototype.criarConta = function () {
         var apelido = (0, auxFunctions_1.getData)("Escolha um nome de usuário: ");
@@ -120,10 +128,18 @@ var App = /** @class */ (function () {
                     this.menuAlterarPerfil();
                     break;
                 case "3":
-                    (0, auxFunctions_1.print)("Deletando perfil...");
-                    this._redeSocial.desativarPerfil(this._perfilAtual.apelido);
-                    this._perfilAtual = null;
-                    this._isLoggedIn = false;
+                    if (validations.validationTrocarSenha(this._perfilAtual.senha)) {
+                        (0, auxFunctions_1.print)("Deletando perfil...");
+                        this._redeSocial.desativarPerfil(this._perfilAtual.apelido);
+                        this._perfilAtual = null;
+                        this._isLoggedIn = false;
+                        (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+                        (0, auxFunctions_1.print)("...");
+                        (0, auxFunctions_1.print)("...");
+                        (0, auxFunctions_1.print)("Perfil Deletado!\n");
+                        (0, auxFunctions_1.clear)();
+                        this.start();
+                    }
                     return;
                 case "0":
                     (0, auxFunctions_1.print)("Voltando ao Menu Principal...");
@@ -138,7 +154,7 @@ var App = /** @class */ (function () {
         var opcao = "";
         do {
             (0, auxFunctions_1.clear)();
-            console.log("\n\nPublica\u00E7\u00F5es:\n1 - Visualizar Publica\u00E7\u00E3o\n2 - Criar Publica\u00E7\u00E3o\n3 - Alterar Publica\u00E7\u00E3o\n4 - Deletar Publica\u00E7\u00E3o\n0 - Voltar ao Menu Principal\n      ");
+            console.log("\n\nPublica\u00E7\u00F5es:\n1 - Visualizar Publica\u00E7\u00E3o\n2 - Criar Publica\u00E7\u00E3o\n3 - Alterar Publica\u00E7\u00E3o\n4 - Deletar Publica\u00E7\u00E3o\n5 - Visualizar Minhas Publica\u00E7\u00F5es\n\n0 - Voltar ao Menu Principal\n      ");
             opcao = (0, auxFunctions_1.getData)("Digite a opção desejada: ");
             switch (opcao) {
                 case "1":
@@ -152,6 +168,12 @@ var App = /** @class */ (function () {
                     break;
                 case "4":
                     this.deletarPublicacao();
+                    break;
+                case "4":
+                    this.deletarPublicacao();
+                    break;
+                case "5":
+                    this.visualizarMinhasPublicacoes();
                     break;
                 case "0":
                     (0, auxFunctions_1.print)("Voltando ao Menu Principal...");
@@ -213,7 +235,7 @@ var App = /** @class */ (function () {
                     if (validations.validationEmail(novoEmail)) {
                         this._perfilAtual.apelido = novoEmail;
                         (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
-                        (0, auxFunctions_1.print)("Email trocado com sucesso");
+                        (0, auxFunctions_1.print)("Email alterado com sucesso");
                     }
                     break;
                 case "3":
@@ -231,7 +253,7 @@ var App = /** @class */ (function () {
                     break;
                 case "5":
                     this._perfilAtual.stats = false;
-                    (0, auxFunctions_1.print)("Status alterado para falso");
+                    (0, auxFunctions_1.print)("Perfil desativado!");
                     break;
                 case "0":
                     (0, auxFunctions_1.print)("Voltando ao Menu Principal...");
@@ -243,10 +265,18 @@ var App = /** @class */ (function () {
         } while (opcao !== "0");
     };
     App.prototype.visualizarPublicacao = function () {
+        this._redeSocial.listarTodasPublicacoes();
+    };
+    App.prototype.visualizarMinhasPublicacoes = function () {
+        (0, auxFunctions_1.print)(this._redeSocial.listarPublicacoes(this._perfilAtual.apelido));
         (0, auxFunctions_1.print)("Visualizando publicação...");
     };
     App.prototype.criarPublicacao = function () {
         (0, auxFunctions_1.print)("Criando publicação...");
+        var pub = this._redeSocial.criarPublicacao(this._perfilAtual.apelido);
+        if (pub)
+            (0, auxFunctions_1.salvarDadosPublicacoes)(pub);
+        (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
     };
     App.prototype.alterarPublicacao = function () {
         (0, auxFunctions_1.print)("Alterando publicação...");

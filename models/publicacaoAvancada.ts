@@ -1,3 +1,4 @@
+import { strict } from "assert";
 import { Interacao } from "./interacao";
 import { Perfil } from "./perfil";
 import { Publicacao } from "./publicacao";
@@ -7,10 +8,10 @@ export class PublicacaoAvancada extends Publicacao {
   private _listaInteracoes: TipoInteracao[];
 
   constructor(
-    id: number,
+    id: string,
     conteudo: string,
     dataHora: Date,
-    perfilAssociado: Perfil
+    perfilAssociado: string
   ) {
     super(id, conteudo, dataHora, perfilAssociado);
     this._listaInteracoes = [];

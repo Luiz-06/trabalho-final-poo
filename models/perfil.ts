@@ -135,7 +135,7 @@ export class Perfil {
     this._publicacoes.push(publicacao);
   }
 
-  public removerPublicacao(id: number): void {
+  public removerPublicacao(id: string): void {
     this._publicacoes = this._publicacoes.filter(
       (publicacoes) => publicacoes.id !== id
     );
