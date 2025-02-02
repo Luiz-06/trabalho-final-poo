@@ -3,6 +3,8 @@ import * as fs from "fs";
 import * as path from "path";
 import { log } from "console";
 import { Perfil } from "../models/perfil";
+import { Publicacao } from "../models/publicacao";
+
 
 function print(mensagem: any): void {
   console.log(mensagem);
@@ -136,15 +138,12 @@ function lerDadosPerfis(): Perfil[] {
 }
 
 
-const salvarDadosPublicacoes = (perfis: Perfil[]) => {
+const salvarDadosPublicacoes = (perfis: Publicacao) => {
   const filePath = path.join(process.cwd(), "data.json");
 
   const jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-  jsonData.data.publicacao = [];
+  jsonData.data.publicacao.push(perfis);
 
-  perfis.forEach((perfil: any) => {
-    jsonData.data.perfil.push(perfil);
-  });
   fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), "utf-8");
 };
 
@@ -164,5 +163,6 @@ export {
   carregarDadosPerfis,
   carregarDadosPublicacoes,
   salvarDadosPerfis,
+  salvarDadosPublicacoes,
   lerDadosPerfis,
 };
