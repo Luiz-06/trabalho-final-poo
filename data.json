@@ -9,7 +9,26 @@
         "_senha": "1",
         "_stats": true,
         "_amigos": [],
-        "_publicacoes": [],
+        "_publicacoes": [
+          {
+            "_id": "01JK2AGXJBACXW1PX5PMV9JGKJ",
+            "_conteudo": "1111",
+            "_dataHora": "2025-02-02T03:16:02.251Z",
+            "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
+          },
+          {
+            "_id": "01JK2AH0CB9A74GRNWD5ZETAVE",
+            "_conteudo": "2",
+            "_dataHora": "2025-02-02T03:16:05.131Z",
+            "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
+          },
+          {
+            "_id": "01JK2AHD5KH0ZW73JCP5T1Q0DM",
+            "_conteudo": "3333333",
+            "_dataHora": "2025-02-02T03:16:18.227Z",
+            "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
+          }
+        ],
         "_solicitacoesAmizade": []
       },
       {
@@ -31,7 +50,14 @@
         "_senha": "3",
         "_stats": true,
         "_amigos": [],
-        "_publicacoes": [],
+        "_publicacoes": [
+          {
+            "_id": "01JK2AMED6C3V5RX91AX4G87MS",
+            "_conteudo": "pub 33333333333333333333",
+            "_dataHora": "2025-02-02T03:17:57.799Z",
+            "_perfilAssociado": "01JJSJN4WJ1259A9CZCR1VARHY"
+          }
+        ],
         "_solicitacoesAmizade": []
       },
       {
@@ -55,14 +81,56 @@
         "_amigos": [],
         "_publicacoes": [],
         "_solicitacoesAmizade": []
+      },
+      {
+        "_id": "01JK2CQDT7D2B4PGDPSSZ2F4YJ",
+        "_apelido": "Sofia Gascon",
+        "_email": "0",
+        "_foto": "🙂",
+        "_senha": "0",
+        "_stats": true,
+        "_amigos": [],
+        "_publicacoes": [
+          {
+            "_id": "01JK2CT2P1VHDFKG7KXP65XEY1",
+            "_conteudo": "Amo falar merda",
+            "_dataHora": "2025-02-02T03:55:59.553Z",
+            "_perfilAssociado": "01JK2CQDT7D2B4PGDPSSZ2F4YJ"
+          }
+        ],
+        "_solicitacoesAmizade": []
       }
     ],
     "publicacao": [
       {
-        "id": 1,
-        "conteudo": "Primeira publicacao",
-        "dataHora": "2024-01-01",
-        "perfilAssociado": "apelido1"
+        "_id": "01JK2AGXJBACXW1PX5PMV9JGKJ",
+        "_conteudo": "1111",
+        "_dataHora": "2025-02-02T03:16:02.251Z",
+        "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
+      },
+      {
+        "_id": "01JK2AH0CB9A74GRNWD5ZETAVE",
+        "_conteudo": "2",
+        "_dataHora": "2025-02-02T03:16:05.131Z",
+        "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
+      },
+      {
+        "_id": "01JK2AHD5KH0ZW73JCP5T1Q0DM",
+        "_conteudo": "3333333",
+        "_dataHora": "2025-02-02T03:16:18.227Z",
+        "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
+      },
+      {
+        "_id": "01JK2AMED6C3V5RX91AX4G87MS",
+        "_conteudo": "pub 33333333333333333333",
+        "_dataHora": "2025-02-02T03:17:57.799Z",
+        "_perfilAssociado": "01JJSJN4WJ1259A9CZCR1VARHY"
+      },
+      {
+        "_id": "01JK2CT2P1VHDFKG7KXP65XEY1",
+        "_conteudo": "Amo falar merda",
+        "_dataHora": "2025-02-02T03:55:59.553Z",
+        "_perfilAssociado": "01JK2CQDT7D2B4PGDPSSZ2F4YJ"
       }
     ]
   }

@@ -1,16 +1,16 @@
 import { Perfil } from "./perfil";
 
 export class Publicacao {
-  private _id: number;
+  private _id: string;
   private _conteudo: string;
   private _dataHora: Date;
-  private _perfilAssociado: Perfil;
+  private _perfilAssociado: string;
 
   constructor(
-    id: number,
+    id: string,
     conteudo: string,
     dataHora: Date,
-    perfilAssociado: Perfil
+    perfilAssociado: string
   ) {
     this._id = id;
     this._conteudo = conteudo;
@@ -18,10 +18,10 @@ export class Publicacao {
     this._perfilAssociado = perfilAssociado;
   }
 
-  public get id(): number {
+  public get id(): string {
     return this._id;
   }
-  public set id(value: number) {
+  public set id(value: string) {
     this._id = value;
   }
 
@@ -39,10 +39,10 @@ export class Publicacao {
     this._dataHora = value;
   }
 
-  public get perfilAssociado(): Perfil {
+  public get perfilAssociado(): string {
     return this._perfilAssociado;
   }
-  public set perfilAssociado(value: Perfil) {
+  public set perfilAssociado(value: string) {
     this._perfilAssociado = value;
   }
 }

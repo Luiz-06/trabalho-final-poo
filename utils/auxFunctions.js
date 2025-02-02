@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-exports.lerDadosPerfis = exports.salvarDadosPerfis = exports.carregarDadosPublicacoes = exports.carregarDadosPerfis = exports.choosePhoto = exports.clear = exports.getNegativeNumber = exports.removeList = exports.addList = exports.mapList = exports.filterList = exports.getPositiveNumber = exports.getNaturalNumber = exports.print = exports.getNumber = exports.getData = void 0;
+exports.lerDadosPerfis = exports.salvarDadosPublicacoes = exports.salvarDadosPerfis = exports.carregarDadosPublicacoes = exports.carregarDadosPerfis = exports.choosePhoto = exports.clear = exports.getNegativeNumber = exports.removeList = exports.addList = exports.mapList = exports.filterList = exports.getPositiveNumber = exports.getNaturalNumber = exports.print = exports.getNumber = exports.getData = void 0;
 var readline_sync_1 = require("readline-sync");
 var fs = require("fs");
 var path = require("path");
@@ -121,9 +121,7 @@ exports.lerDadosPerfis = lerDadosPerfis;
 var salvarDadosPublicacoes = function (perfis) {
     var filePath = path.join(process.cwd(), "data.json");
     var jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-    jsonData.data.publicacao = [];
-    perfis.forEach(function (perfil) {
-        jsonData.data.perfil.push(perfil);
-    });
+    jsonData.data.publicacao.push(perfis);
     fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), "utf-8");
 };
+exports.salvarDadosPublicacoes = salvarDadosPublicacoes;
