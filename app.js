@@ -52,11 +52,11 @@ var App = /** @class */ (function () {
                 (0, auxFunctions_1.print)("Login realizado com sucesso!");
                 this._perfilAtual = perfil;
                 this._isLoggedIn = true;
+                return;
             }
         }
-        else {
-            console.log("Usuário ou senha inválidos. Tente novamente.");
-        } // fiz isso para que quando nao haja perfil, o usuário não saiba disso, porque se ele soubesse ele poderia testar ate descobrir usuários que existem 
+        console.log("Usuário ou senha inválidos. Tente novamente.");
+        // fiz isso para que quando nao haja perfil, o usuário não saiba disso, porque se ele soubesse ele poderia testar ate descobrir usuários que existem 
     };
     App.prototype.criarConta = function () {
         var apelido = (0, auxFunctions_1.getData)("Escolha um nome de usuário: ");
@@ -165,9 +165,6 @@ var App = /** @class */ (function () {
                     break;
                 case "3":
                     this.alterarPublicacao();
-                    break;
-                case "4":
-                    this.deletarPublicacao();
                     break;
                 case "4":
                     this.deletarPublicacao();

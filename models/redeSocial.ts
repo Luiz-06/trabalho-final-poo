@@ -52,7 +52,7 @@ export class RedeSocial {
     if (indexPerfil !== -1) {
       let perfilRemovido: Perfil = this._perfisCadastrados[indexPerfil];
 
-    // this.deletarPublicacao(perfilRemovido);
+      // this.deletarPublicacao(perfilRemovido);
 
       this.deletarPerfilDeAmigos(perfilRemovido);
 
@@ -62,18 +62,19 @@ export class RedeSocial {
     }
   }
 
+  //PUBLICACOES
+  // private deletarPublicacao(perfilRemovido: Perfil): void {
+  //   this._publicacoesPostadas.filter(
+  //     (postagem) => postagem.perfilAssociado.id !== perfilRemovido.id
+  //   );
+  // }
+
   private deletarPerfilDeAmigos(perfilRemovido: Perfil): void {
     for (let perfil of this._perfisCadastrados) {
       perfil.removerAmigo(perfilRemovido.apelido);
     }
   }
   
-  /*private deletarPublicacao(perfilRemovido: Perfil): void {
-    this._publicacoesPostadas.filter(
-      (postagem) => postagem.perfilAssociado["id"] !== perfilRemovido.id
-    );
-  }*/
-
   public listarPerfis(): Perfil[] {
     let copiaDePerfis: Perfil[] = [];
     
@@ -137,7 +138,7 @@ export class RedeSocial {
     console.log("Publicação criada com sucesso!");
     return novaPublicacao
   }
-
+  
   private estaAssociada(publicacao: Publicacao): boolean {
     return publicacao.perfilAssociado ? true : false;
   }
@@ -166,6 +167,12 @@ export class RedeSocial {
     return publicacoesFiltradas;
   }
 
+  public listarTodasPublicacoes(): void{
+    // this._publicacoesPostadas.forEach((pub) => aux.print(pub["_conteudo"]));
+    this._publicacoesPostadas.map(
+      (pub) => aux.print(`${this.buscarPerfilPorID(pub["_perfilAssociado"])?.apelido} publicou: ${pub["_conteudo"]}`)
+    );
+  }
   //INTERAÇÕES 
 
   // SOLICITAÇÕES DE AMIZADE

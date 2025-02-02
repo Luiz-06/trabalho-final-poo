@@ -38,6 +38,12 @@ var RedeSocial = /** @class */ (function () {
             console.log("Perfil não encontrado.");
         }
     };
+    //PUBLICACOES
+    // private deletarPublicacao(perfilRemovido: Perfil): void {
+    //   this._publicacoesPostadas.filter(
+    //     (postagem) => postagem.perfilAssociado.id !== perfilRemovido.id
+    //   );
+    // }
     RedeSocial.prototype.deletarPerfilDeAmigos = function (perfilRemovido) {
         for (var _i = 0, _a = this._perfisCadastrados; _i < _a.length; _i++) {
             var perfil = _a[_i];
@@ -71,7 +77,7 @@ var RedeSocial = /** @class */ (function () {
             console.log("Perfil já se encontra desativado.");
         }
     };
-    // PUBLICAÇÕES
+    //PUBLICACOES
     RedeSocial.prototype.criarPublicacao = function (apelidoPerfil) {
         var perfilAssociado = this.buscarPerfil(apelidoPerfil);
         if (!perfilAssociado) {
@@ -85,43 +91,46 @@ var RedeSocial = /** @class */ (function () {
         console.log("Publicação criada com sucesso!");
         return novaPublicacao;
     };
-    RedeSocial.prototype.listarPublicacoes = function (apelidoPerfil) {
-        var perfilAssociado = this.buscarPerfil(apelidoPerfil);
-        if (!perfilAssociado) {
-            console.log("Perfil não encontrado.");
-            return [];
-        }
-        var pub = this._publicacoesPostadas;
-        // .filter(
-        //   (publicacao) => publicacao.perfilAssociado === perfilAssociado.id
-        // );
-        aux.print(pub);
+    RedeSocial.prototype.estaAssociada = function (publicacao) {
+        return publicacao.perfilAssociado ? true : false;
     };
-    RedeSocial.prototype.cpPublicacao = function () {
-        var copiaDePublicacoes = [];
-        for (var _i = 0, _a = this._publicacoesPostadas; _i < _a.length; _i++) {
-            var pub = _a[_i];
-            var publicacaoCP = new publicacao_1.Publicacao(pub.id, pub.conteudo, pub.dataHora, pub.perfilAssociado);
-            copiaDePublicacoes.push(publicacaoCP);
+    RedeSocial.prototype.adicionarPublicacao = function (publicacao) {
+        if (!this.estaAssociada(publicacao)) {
+            console.log("Esta publicacao não está associada a nenhum perfil");
+            return;
         }
-        return copiaDePublicacoes;
+        this._publicacoesPostadas.push(publicacao);
+    };
+    RedeSocial.prototype.listarPublicacoes = function (apelido) {
+        var publicacoesFiltradas = apelido
+            ? this._publicacoesPostadas.filter(function (publicacao) { return publicacao.perfilAssociado["apelido"] === apelido; })
+            : this._publicacoesPostadas;
+        publicacoesFiltradas.sort(function (a, b) {
+            var dataA = new Date(a.dataHora);
+            var dataB = new Date(b.dataHora);
+            return dataB.getTime() - dataA.getTime();
+        });
+        return publicacoesFiltradas;
     };
     RedeSocial.prototype.listarTodasPublicacoes = function () {
         var _this = this;
         // this._publicacoesPostadas.forEach((pub) => aux.print(pub["_conteudo"]));
         this._publicacoesPostadas.map(function (pub) { var _a; return aux.print("".concat((_a = _this.buscarPerfilPorID(pub["_perfilAssociado"])) === null || _a === void 0 ? void 0 : _a.apelido, " publicou: ").concat(pub["_conteudo"])); });
     };
-    // private deletarPublicacao(perfilRemovido: Perfil): void {
-    //   this._publicacoesPostadas.filter(
-    //     (postagem) => postagem.perfilAssociado. !== perfilRemovido.id
-    //   );
-    // }
-    //SOLICITACOES
+    //INTERAÇÕES 
+    // SOLICITAÇÕES DE AMIZADE
     RedeSocial.prototype.enviarSolicitacaoAmizade = function (apelidoRemetente, apelidoDestinatario) {
-        var perfilRemetente = this.buscarPerfil(apelidoRemetente);
-        var perfilDestinatario = this.buscarPerfil(apelidoDestinatario);
-        if (perfilRemetente && perfilDestinatario) {
-            perfilDestinatario.addCaixaDeSolicitacoes(perfilRemetente);
+        var remetente = this.buscarPerfil(apelidoRemetente);
+        var destinatario = this.buscarPerfil(apelidoDestinatario);
+        if (remetente && destinatario) {
+            destinatario.addCaixaDeSolicitacoes(remetente);
+        }
+    };
+    RedeSocial.prototype.aceitarSolicitacaoAmizade = function (apelidoRemetente, apelidoDestinatario, aceitar) {
+        var destinatario = this.buscarPerfil(apelidoDestinatario);
+        var remetente = this.buscarPerfil(apelidoRemetente);
+        if (remetente && destinatario) {
+            destinatario.aceitarSolicitacao(remetente, aceitar);
         }
     };
     return RedeSocial;
