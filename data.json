@@ -33,6 +33,12 @@
             "_conteudo": "to com fome DESGRAAAAAÇA",
             "_dataHora": "2025-02-02T16:50:20.838Z",
             "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
+          },
+          {
+            "_id": "01JK9BE233KYJJSH7YNBEERJ38",
+            "_conteudo": "lalalalalallala",
+            "_dataHora": "2025-02-04T20:46:38.180Z",
+            "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
           }
         ],
         "_solicitacoesAmizade": []
@@ -45,7 +51,14 @@
         "_senha": "2",
         "_stats": true,
         "_amigos": [],
-        "_publicacoes": [],
+        "_publicacoes": [
+          {
+            "_id": "01JK9ASHFE3GBMX0ABYKD3SV32",
+            "_conteudo": "",
+            "_dataHora": "2025-02-04T20:35:25.807Z",
+            "_perfilAssociado": "01JJSJ32ZCFTV2SDDHYDRTSTGQ"
+          }
+        ],
         "_solicitacoesAmizade": []
       },
       {
@@ -110,7 +123,7 @@
     "publicacao": [
       {
         "_id": "01JK2AGXJBACXW1PX5PMV9JGKJ",
-        "_conteudo": "1111",
+        "_conteudo": "1234",
         "_dataHora": "2025-02-02T03:16:02.251Z",
         "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
       },
@@ -142,6 +155,18 @@
         "_id": "01JK3S3Z15M51B7KECE0KEF6B6",
         "_conteudo": "to com fome DESGRAAAAAÇA",
         "_dataHora": "2025-02-02T16:50:20.838Z",
+        "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
+      },
+      {
+        "_id": "01JK9ASHFE3GBMX0ABYKD3SV32",
+        "_conteudo": "",
+        "_dataHora": "2025-02-04T20:35:25.807Z",
+        "_perfilAssociado": "01JJSJ32ZCFTV2SDDHYDRTSTGQ"
+      },
+      {
+        "_id": "01JK9BE233KYJJSH7YNBEERJ38",
+        "_conteudo": "lele",
+        "_dataHora": "2025-02-04T20:46:38.180Z",
         "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
       }
     ]

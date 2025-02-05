@@ -5,7 +5,6 @@ import { log } from "console";
 import { Perfil } from "../models/perfil";
 import { Publicacao } from "../models/publicacao";
 
-
 function print(mensagem: any): void {
   console.log(mensagem);
 }
@@ -104,14 +103,6 @@ const carregarDadosPerfis = (): Perfil[] => {
 
 carregarDadosPerfis();
 
-const carregarDadosPublicacoes = () => {
-  const filePath = path.join(process.cwd(), "data.json");
-
-  const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-
-  return data.data.publicacao;
-};
-
 const salvarDadosPerfis = (perfis: Perfil[]) => {
   const filePath = path.join(process.cwd(), "data.json");
 
@@ -126,25 +117,36 @@ const salvarDadosPerfis = (perfis: Perfil[]) => {
 
 function lerDadosPerfis(): Perfil[] {
   try {
-    const dados = fs.readFileSync('data.json', 'utf-8'); // Lê o arquivo JSON
-    const parsedData = JSON.parse(dados);  // Converte a string JSON em um objeto JavaScript
+    const dados = fs.readFileSync("data.json", "utf-8"); // Lê o arquivo JSON
+    const parsedData = JSON.parse(dados); // Converte a string JSON em um objeto JavaScript
 
     // Retorna a lista de perfis contida em parsedData.data.perfil
+    const dadosPerfisLidos = parsedData.data.perfil;
     return parsedData.data.perfil;
   } catch (error) {
-    console.log('Erro ao ler os dados: ', error);
-    return [];  // Se houver erro, retorna um array vazio
+    console.log("Erro ao ler os dados: ", error);
+    return []; // Se houver erro, retorna um array vazio
   }
 }
 
-
-const salvarDadosPublicacoes = (perfis: Publicacao) => {
+const salvarDadosPublicacoes = (publicacoes: Publicacao[]) => {
   const filePath = path.join(process.cwd(), "data.json");
 
   const jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-  jsonData.data.publicacao.push(perfis);
+  jsonData.data.publicacao = [];
 
+  publicacoes.forEach((publicacao: any) => {
+    jsonData.data.publicacao.push(publicacao);
+  });
   fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), "utf-8");
+};
+
+const carregarDadosPublicacoes = () => {
+  const filePath = path.join(process.cwd(), "data.json");
+
+  const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+
+  return data.data.publicacao;
 };
 
 export {

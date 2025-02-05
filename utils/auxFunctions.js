@@ -1,6 +1,18 @@
 "use strict";
-exports.__esModule = true;
-exports.lerDadosPerfis = exports.salvarDadosPublicacoes = exports.salvarDadosPerfis = exports.carregarDadosPublicacoes = exports.carregarDadosPerfis = exports.choosePhoto = exports.clear = exports.getNegativeNumber = exports.removeList = exports.addList = exports.mapList = exports.filterList = exports.getPositiveNumber = exports.getNaturalNumber = exports.print = exports.getNumber = exports.getData = void 0;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.salvarDadosPublicacoes = exports.salvarDadosPerfis = exports.carregarDadosPublicacoes = exports.carregarDadosPerfis = exports.choosePhoto = void 0;
+exports.getData = getData;
+exports.getNumber = getNumber;
+exports.print = print;
+exports.getNaturalNumber = getNaturalNumber;
+exports.getPositiveNumber = getPositiveNumber;
+exports.filterList = filterList;
+exports.mapList = mapList;
+exports.addList = addList;
+exports.removeList = removeList;
+exports.getNegativeNumber = getNegativeNumber;
+exports.clear = clear;
+exports.lerDadosPerfis = lerDadosPerfis;
 var readline_sync_1 = require("readline-sync");
 var fs = require("fs");
 var path = require("path");
@@ -8,55 +20,44 @@ var perfil_1 = require("../models/perfil");
 function print(mensagem) {
     console.log(mensagem);
 }
-exports.print = print;
 function getNumber(mensagem) {
     return Number((0, readline_sync_1.question)(mensagem));
 }
-exports.getNumber = getNumber;
 function getData(mensagem) {
     return (0, readline_sync_1.question)(mensagem);
 }
-exports.getData = getData;
 function getNaturalNumber(numero) {
     if (numero >= 0)
         return numero;
     throw new Error("Apenas valores positivos");
 }
-exports.getNaturalNumber = getNaturalNumber;
 function getPositiveNumber(numero) {
     if (numero > 0)
         return numero;
     throw new Error("Apenas valores positivos");
 }
-exports.getPositiveNumber = getPositiveNumber;
 function getNegativeNumber(numero) {
     if (numero < 0)
         return numero;
     throw new Error("Apenas valores negativos");
 }
-exports.getNegativeNumber = getNegativeNumber;
 function filterList(colecao, criterio) {
     return colecao.filter(criterio);
 }
-exports.filterList = filterList;
 function mapList(colecao, criterio) {
     return colecao.map(criterio);
 }
-exports.mapList = mapList;
 function addList(colecao, item) {
     colecao.push(item);
     return colecao;
 }
-exports.addList = addList;
 function removeList(colecao, item) {
     return colecao.filter(function (i) { return i !== item; });
 }
-exports.removeList = removeList;
 function clear() {
     getData("Pressione Enter para sair");
     console.clear();
 }
-exports.clear = clear;
 var choosePhoto = function () {
     var emojisArray = [
         "\ud83d\ude00",
@@ -89,12 +90,6 @@ var carregarDadosPerfis = function () {
 };
 exports.carregarDadosPerfis = carregarDadosPerfis;
 carregarDadosPerfis();
-var carregarDadosPublicacoes = function () {
-    var filePath = path.join(process.cwd(), "data.json");
-    var data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-    return data.data.publicacao;
-};
-exports.carregarDadosPublicacoes = carregarDadosPublicacoes;
 var salvarDadosPerfis = function (perfis) {
     var filePath = path.join(process.cwd(), "data.json");
     var jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
@@ -107,21 +102,30 @@ var salvarDadosPerfis = function (perfis) {
 exports.salvarDadosPerfis = salvarDadosPerfis;
 function lerDadosPerfis() {
     try {
-        var dados = fs.readFileSync('data.json', 'utf-8'); // Lê o arquivo JSON
+        var dados = fs.readFileSync("data.json", "utf-8"); // Lê o arquivo JSON
         var parsedData = JSON.parse(dados); // Converte a string JSON em um objeto JavaScript
         // Retorna a lista de perfis contida em parsedData.data.perfil
+        var dadosPerfisLidos = parsedData.data.perfil;
         return parsedData.data.perfil;
     }
     catch (error) {
-        console.log('Erro ao ler os dados: ', error);
+        console.log("Erro ao ler os dados: ", error);
         return []; // Se houver erro, retorna um array vazio
     }
 }
-exports.lerDadosPerfis = lerDadosPerfis;
-var salvarDadosPublicacoes = function (perfis) {
+var salvarDadosPublicacoes = function (publicacoes) {
     var filePath = path.join(process.cwd(), "data.json");
     var jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-    jsonData.data.publicacao.push(perfis);
+    jsonData.data.publicacao = [];
+    publicacoes.forEach(function (publicacao) {
+        jsonData.data.publicacao.push(publicacao);
+    });
     fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), "utf-8");
 };
 exports.salvarDadosPublicacoes = salvarDadosPublicacoes;
+var carregarDadosPublicacoes = function () {
+    var filePath = path.join(process.cwd(), "data.json");
+    var data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+    return data.data.publicacao;
+};
+exports.carregarDadosPublicacoes = carregarDadosPublicacoes;

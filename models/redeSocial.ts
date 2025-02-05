@@ -4,7 +4,7 @@ import {
   carregarDadosPublicacoes,
   getData,
 } from "../utils/auxFunctions";
-import * as aux from "../utils/auxFunctions"
+import * as aux from "../utils/auxFunctions";
 import { Perfil } from "./perfil";
 import { Publicacao } from "./publicacao";
 import { PublicacaoAvancada } from "./publicacaoAvancada";
@@ -19,6 +19,7 @@ export class RedeSocial {
 
   constructor() {
     this._perfisCadastrados = carregarDadosPerfis();
+
     this._publicacoesPostadas = carregarDadosPublicacoes();
   }
 
@@ -30,10 +31,14 @@ export class RedeSocial {
     );
   }
 
-  public buscarPerfilPorID(id: string): Perfil | undefined{
+  public buscarPublicacao(idPublicacao: string): Publicacao | undefined {
+    return this._publicacoesPostadas.find((pub) => pub["_id"] === idPublicacao);
+  }
+
+  public buscarPerfilPorID(id: string): Perfil | undefined {
     return this._perfisCadastrados.find(
       (perfil) => perfil.id === id && perfil.stats
-    )
+    );
   }
 
   private consultarPerfilPorIndice(apelido: string): number {
@@ -74,10 +79,10 @@ export class RedeSocial {
       perfil.removerAmigo(perfilRemovido.apelido);
     }
   }
-  
+
   public listarPerfis(): Perfil[] {
     let copiaDePerfis: Perfil[] = [];
-    
+
     for (let perfil of this._perfisCadastrados) {
       let perfilCopiado = new Perfil(
         perfil.id,
@@ -92,20 +97,20 @@ export class RedeSocial {
       );
       copiaDePerfis.push(perfilCopiado);
     }
-    
+
     return copiaDePerfis;
   }
-  
+
   public ativarPerfil(apelido: string): void {
     let perfilProcurado = this.buscarPerfil(apelido);
-    
+
     if (perfilProcurado?.stats == false) {
       perfilProcurado.stats = true;
     } else {
       console.log("Perfil já se encontra ativado.");
     }
   }
-  
+
   public desativarPerfil(apelido: string): void {
     let perfilProcurado = this.buscarPerfil(apelido);
     if (perfilProcurado?.stats) {
@@ -116,29 +121,29 @@ export class RedeSocial {
   }
 
   //PUBLICACOES
-  public criarPublicacao(apelidoPerfil: string): Publicacao | void{
+  public criarPublicacao(apelidoPerfil: string): Publicacao | void {
     const perfilAssociado = this.buscarPerfil(apelidoPerfil);
-  
+
     if (!perfilAssociado) {
       console.log("Perfil não encontrado.");
       return;
     }
 
-    const conteudo = aux.getData("Escreva sua publicação: ") 
-    
+    const conteudo = aux.getData("Escreva sua publicação: ");
+
     const novaPublicacao = new Publicacao(
       ulid(),
       conteudo,
-      new Date(), 
+      new Date(),
       perfilAssociado.id
     );
     perfilAssociado.adicionarPublicacao(novaPublicacao);
-  
+
     this._publicacoesPostadas.push(novaPublicacao);
     console.log("Publicação criada com sucesso!");
-    return novaPublicacao
+    return novaPublicacao;
   }
-  
+
   private estaAssociada(publicacao: Publicacao): boolean {
     return publicacao.perfilAssociado ? true : false;
   }
@@ -151,29 +156,83 @@ export class RedeSocial {
     this._publicacoesPostadas.push(publicacao);
   }
 
-  public listarPublicacoes(apelido?: string): Publicacao[] {
-    let publicacoesFiltradas = apelido
-      ? this._publicacoesPostadas.filter(
-          (publicacao) => publicacao.perfilAssociado["apelido"] === apelido
-        )
-      : this._publicacoesPostadas;
-
-    publicacoesFiltradas.sort((a, b) => {
-      const dataA = new Date(a.dataHora);
-      const dataB = new Date(b.dataHora);
-      return dataB.getTime() - dataA.getTime(); 
+  listarPublicacoes(apelido: string): Publicacao[] {
+    // Return the list of publicações for the given user
+    return this._publicacoesPostadas.filter((publicacao) => {
+      const perfil = this.buscarPerfilPorID(publicacao["_perfilAssociado"]);
+      return perfil?.apelido === apelido;
     });
-
-    return publicacoesFiltradas;
   }
 
-  public listarTodasPublicacoes(): void{
-    // this._publicacoesPostadas.forEach((pub) => aux.print(pub["_conteudo"]));
-    this._publicacoesPostadas.map(
-      (pub) => aux.print(`${this.buscarPerfilPorID(pub["_perfilAssociado"])?.apelido} publicou: ${pub["_conteudo"]}`)
+  listarTodasPublicacoes(): Publicacao[] {
+    // Return the list of all publicações
+    return this._publicacoesPostadas;
+  }
+
+  public editarPublicacao(
+    apelidoPerfil: string,
+    idPublicacao: string,
+    novoConteudo: string
+  ): boolean {
+    const perfil = this.buscarPerfil(apelidoPerfil);
+    if (!perfil) return false;
+
+    const publicacao = this.buscarPublicacao(idPublicacao);
+    if (!publicacao || publicacao["_perfilAssociado"] !== perfil["_id"]) {
+      console.log(
+        !publicacao || publicacao["_perfilAssociado"] !== perfil["_id"]
+      );
+
+      return false;
+    }
+
+    publicacao["_conteudo"] = novoConteudo;
+
+    console.log(publicacao);
+
+    return true;
+  }
+
+  public deletarPublicacao(
+    apelidoPerfil: string,
+    idPublicacao: string
+  ): boolean {
+    const perfil = this.buscarPerfil(apelidoPerfil);
+    if (!perfil) return false;
+
+    const index = perfil.publicacoes.findIndex((p) => p.id === idPublicacao);
+    if (index === -1) return false;
+
+    perfil.publicacoes.splice(index, 1);
+    this._publicacoesPostadas = this._publicacoesPostadas.filter(
+      (p) => p.id !== idPublicacao
     );
+    return true;
   }
-  //INTERAÇÕES 
+
+  // Para solicitações de amizade
+  public listarSolicitacoes(apelido: string): Perfil[] {
+    const perfil = this.buscarPerfil(apelido);
+    return perfil ? perfil.solicitacoesAmizade : [];
+  }
+
+  public processarSolicitacao(
+    apelidoUsuario: string,
+    apelidoRemetente: string,
+    aceitar: boolean
+  ): void {
+    const usuario = this.buscarPerfil(apelidoUsuario);
+    const remetente = this.buscarPerfil(apelidoRemetente);
+
+    if (usuario && remetente) {
+      usuario.aceitarSolicitacao(remetente, aceitar);
+      if (aceitar) {
+        usuario.adicionarAmigo(remetente);
+        remetente.adicionarAmigo(usuario);
+      }
+    }
+  }
+  //INTERAÇÕES
 
   // SOLICITAÇÕES DE AMIZADE
   public enviarSolicitacaoAmizade(

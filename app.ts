@@ -9,7 +9,7 @@ import {
   print,
   salvarDadosPerfis,
   salvarDadosPublicacoes,
-  lerDadosPerfis
+  lerDadosPerfis,
 } from "./utils/auxFunctions";
 import * as validations from "./validations/validations";
 
@@ -51,12 +51,12 @@ Por favor, escolha uma das opções abaixo para continuar:
           break;
         case "4": // remover essa merda, so ta pq sou preguiçoso
           const perfil: Perfil | undefined = this._redeSocial.buscarPerfil("1");
-          if (perfil){
+          if (perfil) {
             print("Login realizado com sucesso!");
             this._perfilAtual = perfil;
             this._isLoggedIn = true;
           }
-          break
+          break;
         case "0":
           print("Aplicação encerrada!");
           return;
@@ -78,16 +78,16 @@ Por favor, escolha uma das opções abaixo para continuar:
         print("Login realizado com sucesso!");
         this._perfilAtual = perfil;
         this._isLoggedIn = true;
-        return
+        return;
       }
-    } 
+    }
     console.log("Usuário ou senha inválidos. Tente novamente.");
-     // fiz isso para que quando nao haja perfil, o usuário não saiba disso, porque se ele soubesse ele poderia testar ate descobrir usuários que existem 
+    // fiz isso para que quando nao haja perfil, o usuário não saiba disso, porque se ele soubesse ele poderia testar ate descobrir usuários que existem
   }
 
   private criarConta(): void {
     const apelido = getData("Escolha um nome de usuário: ");
-    validations.possiveisErrosUsername(apelido)
+    validations.possiveisErrosUsername(apelido);
     const senha = getData("Escolha uma senha: ");
     const email = getData("Digite seu email: ");
     const foto = choosePhoto();
@@ -194,7 +194,7 @@ Menu Principal:
           this.menuAlterarPerfil();
           break;
         case "3":
-          if(validations.validationTrocarSenha(this._perfilAtual!.senha)){
+          if (validations.validationTrocarSenha(this._perfilAtual!.senha)) {
             print("Deletando perfil...");
             this._redeSocial.desativarPerfil(this._perfilAtual!.apelido);
             this._perfilAtual = null;
@@ -258,6 +258,8 @@ Menu Principal:
           print("Opção inválida! Tente novamente.");
           break;
       }
+
+      salvarDadosPublicacoes(this._redeSocial.listarTodasPublicacoes());
     } while (opcao !== "0");
   }
 
@@ -324,33 +326,36 @@ O que deseja alterar?
       switch (opcao) {
         case "1":
           const novoApelido = getData("Insira o novo apelido: ");
-          if (validations.validationTrocarApelido(novoApelido)){
-            this._perfilAtual!.apelido = novoApelido
+          if (validations.validationTrocarApelido(novoApelido)) {
+            this._perfilAtual!.apelido = novoApelido;
             salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("Apelido trocado com sucesso")
-          }break
+            print("Apelido trocado com sucesso");
+          }
+          break;
         case "2":
           const novoEmail = getData("Insira o novo email: ");
-          if (validations.validationEmail(novoEmail)){
-            this._perfilAtual!.apelido = novoEmail
+          if (validations.validationEmail(novoEmail)) {
+            this._perfilAtual!.apelido = novoEmail;
             salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("Email alterado com sucesso")
-          }break
+            print("Email alterado com sucesso");
+          }
+          break;
         case "3":
           const novaFoto = choosePhoto();
           this._perfilAtual!.foto = novaFoto;
           salvarDadosPerfis(this._redeSocial.listarPerfis());
           break;
         case "4":
-          if(validations.validationTrocarSenha(this._perfilAtual!.senha)){
+          if (validations.validationTrocarSenha(this._perfilAtual!.senha)) {
             const novaSenha = getData("Insira o nova senha: ");
-            this._perfilAtual!.senha = novaSenha
+            this._perfilAtual!.senha = novaSenha;
             salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("Senha alterada com sucesso")
-          }break;
+            print("Senha alterada com sucesso");
+          }
+          break;
         case "5":
-          this._perfilAtual!.stats = false
-          print("Perfil desativado!")
+          this._perfilAtual!.stats = false;
+          print("Perfil desativado!");
           break;
         case "0":
           print("Voltando ao Menu Principal...");
@@ -362,24 +367,72 @@ O que deseja alterar?
     } while (opcao !== "0");
   }
 
-  private visualizarPublicacao(): void {
-    this._redeSocial.listarTodasPublicacoes()
+  visualizarPublicacao(): void {
+    const publicacoes = this._redeSocial.listarTodasPublicacoes();
+    publicacoes.forEach((publicacao) => {
+      const perfil = this._redeSocial.buscarPerfilPorID(
+        publicacao["_perfilAssociado"]
+      );
+      console.log(
+        `Usuario: ${perfil!.apelido}, Conteúdo: ${publicacao["_conteudo"]}`
+      );
+    });
   }
 
-  private visualizarMinhasPublicacoes(): void {
-    print(this._redeSocial.listarPublicacoes(this._perfilAtual!.apelido))
-    print("Visualizando publicação...");
+  visualizarMinhasPublicacoes(): void {
+    const minhasPublicacoes = this._redeSocial.listarPublicacoes(
+      this._perfilAtual!.apelido
+    );
+    minhasPublicacoes.forEach((publicacao) => {
+      const perfil = this._redeSocial.buscarPerfilPorID(
+        publicacao["_perfilAssociado"]
+      );
+      console.log(
+        `Usuario: ${perfil!.apelido}, Conteúdo: ${publicacao["_conteudo"]}`
+      );
+    });
   }
 
   private criarPublicacao(): void {
     print("Criando publicação...");
-    let pub = this._redeSocial.criarPublicacao(this._perfilAtual!.apelido)
-    if (pub) salvarDadosPublicacoes(pub)
-    salvarDadosPerfis(this._redeSocial.listarPerfis())
+    let pub = this._redeSocial.criarPublicacao(this._perfilAtual!.apelido);
+    if (pub) salvarDadosPublicacoes(this._redeSocial.listarTodasPublicacoes());
+    salvarDadosPerfis(this._redeSocial.listarPerfis());
   }
 
   private alterarPublicacao(): void {
-    print("Alterando publicação...");
+    const publicacoes = this._perfilAtual?.publicacoes;
+    if (publicacoes) {
+      if (publicacoes.length === 0) {
+        print("Você não tem publicações para alterar");
+        return;
+      }
+
+      // Mostrar publicações com IDs
+      print("\nSuas publicações:");
+      publicacoes.forEach((pub, index) => {
+        print(`ID: ${pub["_id"]}`);
+        print(`Conteúdo: ${pub["_conteudo"]}`);
+        print("-----------------------");
+      });
+
+      // Obter inputs do usuário
+      const idPublicacao = getData(
+        "\nDigite o ID da publicação que deseja alterar: "
+      );
+      // console.log(publicacoes);
+      // console.log(publicacoes[index]);
+
+      // const idPublicacao = publicacoes[index].id;
+      const novoConteudo = getData("Digite o novo conteúdo: ");
+
+      // Chamar método da RedeSocial
+      this._redeSocial.editarPublicacao(
+        this._perfilAtual!.apelido,
+        idPublicacao,
+        novoConteudo
+      );
+    }
   }
 
   private deletarPublicacao(): void {

@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 var perfil_1 = require("./models/perfil");
 var redeSocial_1 = require("./models/redeSocial");
 var auxFunctions_1 = require("./utils/auxFunctions");
@@ -56,7 +56,7 @@ var App = /** @class */ (function () {
             }
         }
         console.log("Usuário ou senha inválidos. Tente novamente.");
-        // fiz isso para que quando nao haja perfil, o usuário não saiba disso, porque se ele soubesse ele poderia testar ate descobrir usuários que existem 
+        // fiz isso para que quando nao haja perfil, o usuário não saiba disso, porque se ele soubesse ele poderia testar ate descobrir usuários que existem
     };
     App.prototype.criarConta = function () {
         var apelido = (0, auxFunctions_1.getData)("Escolha um nome de usuário: ");
@@ -179,6 +179,7 @@ var App = /** @class */ (function () {
                     (0, auxFunctions_1.print)("Opção inválida! Tente novamente.");
                     break;
             }
+            (0, auxFunctions_1.salvarDadosPublicacoes)(this._redeSocial.listarTodasPublicacoes());
         } while (opcao !== "0");
     };
     App.prototype.menuSolicitacoes = function () {
@@ -262,21 +263,52 @@ var App = /** @class */ (function () {
         } while (opcao !== "0");
     };
     App.prototype.visualizarPublicacao = function () {
-        this._redeSocial.listarTodasPublicacoes();
+        var _this = this;
+        var publicacoes = this._redeSocial.listarTodasPublicacoes();
+        publicacoes.forEach(function (publicacao) {
+            var perfil = _this._redeSocial.buscarPerfilPorID(publicacao["_perfilAssociado"]);
+            console.log("Usuario: ".concat(perfil.apelido, ", Conte\u00FAdo: ").concat(publicacao["_conteudo"]));
+        });
     };
     App.prototype.visualizarMinhasPublicacoes = function () {
-        (0, auxFunctions_1.print)(this._redeSocial.listarPublicacoes(this._perfilAtual.apelido));
-        (0, auxFunctions_1.print)("Visualizando publicação...");
+        var _this = this;
+        var minhasPublicacoes = this._redeSocial.listarPublicacoes(this._perfilAtual.apelido);
+        minhasPublicacoes.forEach(function (publicacao) {
+            var perfil = _this._redeSocial.buscarPerfilPorID(publicacao["_perfilAssociado"]);
+            console.log("Usuario: ".concat(perfil.apelido, ", Conte\u00FAdo: ").concat(publicacao["_conteudo"]));
+        });
     };
     App.prototype.criarPublicacao = function () {
         (0, auxFunctions_1.print)("Criando publicação...");
         var pub = this._redeSocial.criarPublicacao(this._perfilAtual.apelido);
         if (pub)
-            (0, auxFunctions_1.salvarDadosPublicacoes)(pub);
+            (0, auxFunctions_1.salvarDadosPublicacoes)(this._redeSocial.listarTodasPublicacoes());
         (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
     };
     App.prototype.alterarPublicacao = function () {
-        (0, auxFunctions_1.print)("Alterando publicação...");
+        var _a;
+        var publicacoes = (_a = this._perfilAtual) === null || _a === void 0 ? void 0 : _a.publicacoes;
+        if (publicacoes) {
+            if (publicacoes.length === 0) {
+                (0, auxFunctions_1.print)("Você não tem publicações para alterar");
+                return;
+            }
+            // Mostrar publicações com IDs
+            (0, auxFunctions_1.print)("\nSuas publicações:");
+            publicacoes.forEach(function (pub, index) {
+                (0, auxFunctions_1.print)("ID: ".concat(pub["_id"]));
+                (0, auxFunctions_1.print)("Conte\u00FAdo: ".concat(pub["_conteudo"]));
+                (0, auxFunctions_1.print)("-----------------------");
+            });
+            // Obter inputs do usuário
+            var idPublicacao = (0, auxFunctions_1.getData)("\nDigite o ID da publicação que deseja alterar: ");
+            // console.log(publicacoes);
+            // console.log(publicacoes[index]);
+            // const idPublicacao = publicacoes[index].id;
+            var novoConteudo = (0, auxFunctions_1.getData)("Digite o novo conteúdo: ");
+            // Chamar método da RedeSocial
+            this._redeSocial.editarPublicacao(this._perfilAtual.apelido, idPublicacao, novoConteudo);
+        }
     };
     App.prototype.deletarPublicacao = function () {
         (0, auxFunctions_1.print)("Deletando publicação...");

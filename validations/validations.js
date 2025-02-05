@@ -1,6 +1,9 @@
 "use strict";
-exports.__esModule = true;
-exports.validationTrocarSenha = exports.validationEmail = exports.validationTrocarApelido = exports.possiveisErrosUsername = void 0;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.possiveisErrosUsername = possiveisErrosUsername;
+exports.validationTrocarApelido = validationTrocarApelido;
+exports.validationEmail = validationEmail;
+exports.validationTrocarSenha = validationTrocarSenha;
 var aux = require("./../utils/auxFunctions");
 function exist(apelido) {
     var perfisSalvos = aux.lerDadosPerfis();
@@ -14,7 +17,6 @@ function validationTrocarSenha(senhaAtual) {
     }
     return true;
 }
-exports.validationTrocarSenha = validationTrocarSenha;
 function validationTrocarApelido(apelido) {
     if (exist(apelido)) {
         console.error("O nome \"".concat(apelido, "\" j\u00E1 est\u00E1 em uso. Por favor, escolha outro."));
@@ -22,7 +24,6 @@ function validationTrocarApelido(apelido) {
     }
     return true;
 }
-exports.validationTrocarApelido = validationTrocarApelido;
 function validationEmail(email) {
     if (exist(email)) {
         console.error("O email \"".concat(email, "\" j\u00E1 est\u00E1 em uso. Por favor, escolha outro."));
@@ -30,9 +31,7 @@ function validationEmail(email) {
     }
     return true;
 }
-exports.validationEmail = validationEmail;
 function possiveisErrosUsername(apelido) {
     if (exist(apelido))
         throw new Error("O nome \"".concat(apelido, "\" j\u00E1 est\u00E1 em uso. Por favor, escolha outro."));
 }
-exports.possiveisErrosUsername = possiveisErrosUsername;
