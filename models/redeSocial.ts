@@ -200,12 +200,14 @@ export class RedeSocial {
     const perfil = this.buscarPerfil(apelidoPerfil);
     if (!perfil) return false;
 
-    const index = perfil.publicacoes.findIndex((p) => p.id === idPublicacao);
+    const index = perfil.publicacoes.findIndex(
+      (p) => p["_id"] === idPublicacao
+    );
     if (index === -1) return false;
 
     perfil.publicacoes.splice(index, 1);
     this._publicacoesPostadas = this._publicacoesPostadas.filter(
-      (p) => p.id !== idPublicacao
+      (p) => p["_id"] !== idPublicacao
     );
     return true;
   }

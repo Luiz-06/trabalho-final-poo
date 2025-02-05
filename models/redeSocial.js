@@ -133,11 +133,11 @@ var RedeSocial = /** @class */ (function () {
         var perfil = this.buscarPerfil(apelidoPerfil);
         if (!perfil)
             return false;
-        var index = perfil.publicacoes.findIndex(function (p) { return p.id === idPublicacao; });
+        var index = perfil.publicacoes.findIndex(function (p) { return p["_id"] === idPublicacao; });
         if (index === -1)
             return false;
         perfil.publicacoes.splice(index, 1);
-        this._publicacoesPostadas = this._publicacoesPostadas.filter(function (p) { return p.id !== idPublicacao; });
+        this._publicacoesPostadas = this._publicacoesPostadas.filter(function (p) { return p["_id"] !== idPublicacao; });
         return true;
     };
     // Para solicitações de amizade

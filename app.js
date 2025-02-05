@@ -293,25 +293,36 @@ var App = /** @class */ (function () {
                 (0, auxFunctions_1.print)("Você não tem publicações para alterar");
                 return;
             }
-            // Mostrar publicações com IDs
             (0, auxFunctions_1.print)("\nSuas publicações:");
             publicacoes.forEach(function (pub, index) {
-                (0, auxFunctions_1.print)("ID: ".concat(pub["_id"]));
+                (0, auxFunctions_1.print)("ID: ".concat(index + 1));
                 (0, auxFunctions_1.print)("Conte\u00FAdo: ".concat(pub["_conteudo"]));
                 (0, auxFunctions_1.print)("-----------------------");
             });
-            // Obter inputs do usuário
-            var idPublicacao = (0, auxFunctions_1.getData)("\nDigite o ID da publicação que deseja alterar: ");
-            // console.log(publicacoes);
-            // console.log(publicacoes[index]);
-            // const idPublicacao = publicacoes[index].id;
+            var index = (0, auxFunctions_1.getNumber)("\nDigite o ID da publicação que deseja alterar: ");
+            var idPublicacao = publicacoes[index - 1]["_id"];
             var novoConteudo = (0, auxFunctions_1.getData)("Digite o novo conteúdo: ");
-            // Chamar método da RedeSocial
             this._redeSocial.editarPublicacao(this._perfilAtual.apelido, idPublicacao, novoConteudo);
         }
     };
     App.prototype.deletarPublicacao = function () {
-        (0, auxFunctions_1.print)("Deletando publicação...");
+        var _a;
+        var publicacoes = (_a = this._perfilAtual) === null || _a === void 0 ? void 0 : _a.publicacoes;
+        if (publicacoes) {
+            if (publicacoes.length === 0) {
+                (0, auxFunctions_1.print)("Você não tem publicações para deletar");
+                return;
+            }
+            (0, auxFunctions_1.print)("\nSuas publicações:");
+            publicacoes.forEach(function (pub, index) {
+                (0, auxFunctions_1.print)("ID: ".concat(index + 1));
+                (0, auxFunctions_1.print)("Conte\u00FAdo: ".concat(pub["_conteudo"]));
+                (0, auxFunctions_1.print)("-----------------------");
+            });
+            var index = (0, auxFunctions_1.getNumber)("\nDigite o ID da publicação que deseja deletar: ");
+            var idPublicacao = publicacoes[index - 1]["_id"];
+            this._redeSocial.deletarPublicacao(this._perfilAtual.apelido, idPublicacao);
+        }
     };
     App.prototype.visualizarSolicitacoes = function () {
         (0, auxFunctions_1.print)("Visualizando solicitações...");

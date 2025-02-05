@@ -408,25 +408,20 @@ O que deseja alterar?
         return;
       }
 
-      // Mostrar publicações com IDs
       print("\nSuas publicações:");
       publicacoes.forEach((pub, index) => {
-        print(`ID: ${pub["_id"]}`);
+        print(`ID: ${index + 1}`);
         print(`Conteúdo: ${pub["_conteudo"]}`);
         print("-----------------------");
       });
 
-      // Obter inputs do usuário
-      const idPublicacao = getData(
+      const index = getNumber(
         "\nDigite o ID da publicação que deseja alterar: "
       );
-      // console.log(publicacoes);
-      // console.log(publicacoes[index]);
 
-      // const idPublicacao = publicacoes[index].id;
+      const idPublicacao = publicacoes[index - 1]["_id"];
       const novoConteudo = getData("Digite o novo conteúdo: ");
 
-      // Chamar método da RedeSocial
       this._redeSocial.editarPublicacao(
         this._perfilAtual!.apelido,
         idPublicacao,
@@ -436,7 +431,31 @@ O que deseja alterar?
   }
 
   private deletarPublicacao(): void {
-    print("Deletando publicação...");
+    const publicacoes = this._perfilAtual?.publicacoes;
+    if (publicacoes) {
+      if (publicacoes.length === 0) {
+        print("Você não tem publicações para deletar");
+        return;
+      }
+
+      print("\nSuas publicações:");
+      publicacoes.forEach((pub, index) => {
+        print(`ID: ${index + 1}`);
+        print(`Conteúdo: ${pub["_conteudo"]}`);
+        print("-----------------------");
+      });
+
+      const index = getNumber(
+        "\nDigite o ID da publicação que deseja deletar: "
+      );
+
+      const idPublicacao = publicacoes[index - 1]["_id"];
+
+      this._redeSocial.deletarPublicacao(
+        this._perfilAtual!.apelido,
+        idPublicacao
+      );
+    }
   }
 
   private visualizarSolicitacoes(): void {
