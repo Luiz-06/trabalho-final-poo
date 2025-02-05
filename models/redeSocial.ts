@@ -213,7 +213,7 @@ export class RedeSocial {
   }
 
   // Para solicitações de amizade
-  public listarSolicitacoes(apelido: string): Perfil[] {
+  public listarSolicitacoes(apelido: string): string[] {
     const perfil = this.buscarPerfil(apelido);
     return perfil ? perfil.solicitacoesAmizade : [];
   }
@@ -226,11 +226,27 @@ export class RedeSocial {
     const usuario = this.buscarPerfil(apelidoUsuario);
     const remetente = this.buscarPerfil(apelidoRemetente);
 
+    console.log(apelidoRemetente);
+
     if (usuario && remetente) {
-      usuario.aceitarSolicitacao(remetente, aceitar);
       if (aceitar) {
-        usuario.adicionarAmigo(remetente);
-        remetente.adicionarAmigo(usuario);
+        // Evita que o usuário adicione a si mesmo
+        if (apelidoUsuario !== apelidoRemetente) {
+          usuario.adicionarAmigo(apelidoRemetente); // Adiciona o remetente à lista de amigos do usuário
+          remetente.adicionarAmigo(apelidoUsuario); // Adiciona o usuário à lista de amigos do remetente
+        } else {
+          console.log("Você não pode adicionar a si mesmo como amigo.");
+        }
+
+        // Remove a solicitação de amizade
+        usuario.solicitacoesAmizade = usuario.solicitacoesAmizade.filter(
+          (apelido) => apelido !== apelidoRemetente
+        );
+      } else {
+        // Caso a solicitação seja rejeitada, remove da lista de solicitações
+        usuario.solicitacoesAmizade = usuario.solicitacoesAmizade.filter(
+          (apelido) => apelido !== apelidoRemetente
+        );
       }
     }
   }
@@ -245,20 +261,20 @@ export class RedeSocial {
     let destinatario = this.buscarPerfil(apelidoDestinatario);
 
     if (remetente && destinatario) {
-      destinatario.addCaixaDeSolicitacoes(remetente);
+      destinatario.addCaixaDeSolicitacoes(apelidoRemetente);
     }
   }
 
-  public aceitarSolicitacaoAmizade(
-    apelidoRemetente: string,
-    apelidoDestinatario: string,
-    aceitar: boolean
-  ): void {
-    let destinatario = this.buscarPerfil(apelidoDestinatario);
-    let remetente = this.buscarPerfil(apelidoRemetente);
+  // public aceitarSolicitacaoAmizade(
+  //   apelidoRemetente: string,
+  //   apelidoDestinatario: string,
+  //   aceitar: boolean
+  // ): void {
+  //   let destinatario = this.buscarPerfil(apelidoDestinatario);
+  //   let remetente = this.buscarPerfil(apelidoRemetente);
 
-    if (remetente && destinatario) {
-      destinatario.aceitarSolicitacao(remetente, aceitar);
-    }
-  }
+  //   if (remetente && destinatario) {
+  //     destinatario.aceitarSolicitacao(remetente, aceitar);
+  //   }
+  // }
 }

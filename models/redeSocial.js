@@ -148,11 +148,23 @@ var RedeSocial = /** @class */ (function () {
     RedeSocial.prototype.processarSolicitacao = function (apelidoUsuario, apelidoRemetente, aceitar) {
         var usuario = this.buscarPerfil(apelidoUsuario);
         var remetente = this.buscarPerfil(apelidoRemetente);
+        console.log(apelidoRemetente);
         if (usuario && remetente) {
-            usuario.aceitarSolicitacao(remetente, aceitar);
             if (aceitar) {
-                usuario.adicionarAmigo(remetente);
-                remetente.adicionarAmigo(usuario);
+                // Evita que o usuário adicione a si mesmo
+                if (apelidoUsuario !== apelidoRemetente) {
+                    usuario.adicionarAmigo(apelidoRemetente); // Adiciona o remetente à lista de amigos do usuário
+                    remetente.adicionarAmigo(apelidoUsuario); // Adiciona o usuário à lista de amigos do remetente
+                }
+                else {
+                    console.log("Você não pode adicionar a si mesmo como amigo.");
+                }
+                // Remove a solicitação de amizade
+                usuario.solicitacoesAmizade = usuario.solicitacoesAmizade.filter(function (apelido) { return apelido !== apelidoRemetente; });
+            }
+            else {
+                // Caso a solicitação seja rejeitada, remove da lista de solicitações
+                usuario.solicitacoesAmizade = usuario.solicitacoesAmizade.filter(function (apelido) { return apelido !== apelidoRemetente; });
             }
         }
     };
@@ -162,14 +174,7 @@ var RedeSocial = /** @class */ (function () {
         var remetente = this.buscarPerfil(apelidoRemetente);
         var destinatario = this.buscarPerfil(apelidoDestinatario);
         if (remetente && destinatario) {
-            destinatario.addCaixaDeSolicitacoes(remetente);
-        }
-    };
-    RedeSocial.prototype.aceitarSolicitacaoAmizade = function (apelidoRemetente, apelidoDestinatario, aceitar) {
-        var destinatario = this.buscarPerfil(apelidoDestinatario);
-        var remetente = this.buscarPerfil(apelidoRemetente);
-        if (remetente && destinatario) {
-            destinatario.aceitarSolicitacao(remetente, aceitar);
+            destinatario.addCaixaDeSolicitacoes(apelidoRemetente);
         }
     };
     return RedeSocial;

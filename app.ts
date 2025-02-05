@@ -263,110 +263,6 @@ Menu Principal:
     } while (opcao !== "0");
   }
 
-  private menuSolicitacoes(): void {
-    let opcao: string = "";
-
-    do {
-      clear();
-      console.log(`
-\nSolicitações:
-1 - Visualizar Solicitações
-2 - Aceitar Solicitação
-3 - Recusar Solicitação
-0 - Voltar ao Menu Principal
-      `);
-
-      opcao = getData("Digite a opção desejada: ");
-
-      switch (opcao) {
-        case "1":
-          this.visualizarSolicitacoes();
-          break;
-        case "2":
-          this.aceitarSolicitacao();
-          break;
-        case "3":
-          this.recusarSolicitacao();
-          break;
-        case "0":
-          print("Voltando ao Menu Principal...");
-          break;
-        default:
-          print("Opção inválida! Tente novamente.");
-          break;
-      }
-    } while (opcao !== "0");
-  }
-
-  private acessarPerfil(): void {
-    if (this._perfilAtual) {
-      print(this._perfilAtual.toString());
-    }
-  }
-
-  private alterarPerfil(): void {}
-
-  private menuAlterarPerfil(): void {
-    let opcao: string = "";
-
-    do {
-      clear();
-      print(`
-O que deseja alterar?
-1 - Apelido
-2 - Email
-3 - Foto
-4 - Senha
-5 - Desativar conta
-0 - Voltar
-      `);
-
-      opcao = getData("Digite a opção desejada: ");
-
-      switch (opcao) {
-        case "1":
-          const novoApelido = getData("Insira o novo apelido: ");
-          if (validations.validationTrocarApelido(novoApelido)) {
-            this._perfilAtual!.apelido = novoApelido;
-            salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("Apelido trocado com sucesso");
-          }
-          break;
-        case "2":
-          const novoEmail = getData("Insira o novo email: ");
-          if (validations.validationEmail(novoEmail)) {
-            this._perfilAtual!.apelido = novoEmail;
-            salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("Email alterado com sucesso");
-          }
-          break;
-        case "3":
-          const novaFoto = choosePhoto();
-          this._perfilAtual!.foto = novaFoto;
-          salvarDadosPerfis(this._redeSocial.listarPerfis());
-          break;
-        case "4":
-          if (validations.validationTrocarSenha(this._perfilAtual!.senha)) {
-            const novaSenha = getData("Insira o nova senha: ");
-            this._perfilAtual!.senha = novaSenha;
-            salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("Senha alterada com sucesso");
-          }
-          break;
-        case "5":
-          this._perfilAtual!.stats = false;
-          print("Perfil desativado!");
-          break;
-        case "0":
-          print("Voltando ao Menu Principal...");
-          break;
-        default:
-          print("Opção inválida! Tente novamente.");
-          break;
-      }
-    } while (opcao !== "0");
-  }
-
   visualizarPublicacao(): void {
     const publicacoes = this._redeSocial.listarTodasPublicacoes();
     publicacoes.forEach((publicacao) => {
@@ -458,16 +354,192 @@ O que deseja alterar?
     }
   }
 
+  private menuSolicitacoes(): void {
+    let opcao: string = "";
+
+    do {
+      clear();
+      console.log(`
+\nSolicitações:
+1 - Visualizar Solicitações
+2 - Aceitar Solicitação
+3 - Recusar Solicitação
+4 - Enviar Solicitação
+0 - Voltar ao Menu Principal
+      `);
+
+      opcao = getData("Digite a opção desejada: ");
+
+      switch (opcao) {
+        case "1":
+          this.visualizarSolicitacoes();
+          break;
+        case "2":
+          this.aceitarSolicitacao();
+          break;
+        case "3":
+          this.recusarSolicitacao();
+          break;
+        case "4":
+          this.enviarSolicitacao();
+          break;
+        case "0":
+          print("Voltando ao Menu Principal...");
+          break;
+        default:
+          print("Opção inválida! Tente novamente.");
+          break;
+      }
+      salvarDadosPerfis(this._redeSocial.listarPerfis());
+    } while (opcao !== "0");
+  }
+
   private visualizarSolicitacoes(): void {
-    print("Visualizando solicitações...");
+    const solicitacoes = this._redeSocial.listarSolicitacoes(
+      this._perfilAtual!.apelido
+    );
+    solicitacoes.forEach((solicitacao) => {
+      const perfil = this._redeSocial.buscarPerfil(solicitacao);
+      console.log(`Solicitante: ${perfil!["_apelido"]}`);
+    });
   }
 
   private aceitarSolicitacao(): void {
-    print("Aceitando solicitação...");
+    const solicitacoes = this._perfilAtual?.solicitacoesAmizade;
+    if (solicitacoes) {
+      if (solicitacoes.length === 0) {
+        console.log("Você não tem solicitações de amizade");
+      } else {
+        solicitacoes.forEach((perfil, index) => {
+          console.log(`Id: ${index + 1} - Usuário: ${perfil}`);
+        });
+
+        const index = getNumber(
+          "\nDigite o ID do usuário que deseja aceitar a solicitação de amizada: "
+        );
+
+        const apelidoPerfil = solicitacoes[index - 1];
+
+        this._redeSocial.processarSolicitacao(
+          this._perfilAtual!.apelido,
+          apelidoPerfil,
+          true
+        );
+      }
+    }
   }
 
   private recusarSolicitacao(): void {
-    print("Recusando solicitação...");
+    const solicitacoes = this._perfilAtual?.solicitacoesAmizade;
+    if (solicitacoes) {
+      if (solicitacoes.length === 0) {
+        console.log("Você não tem solicitações de amizade");
+      } else {
+        solicitacoes.forEach((perfil, index) => {
+          console.log(`Id: ${index + 1} - Usuário: ${perfil}`);
+        });
+
+        const index = getNumber(
+          "\nDigite o ID do usuário que deseja aceitar a solicitação de amizada: "
+        );
+
+        const apelidoPerfil = solicitacoes[index - 1];
+
+        this._redeSocial.processarSolicitacao(
+          this._perfilAtual!.apelido,
+          apelidoPerfil,
+          false
+        );
+      }
+    }
+  }
+
+  private enviarSolicitacao(): void {
+    const usuariosAtuais = this._redeSocial.listarPerfis();
+    usuariosAtuais.forEach((perfil, index) => {
+      if (perfil["_apelido"] !== this._perfilAtual?.apelido) {
+        console.log(`Id: ${index + 1} - Usuário: ${perfil["_apelido"]}`);
+      }
+    });
+
+    const index = getNumber(
+      "\nDigite o ID do usuário que deseja adicionar como amigo: "
+    );
+
+    // const idPerfil = usuariosAtuais[index - 1]["_id"];
+    const apelidoPerfil = usuariosAtuais[index - 1]["_apelido"];
+
+    this._redeSocial.enviarSolicitacaoAmizade(
+      this._perfilAtual!.apelido,
+      apelidoPerfil
+    );
+  }
+
+  private acessarPerfil(): void {
+    if (this._perfilAtual) {
+      print(this._perfilAtual.toString());
+    }
+  }
+
+  private menuAlterarPerfil(): void {
+    let opcao: string = "";
+
+    do {
+      clear();
+      print(`
+O que deseja alterar?
+1 - Apelido
+2 - Email
+3 - Foto
+4 - Senha
+5 - Desativar conta
+0 - Voltar
+      `);
+
+      opcao = getData("Digite a opção desejada: ");
+
+      switch (opcao) {
+        case "1":
+          const novoApelido = getData("Insira o novo apelido: ");
+          if (validations.validationTrocarApelido(novoApelido)) {
+            this._perfilAtual!.apelido = novoApelido;
+            salvarDadosPerfis(this._redeSocial.listarPerfis());
+            print("Apelido trocado com sucesso");
+          }
+          break;
+        case "2":
+          const novoEmail = getData("Insira o novo email: ");
+          if (validations.validationEmail(novoEmail)) {
+            this._perfilAtual!.apelido = novoEmail;
+            salvarDadosPerfis(this._redeSocial.listarPerfis());
+            print("Email alterado com sucesso");
+          }
+          break;
+        case "3":
+          const novaFoto = choosePhoto();
+          this._perfilAtual!.foto = novaFoto;
+          salvarDadosPerfis(this._redeSocial.listarPerfis());
+          break;
+        case "4":
+          if (validations.validationTrocarSenha(this._perfilAtual!.senha)) {
+            const novaSenha = getData("Insira o nova senha: ");
+            this._perfilAtual!.senha = novaSenha;
+            salvarDadosPerfis(this._redeSocial.listarPerfis());
+            print("Senha alterada com sucesso");
+          }
+          break;
+        case "5":
+          this._perfilAtual!.stats = false;
+          print("Perfil desativado!");
+          break;
+        case "0":
+          print("Voltando ao Menu Principal...");
+          break;
+        default:
+          print("Opção inválida! Tente novamente.");
+          break;
+      }
+    } while (opcao !== "0");
   }
 }
 

@@ -108,17 +108,26 @@ var Perfil = /** @class */ (function () {
         this._amigos.push(amigo);
     };
     Perfil.prototype.removerAmigo = function (apelidoProcurado) {
-        this._amigos = this._amigos.filter(function (amigos) { return amigos._apelido !== apelidoProcurado; });
+        this._amigos = this._amigos.filter(function (apelido) { return apelido !== apelidoProcurado; });
     };
-    Perfil.prototype.listarAmigos = function () {
-        var copiaDeAmigos = [];
-        for (var _i = 0, _a = this._amigos; _i < _a.length; _i++) {
-            var amigo = _a[_i];
-            var perfilCopiado = new Perfil(amigo._id, amigo._apelido, amigo._email, amigo._foto, amigo._senha, amigo._stats, amigo._amigos, amigo._publicacoes, amigo._solicitacoesAmizade);
-            copiaDeAmigos.push(perfilCopiado);
-        }
-        return copiaDeAmigos;
-    };
+    // public listarAmigos(): Perfil[] {
+    //   let copiaDeAmigos: Perfil[] = [];
+    //   for (let amigo of this._amigos) {
+    //     let perfilCopiado = new Perfil(
+    //       amigo._id,
+    //       amigo._apelido,
+    //       amigo._email,
+    //       amigo._foto,
+    //       amigo._senha,
+    //       amigo._stats,
+    //       amigo._amigos,
+    //       amigo._publicacoes,
+    //       amigo._solicitacoesAmizade
+    //     );
+    //     copiaDeAmigos.push(perfilCopiado);
+    //   }
+    //   return copiaDeAmigos;
+    // }
     Perfil.prototype.adicionarPublicacao = function (publicacao) {
         this._publicacoes.push(publicacao);
     };
@@ -137,12 +146,14 @@ var Perfil = /** @class */ (function () {
     Perfil.prototype.addCaixaDeSolicitacoes = function (perfil) {
         this._solicitacoesAmizade.push(perfil);
     };
-    Perfil.prototype.aceitarSolicitacao = function (perfil, aceitar) {
-        this._solicitacoesAmizade = this._solicitacoesAmizade.filter(function (perfilAtual) { return perfilAtual.id !== perfil.id; });
-        if (aceitar) {
-            this.adicionarAmigo(perfil);
-        }
-    };
+    // public aceitarSolicitacao(perfil: Perfil, aceitar: boolean) {
+    //   this._solicitacoesAmizade = this._solicitacoesAmizade.filter(
+    //     (perfilAtual) => perfilAtual.id !== perfil.id
+    //   );
+    //   if (aceitar) {
+    //     this.adicionarAmigo(perfil);
+    //   }
+    // }
     Perfil.prototype.toString = function () {
         return "\nApelido = ".concat(this._apelido, "\nEmail = ").concat(this._email, "\nFoto = ").concat(this._foto, "\nSolicita\u00E7\u00F5es de amizade = ").concat(this._solicitacoesAmizade.length, "\n    ");
     };

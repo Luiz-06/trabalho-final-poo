@@ -182,86 +182,6 @@ var App = /** @class */ (function () {
             (0, auxFunctions_1.salvarDadosPublicacoes)(this._redeSocial.listarTodasPublicacoes());
         } while (opcao !== "0");
     };
-    App.prototype.menuSolicitacoes = function () {
-        var opcao = "";
-        do {
-            (0, auxFunctions_1.clear)();
-            console.log("\n\nSolicita\u00E7\u00F5es:\n1 - Visualizar Solicita\u00E7\u00F5es\n2 - Aceitar Solicita\u00E7\u00E3o\n3 - Recusar Solicita\u00E7\u00E3o\n0 - Voltar ao Menu Principal\n      ");
-            opcao = (0, auxFunctions_1.getData)("Digite a opção desejada: ");
-            switch (opcao) {
-                case "1":
-                    this.visualizarSolicitacoes();
-                    break;
-                case "2":
-                    this.aceitarSolicitacao();
-                    break;
-                case "3":
-                    this.recusarSolicitacao();
-                    break;
-                case "0":
-                    (0, auxFunctions_1.print)("Voltando ao Menu Principal...");
-                    break;
-                default:
-                    (0, auxFunctions_1.print)("Opção inválida! Tente novamente.");
-                    break;
-            }
-        } while (opcao !== "0");
-    };
-    App.prototype.acessarPerfil = function () {
-        if (this._perfilAtual) {
-            (0, auxFunctions_1.print)(this._perfilAtual.toString());
-        }
-    };
-    App.prototype.alterarPerfil = function () { };
-    App.prototype.menuAlterarPerfil = function () {
-        var opcao = "";
-        do {
-            (0, auxFunctions_1.clear)();
-            (0, auxFunctions_1.print)("\nO que deseja alterar?\n1 - Apelido\n2 - Email\n3 - Foto\n4 - Senha\n5 - Desativar conta\n0 - Voltar\n      ");
-            opcao = (0, auxFunctions_1.getData)("Digite a opção desejada: ");
-            switch (opcao) {
-                case "1":
-                    var novoApelido = (0, auxFunctions_1.getData)("Insira o novo apelido: ");
-                    if (validations.validationTrocarApelido(novoApelido)) {
-                        this._perfilAtual.apelido = novoApelido;
-                        (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
-                        (0, auxFunctions_1.print)("Apelido trocado com sucesso");
-                    }
-                    break;
-                case "2":
-                    var novoEmail = (0, auxFunctions_1.getData)("Insira o novo email: ");
-                    if (validations.validationEmail(novoEmail)) {
-                        this._perfilAtual.apelido = novoEmail;
-                        (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
-                        (0, auxFunctions_1.print)("Email alterado com sucesso");
-                    }
-                    break;
-                case "3":
-                    var novaFoto = (0, auxFunctions_1.choosePhoto)();
-                    this._perfilAtual.foto = novaFoto;
-                    (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
-                    break;
-                case "4":
-                    if (validations.validationTrocarSenha(this._perfilAtual.senha)) {
-                        var novaSenha = (0, auxFunctions_1.getData)("Insira o nova senha: ");
-                        this._perfilAtual.senha = novaSenha;
-                        (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
-                        (0, auxFunctions_1.print)("Senha alterada com sucesso");
-                    }
-                    break;
-                case "5":
-                    this._perfilAtual.stats = false;
-                    (0, auxFunctions_1.print)("Perfil desativado!");
-                    break;
-                case "0":
-                    (0, auxFunctions_1.print)("Voltando ao Menu Principal...");
-                    break;
-                default:
-                    (0, auxFunctions_1.print)("Opção inválida! Tente novamente.");
-                    break;
-            }
-        } while (opcao !== "0");
-    };
     App.prototype.visualizarPublicacao = function () {
         var _this = this;
         var publicacoes = this._redeSocial.listarTodasPublicacoes();
@@ -324,14 +244,144 @@ var App = /** @class */ (function () {
             this._redeSocial.deletarPublicacao(this._perfilAtual.apelido, idPublicacao);
         }
     };
+    App.prototype.menuSolicitacoes = function () {
+        var opcao = "";
+        do {
+            (0, auxFunctions_1.clear)();
+            console.log("\n\nSolicita\u00E7\u00F5es:\n1 - Visualizar Solicita\u00E7\u00F5es\n2 - Aceitar Solicita\u00E7\u00E3o\n3 - Recusar Solicita\u00E7\u00E3o\n4 - Enviar Solicita\u00E7\u00E3o\n0 - Voltar ao Menu Principal\n      ");
+            opcao = (0, auxFunctions_1.getData)("Digite a opção desejada: ");
+            switch (opcao) {
+                case "1":
+                    this.visualizarSolicitacoes();
+                    break;
+                case "2":
+                    this.aceitarSolicitacao();
+                    break;
+                case "3":
+                    this.recusarSolicitacao();
+                    break;
+                case "4":
+                    this.enviarSolicitacao();
+                    break;
+                case "0":
+                    (0, auxFunctions_1.print)("Voltando ao Menu Principal...");
+                    break;
+                default:
+                    (0, auxFunctions_1.print)("Opção inválida! Tente novamente.");
+                    break;
+            }
+            (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+        } while (opcao !== "0");
+    };
     App.prototype.visualizarSolicitacoes = function () {
-        (0, auxFunctions_1.print)("Visualizando solicitações...");
+        var _this = this;
+        var solicitacoes = this._redeSocial.listarSolicitacoes(this._perfilAtual.apelido);
+        solicitacoes.forEach(function (solicitacao) {
+            var perfil = _this._redeSocial.buscarPerfil(solicitacao);
+            console.log("Solicitante: ".concat(perfil["_apelido"]));
+        });
     };
     App.prototype.aceitarSolicitacao = function () {
-        (0, auxFunctions_1.print)("Aceitando solicitação...");
+        var _a;
+        var solicitacoes = (_a = this._perfilAtual) === null || _a === void 0 ? void 0 : _a.solicitacoesAmizade;
+        if (solicitacoes) {
+            if (solicitacoes.length === 0) {
+                console.log("Você não tem solicitações de amizade");
+            }
+            else {
+                solicitacoes.forEach(function (perfil, index) {
+                    console.log("Id: ".concat(index + 1, " - Usu\u00E1rio: ").concat(perfil));
+                });
+                var index = (0, auxFunctions_1.getNumber)("\nDigite o ID do usuário que deseja aceitar a solicitação de amizada: ");
+                var apelidoPerfil = solicitacoes[index - 1];
+                this._redeSocial.processarSolicitacao(this._perfilAtual.apelido, apelidoPerfil, true);
+            }
+        }
     };
     App.prototype.recusarSolicitacao = function () {
-        (0, auxFunctions_1.print)("Recusando solicitação...");
+        var _a;
+        var solicitacoes = (_a = this._perfilAtual) === null || _a === void 0 ? void 0 : _a.solicitacoesAmizade;
+        if (solicitacoes) {
+            if (solicitacoes.length === 0) {
+                console.log("Você não tem solicitações de amizade");
+            }
+            else {
+                solicitacoes.forEach(function (perfil, index) {
+                    console.log("Id: ".concat(index + 1, " - Usu\u00E1rio: ").concat(perfil));
+                });
+                var index = (0, auxFunctions_1.getNumber)("\nDigite o ID do usuário que deseja aceitar a solicitação de amizada: ");
+                var apelidoPerfil = solicitacoes[index - 1];
+                this._redeSocial.processarSolicitacao(this._perfilAtual.apelido, apelidoPerfil, false);
+            }
+        }
+    };
+    App.prototype.enviarSolicitacao = function () {
+        var _this = this;
+        var usuariosAtuais = this._redeSocial.listarPerfis();
+        usuariosAtuais.forEach(function (perfil, index) {
+            var _a;
+            if (perfil["_apelido"] !== ((_a = _this._perfilAtual) === null || _a === void 0 ? void 0 : _a.apelido)) {
+                console.log("Id: ".concat(index + 1, " - Usu\u00E1rio: ").concat(perfil["_apelido"]));
+            }
+        });
+        var index = (0, auxFunctions_1.getNumber)("\nDigite o ID do usuário que deseja adicionar como amigo: ");
+        // const idPerfil = usuariosAtuais[index - 1]["_id"];
+        var apelidoPerfil = usuariosAtuais[index - 1]["_apelido"];
+        this._redeSocial.enviarSolicitacaoAmizade(this._perfilAtual.apelido, apelidoPerfil);
+    };
+    App.prototype.acessarPerfil = function () {
+        if (this._perfilAtual) {
+            (0, auxFunctions_1.print)(this._perfilAtual.toString());
+        }
+    };
+    App.prototype.menuAlterarPerfil = function () {
+        var opcao = "";
+        do {
+            (0, auxFunctions_1.clear)();
+            (0, auxFunctions_1.print)("\nO que deseja alterar?\n1 - Apelido\n2 - Email\n3 - Foto\n4 - Senha\n5 - Desativar conta\n0 - Voltar\n      ");
+            opcao = (0, auxFunctions_1.getData)("Digite a opção desejada: ");
+            switch (opcao) {
+                case "1":
+                    var novoApelido = (0, auxFunctions_1.getData)("Insira o novo apelido: ");
+                    if (validations.validationTrocarApelido(novoApelido)) {
+                        this._perfilAtual.apelido = novoApelido;
+                        (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+                        (0, auxFunctions_1.print)("Apelido trocado com sucesso");
+                    }
+                    break;
+                case "2":
+                    var novoEmail = (0, auxFunctions_1.getData)("Insira o novo email: ");
+                    if (validations.validationEmail(novoEmail)) {
+                        this._perfilAtual.apelido = novoEmail;
+                        (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+                        (0, auxFunctions_1.print)("Email alterado com sucesso");
+                    }
+                    break;
+                case "3":
+                    var novaFoto = (0, auxFunctions_1.choosePhoto)();
+                    this._perfilAtual.foto = novaFoto;
+                    (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+                    break;
+                case "4":
+                    if (validations.validationTrocarSenha(this._perfilAtual.senha)) {
+                        var novaSenha = (0, auxFunctions_1.getData)("Insira o nova senha: ");
+                        this._perfilAtual.senha = novaSenha;
+                        (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+                        (0, auxFunctions_1.print)("Senha alterada com sucesso");
+                    }
+                    break;
+                case "5":
+                    this._perfilAtual.stats = false;
+                    (0, auxFunctions_1.print)("Perfil desativado!");
+                    break;
+                case "0":
+                    (0, auxFunctions_1.print)("Voltando ao Menu Principal...");
+                    break;
+                default:
+                    (0, auxFunctions_1.print)("Opção inválida! Tente novamente.");
+                    break;
+            }
+        } while (opcao !== "0");
     };
     return App;
 }());
