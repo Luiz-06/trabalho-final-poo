@@ -2,7 +2,7 @@
   "data": {
     "perfil": [
       {
-        "_id": "01JJSH5BE6TJH7FAJD30MDE0WM",
+        "_id": "01JKCRAYT0D3H4YBCQZGWZ61RH",
         "_apelido": "1",
         "_email": "1",
         "_foto": "🥰",
@@ -11,157 +11,78 @@
         "_amigos": [],
         "_publicacoes": [
           {
-            "_id": "01JK2AGXJBACXW1PX5PMV9JGKJ",
-            "_conteudo": "1111",
-            "_dataHora": "2025-02-02T03:16:02.251Z",
-            "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
-          },
-          {
-            "_id": "01JK2AH0CB9A74GRNWD5ZETAVE",
-            "_conteudo": "2",
-            "_dataHora": "2025-02-02T03:16:05.131Z",
-            "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
-          },
-          {
-            "_id": "01JK2AHD5KH0ZW73JCP5T1Q0DM",
-            "_conteudo": "3333333",
-            "_dataHora": "2025-02-02T03:16:18.227Z",
-            "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
-          },
-          {
-            "_id": "01JK3S3Z15M51B7KECE0KEF6B6",
-            "_conteudo": "to com fome DESGRAAAAAÇA",
-            "_dataHora": "2025-02-02T16:50:20.838Z",
-            "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
-          },
-          {
-            "_id": "01JK9BE233KYJJSH7YNBEERJ38",
-            "_conteudo": "lalalalalallala",
-            "_dataHora": "2025-02-04T20:46:38.180Z",
-            "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
+            "_id": "01JKCVE59YFD25B9KN82SVFSQG",
+            "_conteudo": "dqdqw",
+            "_dataHora": "2025-02-06T05:24:04.181Z",
+            "_perfilAssociado": "01JKCRAYT0D3H4YBCQZGWZ61RH"
           }
         ],
         "_solicitacoesAmizade": []
       },
       {
-        "_id": "01JJSJ32ZCFTV2SDDHYDRTSTGQ",
-        "_apelido": "2",
+        "_id": "01JKCRCM7V2ND778C4RXRJ0QSX",
+        "_apelido": "pedro",
         "_email": "2",
-        "_foto": "😃",
+        "_foto": "😴",
         "_senha": "2",
         "_stats": true,
         "_amigos": [],
-        "_publicacoes": [
-          {
-            "_id": "01JK9ASHFE3GBMX0ABYKD3SV32",
-            "_conteudo": "",
-            "_dataHora": "2025-02-04T20:35:25.807Z",
-            "_perfilAssociado": "01JJSJ32ZCFTV2SDDHYDRTSTGQ"
-          }
-        ],
+        "_publicacoes": [],
         "_solicitacoesAmizade": []
       },
       {
-        "_id": "01JJSJN4WJ1259A9CZCR1VARHY",
-        "_apelido": "3",
+        "_id": "01JKCRDZGYYM5ZH1YVBSPA20M0",
+        "_apelido": "gisele",
         "_email": "3",
-        "_foto": "🙂",
+        "_foto": "😃",
         "_senha": "3",
         "_stats": true,
         "_amigos": [],
-        "_publicacoes": [
-          {
-            "_id": "01JK2AMED6C3V5RX91AX4G87MS",
-            "_conteudo": "pub 33333333333333333333",
-            "_dataHora": "2025-02-02T03:17:57.799Z",
-            "_perfilAssociado": "01JJSJN4WJ1259A9CZCR1VARHY"
-          }
-        ],
+        "_publicacoes": [],
         "_solicitacoesAmizade": []
       },
       {
-        "_id": "01JJT5FW6PJJ4S0WQK7HH7J5P4",
-        "_apelido": "4",
+        "_id": "01JKCRF8W8XY9KQ6PE7KY27HBK",
+        "_apelido": "luiz",
         "_email": "4",
-        "_foto": "😃",
+        "_foto": "🙃",
         "_senha": "4",
         "_stats": true,
         "_amigos": [],
         "_publicacoes": [],
         "_solicitacoesAmizade": []
-      },
-      {
-        "_id": "01JJTC9AH49FY1Z42FTW248YBG",
-        "_apelido": "5",
-        "_email": "5",
-        "_foto": "🫠",
-        "_senha": "5",
-        "_stats": true,
-        "_amigos": [],
-        "_publicacoes": [],
-        "_solicitacoesAmizade": []
-      },
-      {
-        "_id": "01JK2CQDT7D2B4PGDPSSZ2F4YJ",
-        "_apelido": "Sofia Gascon",
-        "_email": "0",
-        "_foto": "🙂",
-        "_senha": "0",
-        "_stats": true,
-        "_amigos": [],
-        "_publicacoes": [
-          {
-            "_id": "01JK2CT2P1VHDFKG7KXP65XEY1",
-            "_conteudo": "Amo falar merda",
-            "_dataHora": "2025-02-02T03:55:59.553Z",
-            "_perfilAssociado": "01JK2CQDT7D2B4PGDPSSZ2F4YJ"
-          }
-        ],
-        "_solicitacoesAmizade": []
       }
     ],
     "publicacao": [
       {
-        "_id": "01JK2AGXJBACXW1PX5PMV9JGKJ",
-        "_conteudo": "1234",
-        "_dataHora": "2025-02-02T03:16:02.251Z",
-        "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
+        "_id": "01JKCSXVHCCYPJ6TJ0JVG06C02",
+        "_conteudo": "pub1",
+        "_dataHora": "2025-02-06T04:57:41.925Z",
+        "_perfilAssociado": "01JKCRAYT0D3H4YBCQZGWZ61RH"
       },
       {
-        "_id": "01JK2AH0CB9A74GRNWD5ZETAVE",
-        "_conteudo": "2",
-        "_dataHora": "2025-02-02T03:16:05.131Z",
-        "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
+        "_id": "01JKCSZDZ6HQGZK1J8SGQ037DQ",
+        "_conteudo": "grrg",
+        "_dataHora": "2025-02-06T04:58:33.222Z",
+        "_perfilAssociado": "01JKCRAYT0D3H4YBCQZGWZ61RH"
       },
       {
-        "_id": "01JK2AMED6C3V5RX91AX4G87MS",
-        "_conteudo": "pub 33333333333333333333",
-        "_dataHora": "2025-02-02T03:17:57.799Z",
-        "_perfilAssociado": "01JJSJN4WJ1259A9CZCR1VARHY"
+        "_id": "01JKCT0QBFB2MEZM6K9FSZGGFW",
+        "_conteudo": "teatr1",
+        "_dataHora": "2025-02-06T04:59:16.550Z",
+        "_perfilAssociado": "01JKCRCM7V2ND778C4RXRJ0QSX"
       },
       {
-        "_id": "01JK2CT2P1VHDFKG7KXP65XEY1",
-        "_conteudo": "Amo falar merda",
-        "_dataHora": "2025-02-02T03:55:59.553Z",
-        "_perfilAssociado": "01JK2CQDT7D2B4PGDPSSZ2F4YJ"
+        "_id": "01JKCT35BHSZCHYMK7ZWECJF62",
+        "_conteudo": "teste delete",
+        "_dataHora": "2025-02-06T05:00:37.330Z",
+        "_perfilAssociado": "01JKCRCM7V2ND778C4RXRJ0QSX"
       },
       {
-        "_id": "01JK3S3Z15M51B7KECE0KEF6B6",
-        "_conteudo": "to com fome DESGRAAAAAÇA",
-        "_dataHora": "2025-02-02T16:50:20.838Z",
-        "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
-      },
-      {
-        "_id": "01JK9ASHFE3GBMX0ABYKD3SV32",
-        "_conteudo": "",
-        "_dataHora": "2025-02-04T20:35:25.807Z",
-        "_perfilAssociado": "01JJSJ32ZCFTV2SDDHYDRTSTGQ"
-      },
-      {
-        "_id": "01JK9BE233KYJJSH7YNBEERJ38",
-        "_conteudo": "lelele",
-        "_dataHora": "2025-02-04T20:46:38.180Z",
-        "_perfilAssociado": "01JJSH5BE6TJH7FAJD30MDE0WM"
+        "_id": "01JKCVE59YFD25B9KN82SVFSQG",
+        "_conteudo": "dqdqw",
+        "_dataHora": "2025-02-06T05:24:04.181Z",
+        "_perfilAssociado": "01JKCRAYT0D3H4YBCQZGWZ61RH"
       }
     ]
   }
