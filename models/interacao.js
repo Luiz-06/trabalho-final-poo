@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.Interacao = void 0;
 var Interacao = /** @class */ (function () {
     function Interacao(id, tipoInteracao, perfilAutor) {

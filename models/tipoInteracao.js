@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.TipoInteracao = void 0;
 var TipoInteracao;
 (function (TipoInteracao) {
@@ -7,4 +7,4 @@ var TipoInteracao;
     TipoInteracao["naoCurtir"] = ":(";
     TipoInteracao["riso"] = "xD";
     TipoInteracao["surpresa"] = ":O";
-})(TipoInteracao || (exports.TipoInteracao = TipoInteracao = {}));
+})(TipoInteracao = exports.TipoInteracao || (exports.TipoInteracao = {}));

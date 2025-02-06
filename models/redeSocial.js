@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.RedeSocial = void 0;
 var ulid_1 = require("ulid");
 var auxFunctions_1 = require("../utils/auxFunctions");

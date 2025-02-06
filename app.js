@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var perfil_1 = require("./models/perfil");
 var redeSocial_1 = require("./models/redeSocial");
 var auxFunctions_1 = require("./utils/auxFunctions");
@@ -12,9 +12,11 @@ var App = /** @class */ (function () {
         this._redeSocial = new redeSocial_1.RedeSocial();
     }
     App.prototype.start = function () {
+        console.clear();
+        console.log("\n\u001B[36m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551 \uD83C\uDF10 Bem-vindo \u00E0 Rede Social Interativa \uD83C\uDF10   \u2551\n\u2560\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2563\n\u2551                                          \u2551\n\u2551   \u001B[33m\u2728 Conecte-se, Compartilhe, Interaja! \u2728\u001B[36m \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+        console.log("\n\u001B[34m\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 \uD83D\uDD10 Op\u00E7\u00F5es de Acesso                     \u2502\n\u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 \u001B[33m1\u001B[34m - \u001B[32mLogin                        \u001B[34m\u2502\n\u2502 \u001B[33m2\u001B[34m - \u001B[32mCriar Nova Conta             \u001B[34m\u2502\n\u2502 \u001B[33m3\u001B[34m - \u001B[33mRecuperar Senha              \u001B[34m\u2502\n\u2502 \u001B[33m0\u001B[34m - \u001B[31mSair                         \u001B[34m\u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\u001B[0m");
         while (!this._isLoggedIn) {
-            console.log("\nBem vindo \u00E0 Rede Social!\nPor favor, escolha uma das op\u00E7\u00F5es abaixo para continuar:\n1 - Login\n2 - Criar Conta\n3 - Recuperar Senha\n0 - Sair\n      ");
-            var opcao = (0, auxFunctions_1.getData)("Digite a opção desejada: ");
+            var opcao = (0, auxFunctions_1.getData)("\n➤ Escolha uma opção: ");
             switch (opcao) {
                 case "1":
                     this.login();
@@ -26,47 +28,51 @@ var App = /** @class */ (function () {
                 case "3":
                     this.recuperarSenha();
                     break;
-                case "4": // remover essa merda, so ta pq sou preguiçoso
-                    var perfil = this._redeSocial.buscarPerfil("1");
-                    if (perfil) {
-                        (0, auxFunctions_1.print)("Login realizado com sucesso!");
-                        this._perfilAtual = perfil;
-                        this._isLoggedIn = true;
-                    }
-                    break;
                 case "0":
-                    (0, auxFunctions_1.print)("Aplicação encerrada!");
+                    this.sairDoSistema();
                     return;
                 default:
-                    (0, auxFunctions_1.print)("Opção inválida! Tente novamente.");
+                    (0, auxFunctions_1.print)("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
             }
         }
         this.menuPrincipal();
     };
+    App.prototype.sairDoSistema = function () {
+        console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551        \uD83C\uDF05 At\u00E9 a pr\u00F3xima! \uD83D\uDC4B              \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+        process.exit(0);
+    };
     App.prototype.login = function () {
-        var apelido = (0, auxFunctions_1.getData)("Digite seu nome de usuário: ");
-        var senha = (0, auxFunctions_1.getData)("Digite sua senha: ");
+        console.log('\n\x1b[34m🔐 Autenticação de Usuário \x1b[0m');
+        var apelido = (0, auxFunctions_1.getData)("👤 Nome de usuário: ");
+        var senha = (0, auxFunctions_1.getData)("🔑 Senha: ");
         var perfil = this._redeSocial.buscarPerfil(apelido);
         if (perfil && perfil.stats) {
             if (apelido === perfil.apelido && senha === perfil.senha) {
-                (0, auxFunctions_1.print)("Login realizado com sucesso!");
+                console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83C\uDF89 Login realizado com sucesso!      \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
                 this._perfilAtual = perfil;
                 this._isLoggedIn = true;
                 return;
             }
         }
-        console.log("Usuário ou senha inválidos. Tente novamente.");
-        // fiz isso para que quando nao haja perfil, o usuário não saiba disso, porque se ele soubesse ele poderia testar ate descobrir usuários que existem
+        console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551   \u26A0\uFE0F Usu\u00E1rio ou senha inv\u00E1lidos           \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
     };
     App.prototype.criarConta = function () {
-        var apelido = (0, auxFunctions_1.getData)("Escolha um nome de usuário: ");
-        validations.possiveisErrosUsername(apelido);
-        var senha = (0, auxFunctions_1.getData)("Escolha uma senha: ");
-        var email = (0, auxFunctions_1.getData)("Digite seu email: ");
+        console.log('\n\x1b[34m📝 Criar Nova Conta \x1b[0m');
+        var apelido = (0, auxFunctions_1.getData)("👤 Escolha um nome de usuário: ");
+        try {
+            validations.possiveisErrosUsername(apelido);
+        }
+        catch (error) {
+            console.log("\u001B[31m\u26A0\uFE0F ".concat(error.message, "\u001B[0m"));
+            return;
+        }
+        var senha = (0, auxFunctions_1.getData)("🔐 Escolha uma senha: ");
+        var email = (0, auxFunctions_1.getData)("📧 Digite seu email: ");
+        console.log('\n🖼️ Escolha sua foto de perfil:');
         var foto = (0, auxFunctions_1.choosePhoto)();
         var novoPerfil = new perfil_1.Perfil((0, ulid_1.ulid)(), apelido, email, foto, senha, true, [], [], []);
         this._redeSocial.adicionarPerfil(novoPerfil);
-        (0, auxFunctions_1.print)("Conta criada com sucesso! Bem-vindo, ".concat(apelido, "!"));
+        console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83C\uDF89 Conta criada com sucesso!         \u2551\n\u2551     Bem-vindo, ".concat(apelido, "!               \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m"));
         this._isLoggedIn = true;
         this._perfilAtual = novoPerfil;
     };
@@ -86,14 +92,31 @@ var App = /** @class */ (function () {
             }
         }
     };
+    App.prototype.criarLinha = function (caractere, comprimento) {
+        if (caractere === void 0) { caractere = '-'; }
+        if (comprimento === void 0) { comprimento = 40; }
+        return caractere.repeat(comprimento);
+    };
+    App.prototype.centralizarTexto = function (texto, largura) {
+        if (largura === void 0) { largura = 40; }
+        var espacosEsquerda = Math.floor((largura - texto.length) / 2);
+        var espacosDireita = largura - texto.length - espacosEsquerda;
+        return ' '.repeat(espacosEsquerda) + texto + ' '.repeat(espacosDireita);
+    };
+    App.prototype.exibirTitulo = function (titulo) {
+        console.log('\n' + this.criarLinha('='));
+        console.log(this.centralizarTexto(titulo.toUpperCase()));
+        console.log(this.criarLinha('=') + '\n');
+    };
     App.prototype.menuPrincipal = function () {
         var _a;
         var opcao = "";
         var appOn = true;
         do {
             (0, auxFunctions_1.clear)();
-            console.log("\n\nBem vindo ".concat((_a = this._perfilAtual) === null || _a === void 0 ? void 0 : _a.apelido, "\nMenu Principal:\n1 - Configura\u00E7\u00F5es do Perfil\n2 - Publica\u00E7\u00F5es\n3 - Solicita\u00E7\u00F5es\n0 - Sair\n      "));
-            opcao = (0, auxFunctions_1.getData)("Digite a opção desejada: ");
+            this.exibirTitulo("Bem-vindo, ".concat((_a = this._perfilAtual) === null || _a === void 0 ? void 0 : _a.apelido));
+            console.log("\n\u001B[36m\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 \uD83C\uDFE0 Menu Principal               \u2502\n\u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 \u001B[33m1\u001B[36m - \u001B[34mConfigurar Perfil         \u001B[36m\u2502\n\u2502 \u001B[33m2\u001B[36m - \u001B[34mPublica\u00E7\u00F5es              \u001B[36m\u2502\n\u2502 \u001B[33m3\u001B[36m - \u001B[34mSolicita\u00E7\u00F5es             \u001B[36m\u2502\n\u2502 \u001B[33m0\u001B[36m - \u001B[31mSair do Sistema          \u001B[36m\u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\u001B[0m");
+            opcao = (0, auxFunctions_1.getData)("\n➤ Escolha uma opção: ");
             switch (opcao) {
                 case "1":
                     this.menuPerfil();
@@ -105,11 +128,11 @@ var App = /** @class */ (function () {
                     this.menuSolicitacoes();
                     break;
                 case "0":
-                    (0, auxFunctions_1.print)("Você saiu do sistema. Até logo!");
+                    (0, auxFunctions_1.print)("\x1b[31m✘ Saindo do sistema. Até logo! ✘\x1b[0m");
                     appOn = false;
                     break;
                 default:
-                    (0, auxFunctions_1.print)("Opção inválida! Tente novamente.");
+                    (0, auxFunctions_1.print)("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
                     break;
             }
         } while (appOn === true);
@@ -118,8 +141,9 @@ var App = /** @class */ (function () {
         var opcao = "";
         do {
             (0, auxFunctions_1.clear)();
-            console.log("\n\nConfigura\u00E7\u00F5es do Perfil:\n1 - Visualizar Perfil\n2 - Alterar Perfil\n3 - Deletar Perfil\n0 - Voltar ao Menu Principal\n      ");
-            opcao = (0, auxFunctions_1.getData)("Digite a opção desejada: ");
+            this.exibirTitulo('Configurações do Perfil');
+            console.log("\n\u001B[36m\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 \uD83D\uDC64 Op\u00E7\u00F5es de Perfil             \u2502\n\u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 \u001B[33m1\u001B[36m - \u001B[34mVisualizar Perfil        \u001B[36m\u2502\n\u2502 \u001B[33m2\u001B[36m - \u001B[34mAlterar Perfil           \u001B[36m\u2502\n\u2502 \u001B[33m3\u001B[36m - \u001B[31mDeletar Perfil           \u001B[36m\u2502\n\u2502 \u001B[33m0\u001B[36m - \u001B[32mVoltar                   \u001B[36m\u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\u001B[0m");
+            opcao = (0, auxFunctions_1.getData)("\n➤ Escolha uma opção: ");
             switch (opcao) {
                 case "1":
                     this.acessarPerfil();
@@ -129,23 +153,20 @@ var App = /** @class */ (function () {
                     break;
                 case "3":
                     if (validations.validationTrocarSenha(this._perfilAtual.senha)) {
-                        (0, auxFunctions_1.print)("Deletando perfil...");
+                        (0, auxFunctions_1.print)("\x1b[31m🗑 Deletando perfil... 🗑\x1b[0m");
                         this._redeSocial.desativarPerfil(this._perfilAtual.apelido);
                         this._perfilAtual = null;
                         this._isLoggedIn = false;
                         (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
-                        (0, auxFunctions_1.print)("...");
-                        (0, auxFunctions_1.print)("...");
-                        (0, auxFunctions_1.print)("Perfil Deletado!\n");
-                        (0, auxFunctions_1.clear)();
+                        (0, auxFunctions_1.print)("\x1b[31m✘ Perfil Deletado! ✘\x1b[0m");
                         this.start();
                     }
                     return;
                 case "0":
-                    (0, auxFunctions_1.print)("Voltando ao Menu Principal...");
+                    (0, auxFunctions_1.print)("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
                     break;
                 default:
-                    (0, auxFunctions_1.print)("Opção inválida! Tente novamente.");
+                    (0, auxFunctions_1.print)("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
                     break;
             }
         } while (opcao !== "0");
@@ -338,50 +359,93 @@ var App = /** @class */ (function () {
         var opcao = "";
         do {
             (0, auxFunctions_1.clear)();
-            (0, auxFunctions_1.print)("\nO que deseja alterar?\n1 - Apelido\n2 - Email\n3 - Foto\n4 - Senha\n5 - Desativar conta\n0 - Voltar\n      ");
-            opcao = (0, auxFunctions_1.getData)("Digite a opção desejada: ");
+            this.exibirTitulo('Alterar Perfil');
+            console.log("\n\u001B[36m\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 \uD83D\uDEE0\uFE0F  Configura\u00E7\u00F5es de Perfil             \u2502\n\u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 \u001B[33m1\u001B[36m - \u001B[34m\uD83D\uDC64 Alterar Apelido            \u001B[36m\u2502\n\u2502 \u001B[33m2\u001B[36m - \u001B[34m\uD83D\uDCE7 Alterar Email             \u001B[36m\u2502\n\u2502 \u001B[33m3\u001B[36m - \u001B[34m\uD83D\uDDBC\uFE0F  Alterar Foto             \u001B[36m\u2502\n\u2502 \u001B[33m4\u001B[36m - \u001B[34m\uD83D\uDD10 Alterar Senha             \u001B[36m\u2502\n\u2502 \u001B[33m5\u001B[36m - \u001B[31m\u274C Desativar Conta            \u001B[36m\u2502\n\u2502 \u001B[33m0\u001B[36m - \u001B[32m\u21A9 Voltar                     \u001B[36m\u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\u001B[0m");
+            opcao = (0, auxFunctions_1.getData)("\n➤ Escolha uma opção: ");
             switch (opcao) {
                 case "1":
-                    var novoApelido = (0, auxFunctions_1.getData)("Insira o novo apelido: ");
-                    if (validations.validationTrocarApelido(novoApelido)) {
-                        this._perfilAtual.apelido = novoApelido;
-                        (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
-                        (0, auxFunctions_1.print)("Apelido trocado com sucesso");
-                    }
+                    this.alterarApelido();
                     break;
                 case "2":
-                    var novoEmail = (0, auxFunctions_1.getData)("Insira o novo email: ");
-                    if (validations.validationEmail(novoEmail)) {
-                        this._perfilAtual.apelido = novoEmail;
-                        (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
-                        (0, auxFunctions_1.print)("Email alterado com sucesso");
-                    }
+                    this.alterarEmail();
                     break;
                 case "3":
-                    var novaFoto = (0, auxFunctions_1.choosePhoto)();
-                    this._perfilAtual.foto = novaFoto;
-                    (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+                    this.alterarFoto();
                     break;
                 case "4":
-                    if (validations.validationTrocarSenha(this._perfilAtual.senha)) {
-                        var novaSenha = (0, auxFunctions_1.getData)("Insira o nova senha: ");
-                        this._perfilAtual.senha = novaSenha;
-                        (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
-                        (0, auxFunctions_1.print)("Senha alterada com sucesso");
-                    }
+                    this.alterarSenha();
                     break;
                 case "5":
-                    this._perfilAtual.stats = false;
-                    (0, auxFunctions_1.print)("Perfil desativado!");
+                    this.desativarConta();
                     break;
                 case "0":
-                    (0, auxFunctions_1.print)("Voltando ao Menu Principal...");
+                    (0, auxFunctions_1.print)("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
                     break;
                 default:
-                    (0, auxFunctions_1.print)("Opção inválida! Tente novamente.");
+                    (0, auxFunctions_1.print)("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
                     break;
             }
         } while (opcao !== "0");
+    };
+    // Métodos auxiliares para cada alteração
+    App.prototype.alterarApelido = function () {
+        var novoApelido = (0, auxFunctions_1.getData)("\x1b[34m👤 Insira o novo apelido: \x1b[0m");
+        try {
+            if (validations.validationTrocarApelido(novoApelido)) {
+                this._perfilAtual.apelido = novoApelido;
+                (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+                console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83C\uDF89 Apelido alterado com sucesso!    \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+            }
+        }
+        catch (error) {
+            console.log("\u001B[31m\u26A0\uFE0F ".concat(error.message, "\u001B[0m"));
+        }
+        (0, auxFunctions_1.getData)("\nPressione Enter para continuar...");
+    };
+    App.prototype.alterarEmail = function () {
+        var novoEmail = (0, auxFunctions_1.getData)("\x1b[34m📧 Insira o novo email: \x1b[0m");
+        try {
+            if (validations.validationEmail(novoEmail)) {
+                this._perfilAtual.email = novoEmail;
+                (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+                console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83C\uDF89 Email alterado com sucesso!      \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+            }
+        }
+        catch (error) {
+            console.log("\u001B[31m\u26A0\uFE0F ".concat(error.message, "\u001B[0m"));
+        }
+        (0, auxFunctions_1.getData)("\nPressione Enter para continuar...");
+    };
+    App.prototype.alterarFoto = function () {
+        console.log('\n🖼️  Escolha sua nova foto de perfil:');
+        var novaFoto = (0, auxFunctions_1.choosePhoto)();
+        this._perfilAtual.foto = novaFoto;
+        (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+        console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83C\uDF89 Foto de perfil atualizada!       \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+        (0, auxFunctions_1.getData)("\nPressione Enter para continuar...");
+    };
+    App.prototype.alterarSenha = function () {
+        if (validations.validationTrocarSenha(this._perfilAtual.senha)) {
+            var novaSenha = (0, auxFunctions_1.getData)("\x1b[34m🔐 Insira a nova senha: \x1b[0m");
+            this._perfilAtual.senha = novaSenha;
+            (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+            console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83C\uDF89 Senha alterada com sucesso!      \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+        }
+        (0, auxFunctions_1.getData)("\nPressione Enter para continuar...");
+    };
+    App.prototype.desativarConta = function () {
+        var confirmacao = (0, auxFunctions_1.getData)("\x1b[31m❗ Tem certeza que deseja desativar sua conta? (s/n): \x1b[0m");
+        if (confirmacao.toLowerCase() === 's') {
+            this._redeSocial.desativarPerfil(this._perfilAtual.apelido);
+            this._perfilAtual = null;
+            this._isLoggedIn = false;
+            (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+            console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \u274C Conta desativada com sucesso!    \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+            this.start();
+        }
+        else {
+            (0, auxFunctions_1.print)("\x1b[32m↩ Operação cancelada. ↩\x1b[0m");
+        }
     };
     return App;
 }());
