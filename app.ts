@@ -27,16 +27,28 @@ class App {
   }
 
   public start(): void {
+    console.clear();
+    console.log(`
+\x1b[36m╔══════════════════════════════════════════╗
+║ 🌐 Bem-vindo à Rede Social Interativa 🌐   ║
+╠══════════════════════════════════════════╣
+║                                          ║
+║   \x1b[33m✨ Conecte-se, Compartilhe, Interaja! ✨\x1b[36m ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+
+    console.log(`
+\x1b[34m┌─────────────────────────────────────────┐
+│ 🔐 Opções de Acesso                     │
+├─────────────────────────────────────────┤
+│ \x1b[33m1\x1b[34m - \x1b[32mLogin                        \x1b[34m│
+│ \x1b[33m2\x1b[34m - \x1b[32mCriar Nova Conta             \x1b[34m│
+│ \x1b[33m3\x1b[34m - \x1b[33mRecuperar Senha              \x1b[34m│
+│ \x1b[33m0\x1b[34m - \x1b[31mSair                         \x1b[34m│
+└─────────────────────────────────────────┘\x1b[0m`);
+
     while (!this._isLoggedIn) {
-      console.log(`
-Bem vindo à Rede Social!
-Por favor, escolha uma das opções abaixo para continuar:
-1 - Login
-2 - Criar Conta
-3 - Recuperar Senha
-0 - Sair
-      `);
-      const opcao = getData("Digite a opção desejada: ");
+      const opcao = getData("\n➤ Escolha uma opção: ");
 
       switch (opcao) {
         case "1":
@@ -49,47 +61,73 @@ Por favor, escolha uma das opções abaixo para continuar:
         case "3":
           this.recuperarSenha();
           break;
-        case "4": // remover essa merda, so ta pq sou preguiçoso
-          const perfil: Perfil | undefined = this._redeSocial.buscarPerfil("1");
-          if (perfil) {
-            print("Login realizado com sucesso!");
-            this._perfilAtual = perfil;
-            this._isLoggedIn = true;
-          }
-          break;
         case "0":
-          print("Aplicação encerrada!");
+          this.sairDoSistema();
           return;
         default:
-          print("Opção inválida! Tente novamente.");
+          print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
       }
     }
 
     this.menuPrincipal();
   }
 
+  private sairDoSistema(): void {
+    console.log(`
+\x1b[31m╔══════════════════════════════════╗
+║                                          ║
+║        🌅 Até a próxima! 👋              ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    
+    process.exit(0);
+  }
+
   private login(): void {
-    const apelido = getData("Digite seu nome de usuário: ");
-    const senha = getData("Digite sua senha: ");
+    console.log('\n\x1b[34m🔐 Autenticação de Usuário \x1b[0m');
+    const apelido = getData("👤 Nome de usuário: ");
+    const senha = getData("🔑 Senha: ");
+    
     const perfil: Perfil | undefined = this._redeSocial.buscarPerfil(apelido);
 
     if (perfil && perfil.stats) {
       if (apelido === perfil.apelido && senha === perfil.senha) {
-        print("Login realizado com sucesso!");
+        console.log(`
+\x1b[32m╔══════════════════════════════════╗
+║                                          ║
+║     🎉 Login realizado com sucesso!      ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        
         this._perfilAtual = perfil;
         this._isLoggedIn = true;
         return;
       }
     }
-    console.log("Usuário ou senha inválidos. Tente novamente.");
-    // fiz isso para que quando nao haja perfil, o usuário não saiba disso, porque se ele soubesse ele poderia testar ate descobrir usuários que existem
+    
+    console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Usuário ou senha inválidos           ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
   }
 
   private criarConta(): void {
-    const apelido = getData("Escolha um nome de usuário: ");
-    validations.possiveisErrosUsername(apelido);
-    const senha = getData("Escolha uma senha: ");
-    const email = getData("Digite seu email: ");
+    console.log('\n\x1b[34m📝 Criar Nova Conta \x1b[0m');
+    
+    const apelido = getData("👤 Escolha um nome de usuário: ");
+    try {
+      validations.possiveisErrosUsername(apelido);
+    } catch (error) {
+      console.log(`\x1b[31m⚠️ ${error.message}\x1b[0m`);
+      return;
+    }
+
+    const senha = getData("🔐 Escolha uma senha: ");
+    const email = getData("📧 Digite seu email: ");
+    
+    console.log('\n🖼️ Escolha sua foto de perfil:');
     const foto = choosePhoto();
 
     const novoPerfil: Perfil = new Perfil(
@@ -103,9 +141,17 @@ Por favor, escolha uma das opções abaixo para continuar:
       [],
       []
     );
+    
     this._redeSocial.adicionarPerfil(novoPerfil);
 
-    print(`Conta criada com sucesso! Bem-vindo, ${apelido}!`);
+    console.log(`
+\x1b[32m╔══════════════════════════════════╗
+║                                          ║
+║     🎉 Conta criada com sucesso!         ║
+║     Bem-vindo, ${apelido}!               ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+
     this._isLoggedIn = true;
     this._perfilAtual = novoPerfil;
   }
@@ -133,22 +179,41 @@ Por favor, escolha uma das opções abaixo para continuar:
     }
   }
 
+  private criarLinha(caractere: string = '-', comprimento: number = 40): string {
+    return caractere.repeat(comprimento);
+  }
+
+  private centralizarTexto(texto: string, largura: number = 40): string {
+    const espacosEsquerda = Math.floor((largura - texto.length) / 2);
+    const espacosDireita = largura - texto.length - espacosEsquerda;
+    return ' '.repeat(espacosEsquerda) + texto + ' '.repeat(espacosDireita);
+  }
+
+  private exibirTitulo(titulo: string): void {
+    console.log('\n' + this.criarLinha('='));
+    console.log(this.centralizarTexto(titulo.toUpperCase()));
+    console.log(this.criarLinha('=') + '\n');
+  }
+
   private menuPrincipal(): void {
     let opcao: string = "";
     let appOn: boolean = true;
 
     do {
       clear();
+      this.exibirTitulo(`Bem-vindo, ${this._perfilAtual?.apelido}`);
+      
       console.log(`
-\nBem vindo ${this._perfilAtual?.apelido}
-Menu Principal:
-1 - Configurações do Perfil
-2 - Publicações
-3 - Solicitações
-0 - Sair
-      `);
+\x1b[36m┌─────────────────────────────────┐
+│ 🏠 Menu Principal               │
+├─────────────────────────────────┤
+│ \x1b[33m1\x1b[36m - \x1b[34mConfigurar Perfil         \x1b[36m│
+│ \x1b[33m2\x1b[36m - \x1b[34mPublicações              \x1b[36m│
+│ \x1b[33m3\x1b[36m - \x1b[34mSolicitações             \x1b[36m│
+│ \x1b[33m0\x1b[36m - \x1b[31mSair do Sistema          \x1b[36m│
+└─────────────────────────────────┘\x1b[0m`);
 
-      opcao = getData("Digite a opção desejada: ");
+      opcao = getData("\n➤ Escolha uma opção: ");
 
       switch (opcao) {
         case "1":
@@ -161,11 +226,11 @@ Menu Principal:
           this.menuSolicitacoes();
           break;
         case "0":
-          print("Você saiu do sistema. Até logo!");
+          print("\x1b[31m✘ Saindo do sistema. Até logo! ✘\x1b[0m");
           appOn = false;
           break;
         default:
-          print("Opção inválida! Tente novamente.");
+          print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
           break;
       }
     } while (appOn === true);
@@ -176,15 +241,19 @@ Menu Principal:
 
     do {
       clear();
+      this.exibirTitulo('Configurações do Perfil');
+      
       console.log(`
-\nConfigurações do Perfil:
-1 - Visualizar Perfil
-2 - Alterar Perfil
-3 - Deletar Perfil
-0 - Voltar ao Menu Principal
-      `);
+\x1b[36m┌─────────────────────────────────┐
+│ 👤 Opções de Perfil             │
+├─────────────────────────────────┤
+│ \x1b[33m1\x1b[36m - \x1b[34mVisualizar Perfil        \x1b[36m│
+│ \x1b[33m2\x1b[36m - \x1b[34mAlterar Perfil           \x1b[36m│
+│ \x1b[33m3\x1b[36m - \x1b[31mDeletar Perfil           \x1b[36m│
+│ \x1b[33m0\x1b[36m - \x1b[32mVoltar                   \x1b[36m│
+└─────────────────────────────────┘\x1b[0m`);
 
-      opcao = getData("Digite a opção desejada: ");
+      opcao = getData("\n➤ Escolha uma opção: ");
 
       switch (opcao) {
         case "1":
@@ -195,23 +264,20 @@ Menu Principal:
           break;
         case "3":
           if (validations.validationTrocarSenha(this._perfilAtual!.senha)) {
-            print("Deletando perfil...");
+            print("\x1b[31m🗑 Deletando perfil... 🗑\x1b[0m");
             this._redeSocial.desativarPerfil(this._perfilAtual!.apelido);
             this._perfilAtual = null;
             this._isLoggedIn = false;
             salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("...");
-            print("...");
-            print("Perfil Deletado!\n");
-            clear();
+            print("\x1b[31m✘ Perfil Deletado! ✘\x1b[0m");
             this.start();
           }
           return;
         case "0":
-          print("Voltando ao Menu Principal...");
+          print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
           break;
         default:
-          print("Opção inválida! Tente novamente.");
+          print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
           break;
       }
     } while (opcao !== "0");
@@ -485,61 +551,149 @@ Menu Principal:
     let opcao: string = "";
 
     do {
-      clear();
-      print(`
-O que deseja alterar?
-1 - Apelido
-2 - Email
-3 - Foto
-4 - Senha
-5 - Desativar conta
-0 - Voltar
-      `);
+        clear();
+        this.exibirTitulo('Alterar Perfil');
+        
+        console.log(`
+\x1b[36m┌─────────────────────────────────────────┐
+│ 🛠️  Configurações de Perfil             │
+├─────────────────────────────────────────┤
+│ \x1b[33m1\x1b[36m - \x1b[34m👤 Alterar Apelido            \x1b[36m│
+│ \x1b[33m2\x1b[36m - \x1b[34m📧 Alterar Email             \x1b[36m│
+│ \x1b[33m3\x1b[36m - \x1b[34m🖼️  Alterar Foto             \x1b[36m│
+│ \x1b[33m4\x1b[36m - \x1b[34m🔐 Alterar Senha             \x1b[36m│
+│ \x1b[33m5\x1b[36m - \x1b[31m❌ Desativar Conta            \x1b[36m│
+│ \x1b[33m0\x1b[36m - \x1b[32m↩ Voltar                     \x1b[36m│
+└─────────────────────────────────────────┘\x1b[0m`);
 
-      opcao = getData("Digite a opção desejada: ");
+        opcao = getData("\n➤ Escolha uma opção: ");
 
-      switch (opcao) {
-        case "1":
-          const novoApelido = getData("Insira o novo apelido: ");
-          if (validations.validationTrocarApelido(novoApelido)) {
+        switch (opcao) {
+            case "1":
+                this.alterarApelido();
+                break;
+            case "2":
+                this.alterarEmail();
+                break;
+            case "3":
+                this.alterarFoto();
+                break;
+            case "4":
+                this.alterarSenha();
+                break;
+            case "5":
+                this.desativarConta();
+                break;
+            case "0":
+                print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
+                break;
+            default:
+                print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
+                break;
+        }
+    } while (opcao !== "0");
+  }
+
+  // Métodos auxiliares para cada alteração
+  private alterarApelido(): void {
+    const novoApelido = getData("\x1b[34m👤 Insira o novo apelido: \x1b[0m");
+    
+    try {
+        if (validations.validationTrocarApelido(novoApelido)) {
             this._perfilAtual!.apelido = novoApelido;
             salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("Apelido trocado com sucesso");
-          }
-          break;
-        case "2":
-          const novoEmail = getData("Insira o novo email: ");
-          if (validations.validationEmail(novoEmail)) {
-            this._perfilAtual!.apelido = novoEmail;
+            
+            console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🎉 Apelido alterado com sucesso!    ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        }
+    } catch (error) {
+        console.log(`\x1b[31m⚠️ ${error.message}\x1b[0m`);
+    }
+    
+    getData("\nPressione Enter para continuar...");
+  }
+
+  private alterarEmail(): void {
+    const novoEmail = getData("\x1b[34m📧 Insira o novo email: \x1b[0m");
+    
+    try {
+        if (validations.validationEmail(novoEmail)) {
+            this._perfilAtual!.email = novoEmail;
             salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("Email alterado com sucesso");
-          }
-          break;
-        case "3":
-          const novaFoto = choosePhoto();
-          this._perfilAtual!.foto = novaFoto;
-          salvarDadosPerfis(this._redeSocial.listarPerfis());
-          break;
-        case "4":
-          if (validations.validationTrocarSenha(this._perfilAtual!.senha)) {
-            const novaSenha = getData("Insira o nova senha: ");
-            this._perfilAtual!.senha = novaSenha;
-            salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("Senha alterada com sucesso");
-          }
-          break;
-        case "5":
-          this._perfilAtual!.stats = false;
-          print("Perfil desativado!");
-          break;
-        case "0":
-          print("Voltando ao Menu Principal...");
-          break;
-        default:
-          print("Opção inválida! Tente novamente.");
-          break;
-      }
-    } while (opcao !== "0");
+            
+            console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🎉 Email alterado com sucesso!      ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        }
+    } catch (error) {
+        console.log(`\x1b[31m⚠️ ${error.message}\x1b[0m`);
+    }
+    
+    getData("\nPressione Enter para continuar...");
+  }
+
+  private alterarFoto(): void {
+    console.log('\n🖼️  Escolha sua nova foto de perfil:');
+    const novaFoto = choosePhoto();
+    
+    this._perfilAtual!.foto = novaFoto;
+    salvarDadosPerfis(this._redeSocial.listarPerfis());
+    
+    console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🎉 Foto de perfil atualizada!       ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    
+    getData("\nPressione Enter para continuar...");
+  }
+
+  private alterarSenha(): void {
+    if (validations.validationTrocarSenha(this._perfilAtual!.senha)) {
+        const novaSenha = getData("\x1b[34m🔐 Insira a nova senha: \x1b[0m");
+        
+        this._perfilAtual!.senha = novaSenha;
+        salvarDadosPerfis(this._redeSocial.listarPerfis());
+        
+        console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🎉 Senha alterada com sucesso!      ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    }
+    
+    getData("\nPressione Enter para continuar...");
+  }
+
+  private desativarConta(): void {
+    const confirmacao = getData("\x1b[31m❗ Tem certeza que deseja desativar sua conta? (s/n): \x1b[0m");
+    
+    if (confirmacao.toLowerCase() === 's') {
+        this._redeSocial.desativarPerfil(this._perfilAtual!.apelido);
+        this._perfilAtual = null;
+        this._isLoggedIn = false;
+        salvarDadosPerfis(this._redeSocial.listarPerfis());
+        
+        console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║     ❌ Conta desativada com sucesso!    ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        
+        this.start();
+    } else {
+        print("\x1b[32m↩ Operação cancelada. ↩\x1b[0m");
+    }
   }
 }
 
