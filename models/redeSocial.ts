@@ -3,6 +3,7 @@ import {
   carregarDadosPerfis,
   carregarDadosPublicacoes,
   getData,
+  salvarPublicacoes,
 } from "../utils/auxFunctions";
 import * as aux from "../utils/auxFunctions";
 import { Perfil } from "./perfil";
@@ -121,27 +122,39 @@ export class RedeSocial {
   }
 
   //PUBLICACOES
-  public criarPublicacao(apelidoPerfil: string): Publicacao | void {
-    const perfilAssociado = this.buscarPerfil(apelidoPerfil);
-
-    if (!perfilAssociado) {
-      console.log("Perfil não encontrado.");
-      return;
+  public criarPublicacao(apelidoAutor: string): Publicacao | null {
+    const perfil = this.buscarPerfil(apelidoAutor);
+    
+    if (!perfil || !perfil.stats) {
+        console.log("Não é possível criar publicação.");
+        return null;
     }
 
-    const conteudo = aux.getData("Escreva sua publicação: ");
+    try {
+        const novaPublicacao = new Publicacao(
+            ulid(),
+            getData("Digite o conteúdo da publicação (máximo 180 caracteres): "),
+            new Date(),
+            perfil.id
+        );
 
-    const novaPublicacao = new Publicacao(
-      ulid(),
-      conteudo,
-      new Date(),
-      perfilAssociado.id
-    );
-    perfilAssociado.adicionarPublicacao(novaPublicacao);
+        // Verifica se a publicação já existe
+        const publicacaoExistente = this._publicacoesPostadas.find(
+            p => p.id === novaPublicacao.id
+        );
 
-    this._publicacoesPostadas.push(novaPublicacao);
-    console.log("Publicação criada com sucesso!");
-    return novaPublicacao;
+        if (!publicacaoExistente) {
+            this._publicacoesPostadas.push(novaPublicacao);
+            perfil.adicionarPublicacao(novaPublicacao);
+            
+            salvarPublicacoes(this._publicacoesPostadas);
+        }
+        
+        return novaPublicacao;
+    } catch (error) {
+        console.log(error.message);
+        return null;
+    }
   }
 
   private estaAssociada(publicacao: Publicacao): boolean {
@@ -156,59 +169,56 @@ export class RedeSocial {
     this._publicacoesPostadas.push(publicacao);
   }
 
-  listarPublicacoes(apelido: string): Publicacao[] {
-    // Return the list of publicações for the given user
-    return this._publicacoesPostadas.filter((publicacao) => {
-      const perfil = this.buscarPerfilPorID(publicacao["_perfilAssociado"]);
-      return perfil?.apelido === apelido;
-    });
+  public listarPublicacoes(apelidoAutor: string): Publicacao[] {
+    const perfil = this.buscarPerfil(apelidoAutor);
+    
+    if (!perfil) return [];
+
+    return this._publicacoesPostadas.filter(p => p.perfilAssociado === perfil.id);
   }
 
-  listarTodasPublicacoes(): Publicacao[] {
-    // Return the list of all publicações
+  public listarTodasPublicacoes(): Publicacao[] {
     return this._publicacoesPostadas;
   }
 
-  public editarPublicacao(
-    apelidoPerfil: string,
-    idPublicacao: string,
-    novoConteudo: string
-  ): boolean {
-    const perfil = this.buscarPerfil(apelidoPerfil);
+  public editarPublicacao(apelidoAutor: string, idPublicacao: string, novoConteudo: string): boolean {
+    const perfil = this.buscarPerfil(apelidoAutor);
+    
     if (!perfil) return false;
 
-    const publicacao = this.buscarPublicacao(idPublicacao);
-    if (!publicacao || publicacao["_perfilAssociado"] !== perfil["_id"]) {
-      console.log(
-        !publicacao || publicacao["_perfilAssociado"] !== perfil["_id"]
-      );
+    const publicacao = this._publicacoesPostadas.find(p => p.id === idPublicacao);
+    
+    if (!publicacao || publicacao.perfilAssociado !== perfil.id) return false;
 
+    try {
+        publicacao.conteudo = novoConteudo;
+        
+        salvarPublicacoes(this._publicacoesPostadas);
+        
+        return true;
+    } catch (error) {
+        console.log(error.message);
+        return false;
+    }
+  }
+
+  public deletarPublicacao(apelidoAutor: string, idPublicacao: string): boolean {
+    const perfil = this.buscarPerfil(apelidoAutor);
+    
+    if (!perfil) return false;
+
+    const indexPublicacao = this._publicacoesPostadas.findIndex(p => p.id === idPublicacao);
+    
+    if (indexPublicacao === -1 || 
+        this._publicacoesPostadas[indexPublicacao].perfilAssociado !== perfil.id) {
       return false;
     }
 
-    publicacao["_conteudo"] = novoConteudo;
-
-    console.log(publicacao);
-
-    return true;
-  }
-
-  public deletarPublicacao(
-    apelidoPerfil: string,
-    idPublicacao: string
-  ): boolean {
-    const perfil = this.buscarPerfil(apelidoPerfil);
-    if (!perfil) return false;
-
-    const index = perfil.publicacoes.findIndex(
-      (p) => p["_id"] === idPublicacao
-    );
-    if (index === -1) return false;
-
-    perfil.publicacoes.splice(index, 1);
-    this._publicacoesPostadas = this._publicacoesPostadas.filter(
-      (p) => p["_id"] !== idPublicacao
-    );
+    this._publicacoesPostadas.splice(indexPublicacao, 1);
+    perfil.removerPublicacao(idPublicacao);
+    
+    salvarPublicacoes(this._publicacoesPostadas);
+    
     return true;
   }
 
@@ -219,50 +229,98 @@ export class RedeSocial {
   }
 
   public processarSolicitacao(
-    apelidoUsuario: string,
-    apelidoRemetente: string,
+    apelidoDestinatario: string, 
+    apelidoRemetente: string, 
     aceitar: boolean
-  ): void {
-    const usuario = this.buscarPerfil(apelidoUsuario);
-    const remetente = this.buscarPerfil(apelidoRemetente);
+  ): boolean {
+    const perfilDestinatario = this.buscarPerfil(apelidoDestinatario);
+    const perfilRemetente = this.buscarPerfil(apelidoRemetente);
 
-    console.log(apelidoRemetente);
-
-    if (usuario && remetente) {
-      if (aceitar) {
-        // Evita que o usuário adicione a si mesmo
-        if (apelidoUsuario !== apelidoRemetente) {
-          usuario.adicionarAmigo(apelidoRemetente); // Adiciona o remetente à lista de amigos do usuário
-          remetente.adicionarAmigo(apelidoUsuario); // Adiciona o usuário à lista de amigos do remetente
-        } else {
-          console.log("Você não pode adicionar a si mesmo como amigo.");
-        }
-
-        // Remove a solicitação de amizade
-        usuario.solicitacoesAmizade = usuario.solicitacoesAmizade.filter(
-          (apelido) => apelido !== apelidoRemetente
-        );
-      } else {
-        // Caso a solicitação seja rejeitada, remove da lista de solicitações
-        usuario.solicitacoesAmizade = usuario.solicitacoesAmizade.filter(
-          (apelido) => apelido !== apelidoRemetente
-        );
-      }
+    if (!perfilDestinatario || !perfilRemetente) {
+        console.log("Perfil não encontrado.");
+        return false;
     }
+
+    // Remove a solicitação independente do resultado
+    perfilDestinatario.solicitacoesAmizade = perfilDestinatario.solicitacoesAmizade.filter(
+        apelido => apelido !== apelidoRemetente
+    );
+
+    if (aceitar) {
+        // Verifica se já são amigos antes de adicionar
+        if (!perfilDestinatario.amigos.includes(apelidoRemetente) &&
+            !perfilRemetente.amigos.includes(apelidoDestinatario)) {
+            
+            perfilDestinatario.adicionarAmigo(apelidoRemetente);
+            perfilRemetente.adicionarAmigo(apelidoDestinatario);
+            
+            console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🤝 Amizade confirmada com sucesso!  ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+            
+            return true;
+        } else {
+            console.log(`
+\x1b[33m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Vocês já são amigos!               ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+            return false;
+        }
+    }
+
+    return false;
   }
+
   //INTERAÇÕES
 
   // SOLICITAÇÕES DE AMIZADE
-  public enviarSolicitacaoAmizade(
-    apelidoRemetente: string,
-    apelidoDestinatario: string
-  ): void {
-    let remetente = this.buscarPerfil(apelidoRemetente);
-    let destinatario = this.buscarPerfil(apelidoDestinatario);
+  public enviarSolicitacao(apelidoRemetente: string, apelidoDestinatario: string): boolean {
+    const perfilRemetente = this.buscarPerfil(apelidoRemetente);
+    const perfilDestinatario = this.buscarPerfil(apelidoDestinatario);
 
-    if (remetente && destinatario) {
-      destinatario.addCaixaDeSolicitacoes(apelidoRemetente);
+    if (!perfilRemetente || !perfilDestinatario) {
+        console.log("Perfil não encontrado.");
+        return false;
     }
+
+    // Verifica se já são amigos
+    if (perfilRemetente.amigos.includes(apelidoDestinatario)) {
+        console.log(`
+\x1b[33m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Vocês já são amigos!               ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        return false;
+    }
+
+    // Verifica se já existe solicitação pendente
+    if (perfilDestinatario.solicitacoesAmizade.includes(apelidoRemetente)) {
+        console.log(`
+\x1b[33m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Solicitação já enviada!            ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        return false;
+    }
+
+    // Adiciona a solicitação
+    perfilDestinatario.addCaixaDeSolicitacoes(apelidoRemetente);
+    
+    console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     📨 Solicitação enviada com sucesso! ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+
+    return true;
   }
 
   // public aceitarSolicitacaoAmizade(

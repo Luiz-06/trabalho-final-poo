@@ -141,12 +141,64 @@ const salvarDadosPublicacoes = (publicacoes: Publicacao[]) => {
   fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), "utf-8");
 };
 
-const carregarDadosPublicacoes = () => {
+const carregarDadosPublicacoes = (): Publicacao[] => {
   const filePath = path.join(process.cwd(), "data.json");
 
-  const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  try {
+    const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+    
+    // Verifica se existe a propriedade publicacao
+    if (!data.data.publicacao) {
+      data.data.publicacao = [];
+      fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+    }
 
-  return data.data.publicacao;
+    // Converte os dados para objetos Publicacao
+    return data.data.publicacao.map((pub: any) => 
+      new Publicacao(
+        pub._id, 
+        pub._conteudo, 
+        new Date(pub._dataHora), 
+        pub._perfilAssociado
+      )
+    );
+  } catch (error) {
+    console.error("Erro ao carregar publicações:", error);
+    return [];
+  }
+};
+
+export const salvarPublicacoes = (publicacoes: Publicacao[]) => {
+  const filePath = path.join(process.cwd(), "data.json");
+
+  try {
+    const jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+    
+    // Mapeia as novas publicações para o formato correto
+    const novasPublicacoes = publicacoes.map(pub => ({
+      _id: pub.id,
+      _conteudo: pub.conteudo,
+      _dataHora: pub.dataHora,
+      _perfilAssociado: pub.perfilAssociado
+    }));
+
+    // Verifica se já existe uma lista de publicações
+    if (!jsonData.data.publicacao) {
+      jsonData.data.publicacao = [];
+    }
+
+    // Remove publicações duplicadas
+    const publicacoesUnicas = novasPublicacoes.filter(novaPub => 
+      !jsonData.data.publicacao.some((existente: any) => existente._id === novaPub._id)
+    );
+
+    // Adiciona as novas publicações
+    jsonData.data.publicacao.push(...publicacoesUnicas);
+
+    fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), "utf-8");
+  } catch (error) {
+    console.error("Erro ao salvar publicações:", error);
+  }
 };
 
 export {

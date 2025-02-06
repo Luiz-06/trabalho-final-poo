@@ -8,7 +8,10 @@
         "_foto": "🥰",
         "_senha": "1",
         "_stats": true,
-        "_amigos": [],
+        "_amigos": [
+          "gisele",
+          "luiz"
+        ],
         "_publicacoes": [],
         "_solicitacoesAmizade": []
       },
@@ -29,8 +32,10 @@
         "_email": "3",
         "_foto": "😃",
         "_senha": "3",
-        "_stats": true,
-        "_amigos": [],
+        "_stats": false,
+        "_amigos": [
+          "1"
+        ],
         "_publicacoes": [],
         "_solicitacoesAmizade": []
       },
@@ -41,7 +46,9 @@
         "_foto": "🙃",
         "_senha": "4",
         "_stats": true,
-        "_amigos": [],
+        "_amigos": [
+          "1"
+        ],
         "_publicacoes": [],
         "_solicitacoesAmizade": []
       }

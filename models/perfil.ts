@@ -99,7 +99,11 @@ export class Perfil {
   }
 
   public adicionarAmigo(amigo: string): void {
-    this._amigos.push(amigo);
+    if (!this._amigos.includes(amigo)) {
+        this._amigos.push(amigo);
+    } else {
+        console.log(`\x1b[33m⚠️ ${amigo} já está na sua lista de amigos! ⚠️\x1b[0m`);
+    }
   }
 
   public removerAmigo(apelidoProcurado: string): void {
@@ -134,9 +138,13 @@ export class Perfil {
   }
 
   public removerPublicacao(id: string): void {
-    this._publicacoes = this._publicacoes.filter(
-      (publicacoes) => publicacoes.id !== id
+    const indexPublicacao = this._publicacoes.findIndex(
+      (publicacao) => publicacao.id === id
     );
+    
+    if (indexPublicacao !== -1) {
+      this._publicacoes.splice(indexPublicacao, 1);
+    }
   }
 
   public listarPublicacoes(): Publicacao[] {

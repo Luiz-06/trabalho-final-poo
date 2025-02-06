@@ -105,7 +105,12 @@ var Perfil = /** @class */ (function () {
         configurable: true
     });
     Perfil.prototype.adicionarAmigo = function (amigo) {
-        this._amigos.push(amigo);
+        if (!this._amigos.includes(amigo)) {
+            this._amigos.push(amigo);
+        }
+        else {
+            console.log("\u001B[33m\u26A0\uFE0F ".concat(amigo, " j\u00E1 est\u00E1 na sua lista de amigos! \u26A0\uFE0F\u001B[0m"));
+        }
     };
     Perfil.prototype.removerAmigo = function (apelidoProcurado) {
         this._amigos = this._amigos.filter(function (apelido) { return apelido !== apelidoProcurado; });
@@ -132,7 +137,10 @@ var Perfil = /** @class */ (function () {
         this._publicacoes.push(publicacao);
     };
     Perfil.prototype.removerPublicacao = function (id) {
-        this._publicacoes = this._publicacoes.filter(function (publicacoes) { return publicacoes.id !== id; });
+        var indexPublicacao = this._publicacoes.findIndex(function (publicacao) { return publicacao.id === id; });
+        if (indexPublicacao !== -1) {
+            this._publicacoes.splice(indexPublicacao, 1);
+        }
     };
     Perfil.prototype.listarPublicacoes = function () {
         var publicacoesCopiadas = [];
