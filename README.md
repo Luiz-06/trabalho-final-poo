@@ -49,7 +49,7 @@ Bem-vindo ao repositório do **Projeto Rede Social Interativa**! Este projeto te
 ## 🛠️ Tecnologias Utilizadas
 
 - **Linguagem:** Typescript
-- **Persistência:** Arquivos txt 📂
+- **Persistência:** Arquivos json 📂
 - **Interface:** Linha de comando interativa (CLI) 🖥️
 - **Estrutura:** Orientação a objetos com herança e boas práticas de encapsulamento.
 

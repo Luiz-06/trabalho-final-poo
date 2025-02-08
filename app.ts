@@ -9,9 +9,11 @@ import {
   print,
   salvarDadosPerfis,
   salvarDadosPublicacoes,
-  lerDadosPerfis
+  lerDadosPerfis,
 } from "./utils/auxFunctions";
 import * as validations from "./validations/validations";
+import * as vals from "./utils/validations";
+
 
 import { ulid } from "ulid";
 
@@ -27,16 +29,28 @@ class App {
   }
 
   public start(): void {
+    console.clear();
+    console.log(`
+\x1b[36m╔══════════════════════════════════════════╗
+║ 🌐 Bem-vindo à Rede Social Interativa 🌐 ║
+╠══════════════════════════════════════════╣
+║                                          ║
+║ \x1b[33m✨ Conecte-se, Compartilhe, Interaja! ✨\x1b[36m ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+
+    console.log(`
+\x1b[34m┌─────────────────────────────────────────┐
+│ 🔐 Opções de Acesso                     │
+├─────────────────────────────────────────┤
+│ \x1b[33m1\x1b[34m - \x1b[32mLogin                               \x1b[34m│
+│ \x1b[33m2\x1b[34m - \x1b[32mCriar Nova Conta                    \x1b[34m│
+│ \x1b[33m3\x1b[34m - \x1b[33mRecuperar Senha                     \x1b[34m│
+│ \x1b[33m0\x1b[34m - \x1b[31mSair                                \x1b[34m│
+└─────────────────────────────────────────┘\x1b[0m`);
+
     while (!this._isLoggedIn) {
-      console.log(`
-Bem vindo à Rede Social!
-Por favor, escolha uma das opções abaixo para continuar:
-1 - Login
-2 - Criar Conta
-3 - Recuperar Senha
-0 - Sair
-      `);
-      const opcao = getData("Digite a opção desejada: ");
+      const opcao = getData("\n➤ Escolha uma opção: ");
 
       switch (opcao) {
         case "1":
@@ -49,47 +63,113 @@ Por favor, escolha uma das opções abaixo para continuar:
         case "3":
           this.recuperarSenha();
           break;
-        case "4": // remover essa merda, so ta pq sou preguiçoso
+        case "4":
+          console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🕵️ Modo de Login Secreto Ativado!     ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+          
           const perfil: Perfil | undefined = this._redeSocial.buscarPerfil("1");
-          if (perfil){
-            print("Login realizado com sucesso!");
+          
+          if (perfil && perfil.stats) {
+            console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🎉 Login automático realizado!       ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+            
             this._perfilAtual = perfil;
             this._isLoggedIn = true;
+          } else {
+            console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Perfil de teste não encontrado       ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
           }
-          break
+          break;
         case "0":
-          print("Aplicação encerrada!");
+          this.sairDoSistema();
           return;
         default:
-          print("Opção inválida! Tente novamente.");
+          print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
       }
     }
 
     this.menuPrincipal();
   }
 
+  private sairDoSistema(): void {
+    console.log(`
+\x1b[31m╔══════════════════════════════════╗
+║                                          ║
+║        🌅 Até a próxima! 👋              ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    
+    process.exit(0);
+  }
+
   private login(): void {
-    const apelido = getData("Digite seu nome de usuário: ");
-    const senha = getData("Digite sua senha: ");
+    console.log('\n\x1b[34m🔐 Autenticação de Usuário \x1b[0m');
+    const apelido = getData("👤 Nome de usuário: ");
+    const senha = getData("🔑 Senha: ");
+    
     const perfil: Perfil | undefined = this._redeSocial.buscarPerfil(apelido);
 
     if (perfil && perfil.stats) {
       if (apelido === perfil.apelido && senha === perfil.senha) {
-        print("Login realizado com sucesso!");
+        console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🎉 Login realizado com sucesso!      ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        
         this._perfilAtual = perfil;
         this._isLoggedIn = true;
-        return
+        return;
       }
-    } 
-    console.log("Usuário ou senha inválidos. Tente novamente.");
-     // fiz isso para que quando nao haja perfil, o usuário não saiba disso, porque se ele soubesse ele poderia testar ate descobrir usuários que existem 
+    }
+    
+    console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Usuário ou senha inválidos           ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
   }
 
   private criarConta(): void {
-    const apelido = getData("Escolha um nome de usuário: ");
-    validations.possiveisErrosUsername(apelido)
-    const senha = getData("Escolha uma senha: ");
-    const email = getData("Digite seu email: ");
+    console.log('\n\x1b[34m📝 Criar Nova Conta \x1b[0m');
+    
+    const apelido = getData("👤 Escolha um nome de usuário: ");
+    try {
+      validations.possiveisErrosUsername(apelido);
+    } catch (error) {
+      console.log(`\x1b[31m⚠️ ${error.message}\x1b[0m`);
+      return;
+    }
+    const senha = getData("🔐 Escolha uma senha: ");
+    
+    // let senha: string;
+    // do {
+    //     senha = getData("🔐 Escolha uma senha (mínimo 8 caracteres): ");
+    //     try {
+    //         vals.validationSenha(senha);
+    //         break;
+    //     } catch (error) {
+    //         console.log(error.message);
+    //     }
+    // } while (true);
+
+    const email = getData("📧 Digite seu email: ");
+    
+    console.log('\n🖼️ Escolha sua foto de perfil:');
     const foto = choosePhoto();
 
     const novoPerfil: Perfil = new Perfil(
@@ -103,9 +183,17 @@ Por favor, escolha uma das opções abaixo para continuar:
       [],
       []
     );
+    
     this._redeSocial.adicionarPerfil(novoPerfil);
 
-    print(`Conta criada com sucesso! Bem-vindo, ${apelido}!`);
+    console.log(`
+\x1b[32m╔══════════════════════════════════╗
+║                                          ║
+║     🎉 Conta criada com sucesso!         ║
+║     Bem-vindo, ${apelido}!               ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+
     this._isLoggedIn = true;
     this._perfilAtual = novoPerfil;
   }
@@ -133,42 +221,72 @@ Por favor, escolha uma das opções abaixo para continuar:
     }
   }
 
+  private criarLinha(caractere: string = '-', comprimento: number = 40): string {
+    return caractere.repeat(comprimento);
+  }
+
+  private centralizarTexto(texto: string, largura: number = 40): string {
+    const espacosEsquerda = Math.floor((largura - texto.length) / 2);
+    const espacosDireita = largura - texto.length - espacosEsquerda;
+    return ' '.repeat(espacosEsquerda) + texto + ' '.repeat(espacosDireita);
+  }
+
+  private exibirTitulo(titulo: string): void {
+    console.log('\n' + this.criarLinha('='));
+    console.log(this.centralizarTexto(titulo.toUpperCase()));
+    console.log(this.criarLinha('=') + '\n');
+  }
+
   private menuPrincipal(): void {
     let opcao: string = "";
     let appOn: boolean = true;
 
     do {
-      clear();
-      console.log(`
-\nBem vindo ${this._perfilAtual?.apelido}
-Menu Principal:
-1 - Configurações do Perfil
-2 - Publicações
-3 - Solicitações
-0 - Sair
-      `);
+        clear();
+        this.exibirTitulo(`Bem-vindo, ${this._perfilAtual?.apelido}`);
+        
+        console.log(`
+\x1b[36m┌─────────────────────────────────────────┐
+│ 🏠 Menu Principal                      │
+├─────────────────────────────────────────┤
+│ \x1b[33m1\x1b[36m - \x1b[34mConfigurar Perfil            \x1b[36m│
+│ \x1b[33m2\x1b[36m - \x1b[34mPublicações                 \x1b[36m│
+│ \x1b[33m3\x1b[36m - \x1b[34mInterações Sociais          \x1b[36m│
+│ \x1b[33m0\x1b[36m - \x1b[31m↪ Deslogar                  \x1b[36m│
+└─────────────────────────────────────────┘\x1b[0m`);
 
-      opcao = getData("Digite a opção desejada: ");
+        opcao = getData("\n➤ Escolha uma opção: ");
 
-      switch (opcao) {
-        case "1":
-          this.menuPerfil();
-          break;
-        case "2":
-          this.menuPublicacoes();
-          break;
-        case "3":
-          this.menuSolicitacoes();
-          break;
-        case "0":
-          print("Você saiu do sistema. Até logo!");
-          appOn = false;
-          break;
-        default:
-          print("Opção inválida! Tente novamente.");
-          break;
-      }
-    } while (appOn === true);
+        switch (opcao) {
+            case "1":
+                this.menuAlterarPerfil();
+                break;
+            case "2":
+                this.menuPublicacoes();
+                break;
+            case "3":
+                this.menuInteracoesSociais();
+                break;
+            case "0":
+                console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     👋 Deslogado com sucesso!           ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+                
+                this._perfilAtual = null;
+                this._isLoggedIn = false;
+                appOn = false;
+                break;
+            default:
+                print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
+                break;
+        }
+    } while (appOn);
+
+    // Volta para a tela de opções de acesso
+    this.start();
   }
 
   private menuPerfil(): void {
@@ -176,15 +294,19 @@ Menu Principal:
 
     do {
       clear();
+      this.exibirTitulo('Configurações do Perfil');
+      
       console.log(`
-\nConfigurações do Perfil:
-1 - Visualizar Perfil
-2 - Alterar Perfil
-3 - Deletar Perfil
-0 - Voltar ao Menu Principal
-      `);
+\x1b[36m┌─────────────────────────────────┐
+│ 👤 Opções de Perfil             │
+├─────────────────────────────────┤
+│ \x1b[33m1\x1b[36m - \x1b[34mVisualizar Perfil        \x1b[36m│
+│ \x1b[33m2\x1b[36m - \x1b[34mAlterar Perfil           \x1b[36m│
+│ \x1b[33m3\x1b[36m - \x1b[31mDeletar Perfil           \x1b[36m│
+│ \x1b[33m0\x1b[36m - \x1b[32mVoltar                   \x1b[36m│
+└─────────────────────────────────┘\x1b[0m`);
 
-      opcao = getData("Digite a opção desejada: ");
+      opcao = getData("\n➤ Escolha uma opção: ");
 
       switch (opcao) {
         case "1":
@@ -194,24 +316,21 @@ Menu Principal:
           this.menuAlterarPerfil();
           break;
         case "3":
-          if(validations.validationTrocarSenha(this._perfilAtual!.senha)){
-            print("Deletando perfil...");
+          if (validations.validationTrocarSenha(this._perfilAtual!.senha)) {
+            print("\x1b[31m🗑 Deletando perfil... 🗑\x1b[0m");
             this._redeSocial.desativarPerfil(this._perfilAtual!.apelido);
             this._perfilAtual = null;
             this._isLoggedIn = false;
             salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("...");
-            print("...");
-            print("Perfil Deletado!\n");
-            clear();
+            print("\x1b[31m✘ Perfil Deletado! ✘\x1b[0m");
             this.start();
           }
           return;
         case "0":
-          print("Voltando ao Menu Principal...");
+          print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
           break;
         default:
-          print("Opção inválida! Tente novamente.");
+          print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
           break;
       }
     } while (opcao !== "0");
@@ -221,79 +340,376 @@ Menu Principal:
     let opcao: string = "";
 
     do {
-      clear();
-      console.log(`
-\nPublicações:
-1 - Visualizar Publicação
-2 - Criar Publicação
-3 - Alterar Publicação
-4 - Deletar Publicação
-5 - Visualizar Minhas Publicações
+        clear();
+        this.exibirTitulo('Gerenciamento de Publicações');
+        
+        console.log(`
+\x1b[36m┌─────────────────────────────────────────┐
+│ 📝 Publicações                          │
+├─────────────────────────────────────────┤
+│ \x1b[33m1\x1b[36m - \x1b[34m➕ Criar Publicação            \x1b[36m│
+│ \x1b[33m2\x1b[36m - \x1b[34m📋 Listar Minhas Publicações   \x1b[36m│
+│ \x1b[33m3\x1b[36m - \x1b[34m✏️  Editar Publicação          \x1b[36m│
+│ \x1b[33m4\x1b[36m - \x1b[31m🗑 Excluir Publicação         \x1b[36m│
+│ \x1b[33m5\x1b[36m - \x1b[34m👀 Ver Todas Publicações      \x1b[36m│
+│ \x1b[33m0\x1b[36m - \x1b[32m↩ Voltar                      \x1b[36m│
+└─────────────────────────────────────────┘\x1b[0m`);
 
-0 - Voltar ao Menu Principal
-      `);
+        opcao = getData("\n➤ Escolha uma opção: ");
 
-      opcao = getData("Digite a opção desejada: ");
-
-      switch (opcao) {
-        case "1":
-          this.visualizarPublicacao();
-          break;
-        case "2":
-          this.criarPublicacao();
-          break;
-        case "3":
-          this.alterarPublicacao();
-          break;
-        case "4":
-          this.deletarPublicacao();
-          break;
-        case "5":
-          this.visualizarMinhasPublicacoes();
-          break;
-        case "0":
-          print("Voltando ao Menu Principal...");
-          break;
-        default:
-          print("Opção inválida! Tente novamente.");
-          break;
-      }
+        switch (opcao) {
+            case "1":
+                this.criarPublicacao();
+                break;
+            case "2":
+                this.listarMinhasPublicacoes();
+                break;
+            case "3":
+                this.editarPublicacao();
+                break;
+            case "4":
+                this.excluirPublicacao();
+                break;
+            case "5":
+                this.verTodasPublicacoes();
+                break;
+            case "0":
+                print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
+                break;
+            default:
+                print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
+                break;
+        }
     } while (opcao !== "0");
+  }
+
+  private criarPublicacao(): void {
+    const novaPublicacao = this._redeSocial.criarPublicacao(this._perfilAtual!.apelido);
+    
+    if (novaPublicacao) {
+        console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🎉 Publicação criada com sucesso!   ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    } else {
+        console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║     ❌ Erro ao criar publicação         ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    }
+    
+    getData("\nPressione Enter para continuar...");
+  }
+
+  private listarMinhasPublicacoes(): void {
+    const publicacoes = this._redeSocial.listarPublicacoes(this._perfilAtual!.apelido);
+    
+    if (publicacoes.length === 0) {
+        console.log(`
+\x1b[33m╔══════════════════════════════════════════╗
+║                                          ║
+║     📭 Você ainda não tem publicações   ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    } else {
+        console.log('\n🗒️  Minhas Publicações:');
+        publicacoes.forEach((pub, index) => {
+            console.log(`
+\x1b[34m${index + 1}. 📝 ${pub.conteudo}
+   📅 ${pub.dataHora.toLocaleString()}
+            \x1b[0m`);
+        });
+    }
+    
+    getData("\nPressione Enter para continuar...");
+  }
+
+  private editarPublicacao(): void {
+    const publicacoes = this._redeSocial.listarPublicacoes(this._perfilAtual!.apelido);
+    
+    if (publicacoes.length === 0) {
+        console.log(`
+\x1b[33m╔══════════════════════════════════════════╗
+║                                          ║
+║     📭 Você não tem publicações para    ║
+║           editar                         ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        getData("\nPressione Enter para continuar...");
+        return;
+    }
+
+    console.log('\n🗒️  Escolha a publicação para editar:');
+    publicacoes.forEach((pub, index) => {
+        console.log(`\x1b[34m${index + 1}. ${pub.conteudo}\x1b[0m`);
+    });
+
+    const escolha = getNumber("\n➤ Digite o número da publicação: ") - 1;
+    
+    if (escolha < 0 || escolha >= publicacoes.length) {
+        print("\x1b[31m⚠️ Publicação inválida! ⚠️\x1b[0m");
+        return;
+    }
+
+    const publicacaoSelecionada = publicacoes[escolha];
+    const novoConteudo = getData("\x1b[34m✏️  Digite o novo conteúdo: \x1b[0m");
+
+    const sucesso = this._redeSocial.editarPublicacao(
+        this._perfilAtual!.apelido, 
+        publicacaoSelecionada.id, 
+        novoConteudo
+    );
+
+    if (sucesso) {
+        console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🎉 Publicação editada com sucesso!  ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    } else {
+        console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║     ❌ Erro ao editar publicação        ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    }
+
+    getData("\nPressione Enter para continuar...");
+  }
+
+  private excluirPublicacao(): void {
+    const publicacoes = this._redeSocial.listarPublicacoes(this._perfilAtual!.apelido);
+    
+    if (publicacoes.length === 0) {
+        console.log(`
+\x1b[33m╔══════════════════════════════════════════╗
+║                                          ║
+║     📭 Você não tem publicações para    ║
+║           excluir                        ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        getData("\nPressione Enter para continuar...");
+        return;
+    }
+
+    console.log('\n🗒️  Escolha a publicação para excluir:');
+    publicacoes.forEach((pub, index) => {
+        console.log(`\x1b[34m${index + 1}. ${pub.conteudo}\x1b[0m`);
+    });
+
+    const escolha = getNumber("\n➤ Digite o número da publicação: ") - 1;
+    
+    if (escolha < 0 || escolha >= publicacoes.length) {
+        print("\x1b[31m⚠️ Publicação inválida! ⚠️\x1b[0m");
+        return;
+    }
+
+    const publicacaoSelecionada = publicacoes[escolha];
+    const confirmacao = getData("\x1b[31m❗ Tem certeza que deseja excluir esta publicação? (s/n): \x1b[0m");
+
+    if (confirmacao.toLowerCase() === 's') {
+        const sucesso = this._redeSocial.deletarPublicacao(
+            this._perfilAtual!.apelido, 
+            publicacaoSelecionada.id
+        );
+
+        if (sucesso) {
+            console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🗑 Publicação excluída com sucesso! ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        } else {
+            console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║     ❌ Erro ao excluir publicação       ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        }
+    } else {
+        print("\x1b[32m↩ Operação cancelada. ↩\x1b[0m");
+    }
+
+    getData("\nPressione Enter para continuar...");
+  }
+
+  private verTodasPublicacoes(): void {
+    const todasPublicacoes = this._redeSocial.listarTodasPublicacoes();
+    
+    if (todasPublicacoes.length === 0) {
+        console.log(`
+\x1b[33m╔══════════════════════════════════════════╗
+║                                          ║
+║     📭 Não existem publicações          ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    } else {
+        console.log('\n🌐 Todas as Publicações:');
+        todasPublicacoes.forEach((pub, index) => {
+            const perfil = this._redeSocial.buscarPerfilPorID(pub.perfilAssociado);
+            console.log(`
+\x1b[34m${index + 1}. 👤 ${perfil?.apelido || 'Usuário Removido'}
+   📝 ${pub.conteudo}
+   📅 ${pub.dataHora.toLocaleString()}
+            \x1b[0m`);
+        });
+    }
+    
+    getData("\nPressione Enter para continuar...");
   }
 
   private menuSolicitacoes(): void {
     let opcao: string = "";
 
     do {
-      clear();
-      console.log(`
-\nSolicitações:
-1 - Visualizar Solicitações
-2 - Aceitar Solicitação
-3 - Recusar Solicitação
-0 - Voltar ao Menu Principal
-      `);
+        clear();
+        this.exibirTitulo('Gerenciamento de Solicitações');
+        
+        console.log(`
+\x1b[36m┌─────────────────────────────────────────┐
+│ 👥 Solicitações de Amizade             │
+├─────────────────────────────────────────┤
+│ \x1b[33m1\x1b[36m - \x1b[34m👀 Visualizar Solicitações   \x1b[36m│
+│ \x1b[33m2\x1b[36m - \x1b[32m✅ Aceitar Solicitação       \x1b[36m│
+│ \x1b[33m3\x1b[36m - \x1b[31m❌ Recusar Solicitação       \x1b[36m│
+│ \x1b[33m4\x1b[36m - \x1b[34m➕ Enviar Solicitação        \x1b[36m│
+│ \x1b[33m0\x1b[36m - \x1b[32m↩ Voltar                     \x1b[36m│
+└─────────────────────────────────────────┘\x1b[0m`);
 
-      opcao = getData("Digite a opção desejada: ");
+        opcao = getData("\n➤ Escolha uma opção: ");
 
-      switch (opcao) {
-        case "1":
-          this.visualizarSolicitacoes();
-          break;
-        case "2":
-          this.aceitarSolicitacao();
-          break;
-        case "3":
-          this.recusarSolicitacao();
-          break;
-        case "0":
-          print("Voltando ao Menu Principal...");
-          break;
-        default:
-          print("Opção inválida! Tente novamente.");
-          break;
-      }
+        switch (opcao) {
+            case "1":
+                this.visualizarSolicitacoes();
+                break;
+            case "2":
+                this.aceitarSolicitacao();
+                break;
+            case "3":
+                this.recusarSolicitacao();
+                break;
+            case "4":
+                this.enviarSolicitacao();
+                break;
+            case "0":
+                print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
+                break;
+            default:
+                print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
+                break;
+        }
+        
+        salvarDadosPerfis(this._redeSocial.listarPerfis());
     } while (opcao !== "0");
+  }
+
+  private visualizarSolicitacoes(): void {
+    const solicitacoes = this._redeSocial.listarSolicitacoes(this._perfilAtual!.apelido);
+    
+    if (solicitacoes.length === 0) {
+        console.log(`
+\x1b[33m╔══════════════════════════════════════════╗
+║                                          ║
+║     📭 Você não tem solicitações        ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    } else {
+        console.log('\n👥 Solicitações de Amizade:');
+        solicitacoes.forEach((solicitacao, index) => {
+            console.log(`\x1b[34m${index + 1}. 👤 ${solicitacao}\x1b[0m`);
+        });
+    }
+    
+    getData("\nPressione Enter para continuar...");
+  }
+
+  private aceitarSolicitacao(): void {
+    const solicitacoes = this._perfilAtual?.solicitacoesAmizade;
+    if (solicitacoes) {
+      if (solicitacoes.length === 0) {
+        console.log("Você não tem solicitações de amizade");
+      } else {
+        solicitacoes.forEach((perfil, index) => {
+          console.log(`Id: ${index + 1} - Usuário: ${perfil}`);
+        });
+
+        const index = getNumber(
+          "\nDigite o ID do usuário que deseja aceitar a solicitação de amizada: "
+        );
+
+        const apelidoPerfil = solicitacoes[index - 1];
+
+        this._redeSocial.processarSolicitacao(
+          this._perfilAtual!.apelido,
+          apelidoPerfil,
+          true
+        );
+      }
+    }
+  }
+
+  private recusarSolicitacao(): void {
+    const solicitacoes = this._perfilAtual?.solicitacoesAmizade;
+    if (solicitacoes) {
+      if (solicitacoes.length === 0) {
+        console.log("Você não tem solicitações de amizade");
+      } else {
+        solicitacoes.forEach((perfil, index) => {
+          console.log(`Id: ${index + 1} - Usuário: ${perfil}`);
+        });
+
+        const index = getNumber(
+          "\nDigite o ID do usuário que deseja aceitar a solicitação de amizada: "
+        );
+
+        const apelidoPerfil = solicitacoes[index - 1];
+
+        this._redeSocial.processarSolicitacao(
+          this._perfilAtual!.apelido,
+          apelidoPerfil,
+          false
+        );
+      }
+    }
+  }
+
+  private enviarSolicitacao(): void {
+    try {
+      const usuariosAtuais = this._redeSocial.listarPerfis();
+      usuariosAtuais.forEach((perfil, index) => {
+        if (perfil["_apelido"] !== this._perfilAtual?.apelido) {
+          const isAmigo = this._perfilAtual?.amigos.includes(perfil["_apelido"]);
+          console.log(`Id: ${index + 1} - Usuário: ${perfil["_apelido"]}${isAmigo ? ' (amigos)' : ''}`);
+        }
+      });
+
+      const index = getNumber(
+        "\nDigite o ID do usuário que deseja adicionar como amigo: "
+      );
+
+      // const idPerfil = usuariosAtuais[index - 1]["_id"];
+      const apelidoPerfil = usuariosAtuais[index - 1]["_apelido"];
+
+      this._redeSocial.enviarSolicitacao(
+        this._perfilAtual!.apelido,
+        apelidoPerfil
+      );
+    } catch (error) {
+      console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║     ❌ Erro ao enviar solicitação        ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    }
+    
+    getData("\nPressione Enter para continuar...");
   }
 
   private acessarPerfil(): void {
@@ -302,100 +718,298 @@ Menu Principal:
     }
   }
 
-  private alterarPerfil(): void {}
-
   private menuAlterarPerfil(): void {
     let opcao: string = "";
 
     do {
-      clear();
-      print(`
-O que deseja alterar?
-1 - Apelido
-2 - Email
-3 - Foto
-4 - Senha
-5 - Desativar conta
-0 - Voltar
-      `);
+        clear();
+        this.exibirTitulo('Alterar Perfil');
+        
+        console.log(`
+\x1b[36m┌─────────────────────────────────────────┐
+│ 🛠️  Configurações de Perfil             │
+├─────────────────────────────────────────┤
+│ \x1b[33m1\x1b[36m - \x1b[34m👤 Alterar Apelido            \x1b[36m│
+│ \x1b[33m2\x1b[36m - \x1b[34m📧 Alterar Email             \x1b[36m│
+│ \x1b[33m3\x1b[36m - \x1b[34m🖼️  Alterar Foto             \x1b[36m│
+│ \x1b[33m4\x1b[36m - \x1b[34m🔐 Alterar Senha             \x1b[36m│
+│ \x1b[33m5\x1b[36m - \x1b[31m❌ Desativar Conta            \x1b[36m│
+│ \x1b[33m0\x1b[36m - \x1b[32m↩ Voltar                     \x1b[36m│
+└─────────────────────────────────────────┘\x1b[0m`);
 
-      opcao = getData("Digite a opção desejada: ");
+        opcao = getData("\n➤ Escolha uma opção: ");
 
-      switch (opcao) {
-        case "1":
-          const novoApelido = getData("Insira o novo apelido: ");
-          if (validations.validationTrocarApelido(novoApelido)){
-            this._perfilAtual!.apelido = novoApelido
-            salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("Apelido trocado com sucesso")
-          }break
-        case "2":
-          const novoEmail = getData("Insira o novo email: ");
-          if (validations.validationEmail(novoEmail)){
-            this._perfilAtual!.apelido = novoEmail
-            salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("Email alterado com sucesso")
-          }break
-        case "3":
-          const novaFoto = choosePhoto();
-          this._perfilAtual!.foto = novaFoto;
-          salvarDadosPerfis(this._redeSocial.listarPerfis());
-          break;
-        case "4":
-          if(validations.validationTrocarSenha(this._perfilAtual!.senha)){
-            const novaSenha = getData("Insira o nova senha: ");
-            this._perfilAtual!.senha = novaSenha
-            salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("Senha alterada com sucesso")
-          }break;
-        case "5":
-          this._perfilAtual!.stats = false
-          print("Perfil desativado!")
-          break;
-        case "0":
-          print("Voltando ao Menu Principal...");
-          break;
-        default:
-          print("Opção inválida! Tente novamente.");
-          break;
-      }
+        switch (opcao) {
+            case "1":
+                this.alterarApelido();
+                break;
+            case "2":
+                this.alterarEmail();
+                break;
+            case "3":
+                this.alterarFoto();
+                break;
+            case "4":
+                this.alterarSenha();
+                break;
+            case "5":
+                this.desativarConta();
+                break;
+            case "0":
+                print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
+                break;
+            default:
+                print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
+                break;
+        }
     } while (opcao !== "0");
   }
 
-  private visualizarPublicacao(): void {
-    this._redeSocial.listarTodasPublicacoes()
+  // Métodos auxiliares para cada alteração
+  private alterarApelido(): void {
+    const novoApelido = getData("\x1b[34m👤 Insira o novo apelido: \x1b[0m");
+    
+    try {
+        if (validations.validationTrocarApelido(novoApelido)) {
+            this._perfilAtual!.apelido = novoApelido;
+            salvarDadosPerfis(this._redeSocial.listarPerfis());
+            
+            console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🎉 Apelido alterado com sucesso!    ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        }
+    } catch (error) {
+        console.log(`\x1b[31m⚠️ ${error.message}\x1b[0m`);
+    }
+    
+    getData("\nPressione Enter para continuar...");
   }
 
-  private visualizarMinhasPublicacoes(): void {
-    print(this._redeSocial.listarPublicacoes(this._perfilAtual!.apelido))
-    print("Visualizando publicação...");
+  private alterarEmail(): void {
+    const novoEmail = getData("\x1b[34m📧 Insira o novo email: \x1b[0m");
+    
+    try {
+        if (validations.validationEmail(novoEmail)) {
+            this._perfilAtual!.email = novoEmail;
+            salvarDadosPerfis(this._redeSocial.listarPerfis());
+            
+            console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🎉 Email alterado com sucesso!      ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        }
+    } catch (error) {
+        console.log(`\x1b[31m⚠️ ${error.message}\x1b[0m`);
+    }
+    
+    getData("\nPressione Enter para continuar...");
   }
 
-  private criarPublicacao(): void {
-    print("Criando publicação...");
-    let pub = this._redeSocial.criarPublicacao(this._perfilAtual!.apelido)
-    if (pub) salvarDadosPublicacoes(pub)
-    salvarDadosPerfis(this._redeSocial.listarPerfis())
+  private alterarFoto(): void {
+    console.log('\n🖼️  Escolha sua nova foto de perfil:');
+    const novaFoto = choosePhoto();
+    
+    this._perfilAtual!.foto = novaFoto;
+    salvarDadosPerfis(this._redeSocial.listarPerfis());
+    
+    console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🎉 Foto de perfil atualizada!       ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    
+    getData("\nPressione Enter para continuar...");
   }
 
-  private alterarPublicacao(): void {
-    print("Alterando publicação...");
+  private alterarSenha(): void {
+    if (validations.validationTrocarSenha(this._perfilAtual!.senha)) {
+      const novaSenha = getData("\x1b[34m🔐 Insira a nova senha: \x1b[0m");
+      
+      this._perfilAtual!.senha = novaSenha;
+      salvarDadosPerfis(this._redeSocial.listarPerfis());
+      
+      //     const senhaAtual = getData("\x1b[34m🔐 Insira a senha atual: \x1b[0m");
+      
+      //     if (senhaAtual !== this._perfilAtual!.senha) {
+        //         console.log(`
+        // \x1b[31m╔══════════════════════════════════════════╗
+        // ║                                          ║
+        // ║   ⚠️ Senha atual incorreta               ║
+// ║                                          ║
+// ╚══════════════════════════════════════════╝\x1b[0m`);
+//         return;
+//     }
+
+//     let novaSenha: string;
+//     do {
+//         novaSenha = getData("\x1b[34m🔐 Insira a nova senha (mínimo 8 caracteres): \x1b[0m");
+//         try {
+//             vals.validationSenha(novaSenha);
+//             break;
+//         } catch (error) {
+  //             console.log(error.message);
+  //         }
+  //     } while (true);
+  
+  //     this._perfilAtual!.senha = novaSenha;
+  //     salvarDadosPerfis(this._redeSocial.listarPerfis());
+  
+  //     console.log(`
+  console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🎉 Senha alterada com sucesso!      ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    }
+    
+    getData("\nPressione Enter para continuar...");
   }
 
-  private deletarPublicacao(): void {
-    print("Deletando publicação...");
+  private desativarConta(): void {
+    const confirmacao = getData("\x1b[31m❗ Tem certeza que deseja desativar sua conta? (s/n): \x1b[0m");
+    
+    if (confirmacao.toLowerCase() === 's') {
+        this._redeSocial.desativarPerfil(this._perfilAtual!.apelido);
+        this._perfilAtual = null;
+        this._isLoggedIn = false;
+        salvarDadosPerfis(this._redeSocial.listarPerfis());
+        
+        console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║     ❌ Conta desativada com sucesso!    ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        
+        this.start();
+    } else {
+        print("\x1b[32m↩ Operação cancelada. ↩\x1b[0m");
+    }
   }
 
-  private visualizarSolicitacoes(): void {
-    print("Visualizando solicitações...");
+  private menuInteracoesSociais(): void {
+    let opcao: string = "";
+
+    do {
+        clear();
+        this.exibirTitulo('Interações Sociais');
+        
+        console.log(`
+\x1b[36m┌─────────────────────────────────────────┐
+│ 👥 Interações Sociais                   │
+├─────────────────────────────────────────┤
+│ \x1b[33m1\x1b[36m - \x1b[34m👀 Visualizar Lista de Amigos   \x1b[36m│
+│ \x1b[33m2\x1b[36m - \x1b[31m🗑 Remover Amigo               \x1b[36m│
+│ \x1b[33m3\x1b[36m - \x1b[34m👥 Solicitações de Amizade     \x1b[36m│
+│ \x1b[33m0\x1b[36m - \x1b[32m↩ Voltar                      \x1b[36m│
+└─────────────────────────────────────────┘\x1b[0m`);
+
+        opcao = getData("\n➤ Escolha uma opção: ");
+
+        switch (opcao) {
+            case "1":
+                this.visualizarListaAmigos();
+                break;
+            case "2":
+                this.removerAmigo();
+                break;
+            case "3":
+                this.menuSolicitacoes();
+                break;
+            case "0":
+                print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
+                break;
+            default:
+                print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
+                break;
+        }
+    } while (opcao !== "0");
   }
 
-  private aceitarSolicitacao(): void {
-    print("Aceitando solicitação...");
+  private visualizarListaAmigos(): void {
+    const amigos = this._perfilAtual!.amigos;
+    
+    if (amigos.length === 0) {
+        console.log(`
+\x1b[33m╔══════════════════════════════════════════╗
+║                                          ║
+║     📭 Você não tem amigos ainda        ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    } else {
+        console.log('\n👥 Seus Amigos:');
+        amigos.forEach((amigo, index) => {
+            const perfilAmigo = this._redeSocial.buscarPerfil(amigo);
+            console.log(`
+\x1b[34m${index + 1}. 👤 ${amigo}
+   📧 ${perfilAmigo?.email || 'Email não disponível'}
+   🖼️  ${perfilAmigo?.foto || 'Sem foto'}
+            \x1b[0m`);
+        });
+    }
+    
+    getData("\nPressione Enter para continuar...");
   }
 
-  private recusarSolicitacao(): void {
-    print("Recusando solicitação...");
+  private removerAmigo(): void {
+    const amigos = this._perfilAtual!.amigos;
+    
+    if (amigos.length === 0) {
+        console.log(`
+\x1b[33m╔══════════════════════════════════════════╗
+║                                          ║
+║     📭 Você não tem amigos para remover  ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        getData("\nPressione Enter para continuar...");
+        return;
+    }
+
+    console.log('\n👥 Escolha um amigo para remover:');
+    amigos.forEach((amigo, index) => {
+        console.log(`\x1b[34m${index + 1}. 👤 ${amigo}\x1b[0m`);
+    });
+
+    const escolha = getNumber("\n➤ Digite o número do amigo: ") - 1;
+    
+    if (escolha < 0 || escolha >= amigos.length) {
+        print("\x1b[31m⚠️ Amigo inválido! ⚠️\x1b[0m");
+        return;
+    }
+
+    const amigoParaRemover = amigos[escolha];
+    const confirmacao = getData(`\x1b[31m❗ Tem certeza que deseja remover ${amigoParaRemover}? (s/n): \x1b[0m`);
+    
+    if (confirmacao.toLowerCase() === 's') {
+        // Remove o amigo do perfil atual
+        this._perfilAtual!.removerAmigo(amigoParaRemover);
+        
+        // Remove o perfil atual da lista de amigos do outro usuário
+        const perfilAmigo = this._redeSocial.buscarPerfil(amigoParaRemover);
+        if (perfilAmigo) {
+            perfilAmigo.removerAmigo(this._perfilAtual!.apelido);
+        }
+
+        salvarDadosPerfis(this._redeSocial.listarPerfis());
+        
+        console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🗑 Amigo removido com sucesso!      ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    } else {
+        print("\x1b[32m↩ Operação cancelada. ↩\x1b[0m");
+    }
+    
+    getData("\nPressione Enter para continuar...");
   }
 }
 

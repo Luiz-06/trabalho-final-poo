@@ -5,10 +5,10 @@ export class Perfil {
   private _apelido: string;
   private _email: string;
   private _stats: boolean;
-  private _amigos: Perfil[];
+  private _amigos: string[];
   private _foto: string;
   private _publicacoes: Publicacao[];
-  private _solicitacoesAmizade: Perfil[];
+  private _solicitacoesAmizade: string[];
   private _senha: string;
 
   constructor(
@@ -18,9 +18,9 @@ export class Perfil {
     foto: string,
     senha: string,
     stats: boolean,
-    amigos: Perfil[],
+    amigos: string[],
     publicacoes: Publicacao[],
-    solicitacoesAmizade: Perfil[]
+    solicitacoesAmizade: string[]
   ) {
     this._id = id;
     this._apelido = apelido;
@@ -61,10 +61,10 @@ export class Perfil {
     this._stats = value;
   }
 
-  public get amigos(): Perfil[] {
+  public get amigos(): string[] {
     return this._amigos;
   }
-  public set amigos(value: Perfil[]) {
+  public set amigos(value: string[]) {
     this._amigos = value;
   }
 
@@ -90,53 +90,61 @@ export class Perfil {
     this._publicacoes = value;
   }
 
-  public get solicitacoesAmizade(): Perfil[] {
+  public get solicitacoesAmizade(): string[] {
     return this._solicitacoesAmizade;
   }
 
-  public set solicitacoesAmizade(value: Perfil[]) {
+  public set solicitacoesAmizade(value: string[]) {
     this._solicitacoesAmizade = value;
   }
 
-  public adicionarAmigo(amigo: Perfil): void {
-    this._amigos.push(amigo);
+  public adicionarAmigo(amigo: string): void {
+    if (!this._amigos.includes(amigo)) {
+        this._amigos.push(amigo);
+    } else {
+        console.log(`\x1b[33m⚠️ ${amigo} já está na sua lista de amigos! ⚠️\x1b[0m`);
+    }
   }
 
   public removerAmigo(apelidoProcurado: string): void {
     this._amigos = this._amigos.filter(
-      (amigos) => amigos._apelido !== apelidoProcurado
+      (apelido) => apelido !== apelidoProcurado
     );
   }
 
-  public listarAmigos(): Perfil[] {
-    let copiaDeAmigos: Perfil[] = [];
+  // public listarAmigos(): Perfil[] {
+  //   let copiaDeAmigos: Perfil[] = [];
 
-    for (let amigo of this._amigos) {
-      let perfilCopiado = new Perfil(
-        amigo._id,
-        amigo._apelido,
-        amigo._email,
-        amigo._foto,
-        amigo._senha,
-        amigo._stats,
-        amigo._amigos,
-        amigo._publicacoes,
-        amigo._solicitacoesAmizade
-      );
-      copiaDeAmigos.push(perfilCopiado);
-    }
+  //   for (let amigo of this._amigos) {
+  //     let perfilCopiado = new Perfil(
+  //       amigo._id,
+  //       amigo._apelido,
+  //       amigo._email,
+  //       amigo._foto,
+  //       amigo._senha,
+  //       amigo._stats,
+  //       amigo._amigos,
+  //       amigo._publicacoes,
+  //       amigo._solicitacoesAmizade
+  //     );
+  //     copiaDeAmigos.push(perfilCopiado);
+  //   }
 
-    return copiaDeAmigos;
-  }
+  //   return copiaDeAmigos;
+  // }
 
   public adicionarPublicacao(publicacao: Publicacao): void {
     this._publicacoes.push(publicacao);
   }
 
   public removerPublicacao(id: string): void {
-    this._publicacoes = this._publicacoes.filter(
-      (publicacoes) => publicacoes.id !== id
+    const indexPublicacao = this._publicacoes.findIndex(
+      (publicacao) => publicacao.id === id
     );
+    
+    if (indexPublicacao !== -1) {
+      this._publicacoes.splice(indexPublicacao, 1);
+    }
   }
 
   public listarPublicacoes(): Publicacao[] {
@@ -155,19 +163,19 @@ export class Perfil {
     return publicacoesCopiadas;
   }
 
-  public addCaixaDeSolicitacoes(perfil: Perfil): void {
+  public addCaixaDeSolicitacoes(perfil: string): void {
     this._solicitacoesAmizade.push(perfil);
   }
 
-  public aceitarSolicitacao(perfil: Perfil, aceitar: boolean) {
-    this._solicitacoesAmizade = this._solicitacoesAmizade.filter(
-      (perfilAtual) => perfilAtual.id !== perfil.id
-    );
+  // public aceitarSolicitacao(perfil: Perfil, aceitar: boolean) {
+  //   this._solicitacoesAmizade = this._solicitacoesAmizade.filter(
+  //     (perfilAtual) => perfilAtual.id !== perfil.id
+  //   );
 
-    if (aceitar) {
-      this.adicionarAmigo(perfil);
-    }
-  }
+  //   if (aceitar) {
+  //     this.adicionarAmigo(perfil);
+  //   }
+  // }
 
   public toString(): string {
     return `
