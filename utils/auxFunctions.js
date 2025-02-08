@@ -1,10 +1,11 @@
 "use strict";
 exports.__esModule = true;
-exports.lerDadosPerfis = exports.salvarDadosPublicacoes = exports.salvarDadosPerfis = exports.carregarDadosPublicacoes = exports.carregarDadosPerfis = exports.choosePhoto = exports.clear = exports.getNegativeNumber = exports.removeList = exports.addList = exports.mapList = exports.filterList = exports.getPositiveNumber = exports.getNaturalNumber = exports.print = exports.getNumber = exports.getData = void 0;
+exports.lerDadosPerfis = exports.salvarDadosPublicacoes = exports.salvarDadosPerfis = exports.carregarDadosPublicacoes = exports.carregarDadosPerfis = exports.choosePhoto = exports.clear = exports.getNegativeNumber = exports.removeList = exports.addList = exports.mapList = exports.filterList = exports.getPositiveNumber = exports.getNaturalNumber = exports.print = exports.getNumber = exports.getData = exports.salvarPublicacoes = void 0;
 var readline_sync_1 = require("readline-sync");
 var fs = require("fs");
 var path = require("path");
 var perfil_1 = require("../models/perfil");
+var publicacao_1 = require("../models/publicacao");
 function print(mensagem) {
     console.log(mensagem);
 }
@@ -89,12 +90,6 @@ var carregarDadosPerfis = function () {
 };
 exports.carregarDadosPerfis = carregarDadosPerfis;
 carregarDadosPerfis();
-var carregarDadosPublicacoes = function () {
-    var filePath = path.join(process.cwd(), "data.json");
-    var data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-    return data.data.publicacao;
-};
-exports.carregarDadosPublicacoes = carregarDadosPublicacoes;
 var salvarDadosPerfis = function (perfis) {
     var filePath = path.join(process.cwd(), "data.json");
     var jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
@@ -107,21 +102,74 @@ var salvarDadosPerfis = function (perfis) {
 exports.salvarDadosPerfis = salvarDadosPerfis;
 function lerDadosPerfis() {
     try {
-        var dados = fs.readFileSync('data.json', 'utf-8'); // Lê o arquivo JSON
+        var dados = fs.readFileSync("data.json", "utf-8"); // Lê o arquivo JSON
         var parsedData = JSON.parse(dados); // Converte a string JSON em um objeto JavaScript
         // Retorna a lista de perfis contida em parsedData.data.perfil
+        var dadosPerfisLidos = parsedData.data.perfil;
         return parsedData.data.perfil;
     }
     catch (error) {
-        console.log('Erro ao ler os dados: ', error);
+        console.log("Erro ao ler os dados: ", error);
         return []; // Se houver erro, retorna um array vazio
     }
 }
 exports.lerDadosPerfis = lerDadosPerfis;
-var salvarDadosPublicacoes = function (perfis) {
+var salvarDadosPublicacoes = function (publicacoes) {
     var filePath = path.join(process.cwd(), "data.json");
     var jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-    jsonData.data.publicacao.push(perfis);
+    jsonData.data.publicacao = [];
+    publicacoes.forEach(function (publicacao) {
+        jsonData.data.publicacao.push(publicacao);
+    });
     fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), "utf-8");
 };
 exports.salvarDadosPublicacoes = salvarDadosPublicacoes;
+var carregarDadosPublicacoes = function () {
+    var filePath = path.join(process.cwd(), "data.json");
+    try {
+        var data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+        // Verifica se existe a propriedade publicacao
+        if (!data.data.publicacao) {
+            data.data.publicacao = [];
+            fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+        }
+        // Converte os dados para objetos Publicacao
+        return data.data.publicacao.map(function (pub) {
+            return new publicacao_1.Publicacao(pub._id, pub._conteudo, new Date(pub._dataHora), pub._perfilAssociado);
+        });
+    }
+    catch (error) {
+        console.error("Erro ao carregar publicações:", error);
+        return [];
+    }
+};
+exports.carregarDadosPublicacoes = carregarDadosPublicacoes;
+var salvarPublicacoes = function (publicacoes) {
+    var _a;
+    var filePath = path.join(process.cwd(), "data.json");
+    try {
+        var jsonData_1 = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+        // Mapeia as novas publicações para o formato correto
+        var novasPublicacoes = publicacoes.map(function (pub) { return ({
+            _id: pub.id,
+            _conteudo: pub.conteudo,
+            _dataHora: pub.dataHora,
+            _perfilAssociado: pub.perfilAssociado
+        }); });
+        // Verifica se já existe uma lista de publicações
+        if (!jsonData_1.data.publicacao) {
+            jsonData_1.data.publicacao = [];
+        }
+        // Remove publicações duplicadas
+        var publicacoesUnicas = novasPublicacoes.filter(function (novaPub) {
+            return !jsonData_1.data.publicacao.some(function (existente) { return existente._id === novaPub._id; });
+        });
+        // Adiciona as novas publicações
+        (_a = jsonData_1.data.publicacao).push.apply(_a, publicacoesUnicas);
+        fs.writeFileSync(filePath, JSON.stringify(jsonData_1, null, 2), "utf-8");
+    }
+    catch (error) {
+        console.error("Erro ao salvar publicações:", error);
+    }
+};
+exports.salvarPublicacoes = salvarPublicacoes;
