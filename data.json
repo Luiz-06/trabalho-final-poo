@@ -2,87 +2,67 @@
   "data": {
     "perfil": [
       {
-        "_id": "01JKCRAYT0D3H4YBCQZGWZ61RH",
-        "_apelido": "1",
-        "_email": "1",
-        "_foto": "🥰",
-        "_senha": "1",
+        "_id": "SUPER01JKMNW908P105TRH0A0XKE7CE",
+        "_apelido": "adm",
+        "_email": "administrador@redesocial.com",
+        "_foto": "admin.png",
+        "_senha": "adm",
         "_stats": true,
         "_amigos": [
-          "gisele",
-          "luiz"
+          "pedro",
+          "gisele"
         ],
         "_publicacoes": [],
         "_solicitacoesAmizade": []
       },
       {
-        "_id": "01JKCRCM7V2ND778C4RXRJ0QSX",
+        "_id": "01JKMNXN9FSPTBQAVZD9RFGJ4H",
         "_apelido": "pedro",
+        "_email": "pedro",
+        "_foto": "default.png",
+        "_senha": "pedro",
+        "_stats": true,
+        "_amigos": [
+          "adm"
+        ],
+        "_publicacoes": [],
+        "_solicitacoesAmizade": [
+          "gisele"
+        ]
+      },
+      {
+        "_id": "01JKMP715PZTEEPHVSTZWQZ67F",
+        "_apelido": "gisele",
         "_email": "2",
-        "_foto": "😴",
+        "_foto": "😃",
         "_senha": "2",
         "_stats": true,
-        "_amigos": [],
-        "_publicacoes": [],
-        "_solicitacoesAmizade": []
-      },
-      {
-        "_id": "01JKCRDZGYYM5ZH1YVBSPA20M0",
-        "_apelido": "gisele",
-        "_email": "3",
-        "_foto": "😃",
-        "_senha": "3",
-        "_stats": false,
         "_amigos": [
-          "1"
+          "adm"
         ],
-        "_publicacoes": [],
-        "_solicitacoesAmizade": []
-      },
-      {
-        "_id": "01JKCRF8W8XY9KQ6PE7KY27HBK",
-        "_apelido": "luiz",
-        "_email": "4",
-        "_foto": "🙃",
-        "_senha": "4",
-        "_stats": true,
-        "_amigos": [
-          "1"
+        "_publicacoes": [
+          {
+            "_id": "01JKMP7VMZSBV4FN4GZ730RHB7",
+            "_conteudo": "criadno primeira pub",
+            "_dataHora": "2025-02-09T06:27:16.712Z",
+            "_perfilAssociado": "01JKMP715PZTEEPHVSTZWQZ67F"
+          }
         ],
-        "_publicacoes": [],
         "_solicitacoesAmizade": []
       }
     ],
     "publicacao": [
       {
-        "_id": "01JKCSXVHCCYPJ6TJ0JVG06C02",
-        "_conteudo": "pub1",
-        "_dataHora": "2025-02-06T04:57:41.925Z",
-        "_perfilAssociado": "01JKCRAYT0D3H4YBCQZGWZ61RH"
+        "_id": "01JKMP7VMZSBV4FN4GZ730RHB7",
+        "_conteudo": "criadno primeira pub",
+        "_dataHora": "2025-02-09T06:27:16.712Z",
+        "_perfilAssociado": "01JKMP715PZTEEPHVSTZWQZ67F"
       },
       {
-        "_id": "01JKCSZDZ6HQGZK1J8SGQ037DQ",
-        "_conteudo": "grrg",
-        "_dataHora": "2025-02-06T04:58:33.222Z",
-        "_perfilAssociado": "01JKCRAYT0D3H4YBCQZGWZ61RH"
-      },
-      {
-        "_id": "01JKCT0QBFB2MEZM6K9FSZGGFW",
-        "_conteudo": "teatr1",
-        "_dataHora": "2025-02-06T04:59:16.550Z",
-        "_perfilAssociado": "01JKCRCM7V2ND778C4RXRJ0QSX"
-      },
-      {
-        "_id": "01JKCT35BHSZCHYMK7ZWECJF62",
-        "_conteudo": "teste delete",
-        "_dataHora": "2025-02-06T05:00:37.330Z",
-        "_perfilAssociado": "01JKCRCM7V2ND778C4RXRJ0QSX"
-      },
-      {
-        "_id": "01JKCVE59YFD25B9KN82SVFSQG",
-        "_conteudo": "dqdqw",
-        "_dataHora": "2025-02-06T05:24:04.181Z",
-        "_perfilAssociado": "01JKCRAYT0D3H4YBCQZGWZ61RH"
+        "_id": "01JKMQ23X1DZYHYWB5S3DMPA7N",
+        "_conteudo": "tchau cursor",
+        "_dataHora": "2025-02-09T06:41:40.554Z",
+        "_perfilAssociado": "01JKMNXN9FSPTBQAVZD9RFGJ4H"
       }
     ]
   }
