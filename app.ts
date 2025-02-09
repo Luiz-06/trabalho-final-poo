@@ -11,21 +11,30 @@ import {
   salvarDadosPublicacoes,
   lerDadosPerfis,
 } from "./utils/auxFunctions";
+
 import * as validations from "./validations/validations";
 import * as vals from "./utils/validations";
-
+import { PerfilAvancado } from "./models/perfilAvancado";
 
 import { ulid } from "ulid";
 
 class App {
   private _isLoggedIn: boolean;
-  private _perfilAtual: Perfil | null;
+  private _perfilAtual: Perfil | null | PerfilAvancado | any;
   private _redeSocial: RedeSocial;
 
   constructor() {
     this._isLoggedIn = false;
     this._perfilAtual = null;
     this._redeSocial = new RedeSocial();
+
+    // Adiciona perfil de administrador se não existir
+    const perfilAdm = this._redeSocial.buscarPerfil("adm");
+    if (!perfilAdm) {
+      const novoPerfilAdm = PerfilAvancado.criarPerfilAdministrador();
+      this._redeSocial.adicionarPerfil(novoPerfilAdm);
+      salvarDadosPerfis(this._redeSocial.listarPerfis());
+    }
   }
 
   public start(): void {
@@ -46,6 +55,7 @@ class App {
 │ \x1b[33m1\x1b[34m - \x1b[32mLogin                               \x1b[34m│
 │ \x1b[33m2\x1b[34m - \x1b[32mCriar Nova Conta                    \x1b[34m│
 │ \x1b[33m3\x1b[34m - \x1b[33mRecuperar Senha                     \x1b[34m│
+│ \x1b[33m4\x1b[34m - \x1b[35mLogin de Perfil Avançado            \x1b[34m│
 │ \x1b[33m0\x1b[34m - \x1b[31mSair                                \x1b[34m│
 └─────────────────────────────────────────┘\x1b[0m`);
 
@@ -64,33 +74,7 @@ class App {
           this.recuperarSenha();
           break;
         case "4":
-          console.log(`
-\x1b[32m╔══════════════════════════════════════════╗
-║                                          ║
-║     🕵️ Modo de Login Secreto Ativado!     ║
-║                                          ║
-╚══════════════════════════════════════════╝\x1b[0m`);
-          
-          const perfil: Perfil | undefined = this._redeSocial.buscarPerfil("1");
-          
-          if (perfil && perfil.stats) {
-            console.log(`
-\x1b[32m╔══════════════════════════════════════════╗
-║                                          ║
-║     🎉 Login automático realizado!       ║
-║                                          ║
-╚══════════════════════════════════════════╝\x1b[0m`);
-            
-            this._perfilAtual = perfil;
-            this._isLoggedIn = true;
-          } else {
-            console.log(`
-\x1b[31m╔══════════════════════════════════════════╗
-║                                          ║
-║   ⚠️ Perfil de teste não encontrado       ║
-║                                          ║
-╚══════════════════════════════════════════╝\x1b[0m`);
-          }
+          this.loginPerfilAvancado();
           break;
         case "0":
           this.sairDoSistema();
@@ -221,6 +205,126 @@ class App {
     }
   }
 
+  private loginPerfilAvancado(): void {
+    console.log('\n\x1b[34m🔐 Login de Perfil Avançado \x1b[0m');
+    const apelido = getData("👤 Nome de usuário: ");
+    const senha = getData("🔑 Senha: ");
+    
+    const perfil: Perfil | undefined = this._redeSocial.buscarPerfil(apelido);
+
+    if (perfil && perfil.stats) {
+      // Verifica se é um PerfilAvancado
+      if (PerfilAvancado.isPerfilAvancado(perfil) && 
+          apelido === perfil.apelido && 
+          senha === perfil.senha) {
+        console.log(`
+\x1b[32m╔══════════════════════════════════════════╗
+║                                          ║
+║     🎉 Login de Perfil Avançado         ║
+║        Bem-vindo, Administrador!        ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+        
+        this._perfilAtual = perfil;
+        this._isLoggedIn = true;
+        return;
+      }
+    }
+    
+    console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Acesso negado. Perfil não autorizado ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+  }
+
+  private criarNovoPerfilAvancado(): void {
+    try {
+      if (PerfilAvancado.isPerfilAvancado(this._perfilAtual)) {
+        console.log('\n\x1b[34m📝 Criar Novo Perfil Avançado \x1b[0m');
+        
+        const apelido = getData("👤 Escolha um nome de usuário: ");
+        const email = getData("📧 Digite seu email: ");
+        const senha = getData("🔐 Escolha uma senha: ");
+        
+        const novoPerfilAvancado = PerfilAvancado.criarNovoPerfilAvancado(apelido, email, senha);
+        this._redeSocial.adicionarPerfil(novoPerfilAvancado);
+        salvarDadosPerfis(this._redeSocial.listarPerfis());
+
+        console.log(`
+\x1b[32m╔══════════════════════════════════╗
+║                                          ║
+║     🎉 Perfil Avançado criado com sucesso! ║
+║     Bem-vindo, ${apelido}!               ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+      } else {
+        console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Apenas perfis avançados podem criar outros perfis avançados. ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+      }
+    } catch (error) {
+      console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ❌ Erro ao criar perfil avançado: ${error.message} ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    }
+  }
+
+  private criarPerfilComum(): void {
+    try {
+      if (PerfilAvancado.isPerfilAvancado(this._perfilAtual)) {
+        console.log('\n\x1b[34m📝 Criar Novo Perfil Comum \x1b[0m');
+        
+        const apelido = getData("👤 Escolha um nome de usuário: ");
+        const email = getData("📧 Digite seu email: ");
+        const senha = getData("🔐 Escolha uma senha: ");
+        
+        const novoPerfilComum = new Perfil(
+          ulid(),
+          apelido,
+          email,
+          "default.png", // Foto padrão
+          senha,
+          true,
+          [],
+          [],
+          []
+        );
+        this._redeSocial.adicionarPerfil(novoPerfilComum);
+        salvarDadosPerfis(this._redeSocial.listarPerfis());
+
+        console.log(`
+\x1b[32m╔══════════════════════════════════╗
+║                                          ║
+║     🎉 Perfil Comum criado com sucesso!  ║
+║     Bem-vindo, ${apelido}!               ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+      } else {
+        console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Apenas perfis avançados podem criar perfis comuns. ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+      }
+    } catch (error) {
+      console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ❌ Erro ao criar perfil comum: ${error.message} ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    }
+  }
+
   private criarLinha(caractere: string = '-', comprimento: number = 40): string {
     return caractere.repeat(comprimento);
   }
@@ -242,47 +346,60 @@ class App {
     let appOn: boolean = true;
 
     do {
-        clear();
-        this.exibirTitulo(`Bem-vindo, ${this._perfilAtual?.apelido}`);
-        
-        console.log(`
+      clear();
+      this.exibirTitulo(`Bem-vindo, ${this._perfilAtual?.apelido}`);
+      
+      console.log(`
 \x1b[36m┌─────────────────────────────────────────┐
 │ 🏠 Menu Principal                      │
 ├─────────────────────────────────────────┤
 │ \x1b[33m1\x1b[36m - \x1b[34mConfigurar Perfil            \x1b[36m│
 │ \x1b[33m2\x1b[36m - \x1b[34mPublicações                 \x1b[36m│
 │ \x1b[33m3\x1b[36m - \x1b[34mInterações Sociais          \x1b[36m│
+│ \x1b[33m4\x1b[36m - \x1b[35mGerenciar Perfis            \x1b[36m│
 │ \x1b[33m0\x1b[36m - \x1b[31m↪ Deslogar                  \x1b[36m│
 └─────────────────────────────────────────┘\x1b[0m`);
 
-        opcao = getData("\n➤ Escolha uma opção: ");
+      opcao = getData("\n➤ Escolha uma opção: ");
 
-        switch (opcao) {
-            case "1":
-                this.menuAlterarPerfil();
-                break;
-            case "2":
-                this.menuPublicacoes();
-                break;
-            case "3":
-                this.menuInteracoesSociais();
-                break;
-            case "0":
-                console.log(`
+      switch (opcao) {
+        case "1":
+          this.menuAlterarPerfil();
+          break;
+        case "2":
+          this.menuPublicacoes();
+          break;
+        case "3":
+          this.menuInteracoesSociais();
+          break;
+        case "4":
+          if (PerfilAvancado.isPerfilAvancado(this._perfilAtual)) {
+            this.menuGerenciarPerfis();
+          } else {
+            console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Apenas perfis avançados podem acessar o gerenciamento de perfis. ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+          }
+          break;
+        case "0":
+          console.log(`
 \x1b[32m╔══════════════════════════════════════════╗
 ║                                          ║
 ║     👋 Deslogado com sucesso!           ║
 ║                                          ║
 ╚══════════════════════════════════════════╝\x1b[0m`);
-                
-                this._perfilAtual = null;
-                this._isLoggedIn = false;
-                appOn = false;
-                break;
-            default:
-                print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
-                break;
-        }
+          
+          this._perfilAtual = null;
+          this._isLoggedIn = false;
+          appOn = false;
+          break;
+        default:
+          print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
+          break;
+      }
     } while (appOn);
 
     // Volta para a tela de opções de acesso
@@ -617,6 +734,7 @@ class App {
 \x1b[33m╔══════════════════════════════════════════╗
 ║                                          ║
 ║     📭 Você não tem solicitações        ║
+║         de amizade                       ║
 ║                                          ║
 ╚══════════════════════════════════════════╝\x1b[0m`);
     } else {
@@ -633,7 +751,13 @@ class App {
     const solicitacoes = this._perfilAtual?.solicitacoesAmizade;
     if (solicitacoes) {
       if (solicitacoes.length === 0) {
-        console.log("Você não tem solicitações de amizade");
+        console.log(`
+\x1b[33m╔══════════════════════════════════════════╗
+║                                          ║
+║     📭 Você não tem solicitações        ║
+║         de amizade                       ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
       } else {
         solicitacoes.forEach((perfil, index) => {
           console.log(`Id: ${index + 1} - Usuário: ${perfil}`);
@@ -658,7 +782,13 @@ class App {
     const solicitacoes = this._perfilAtual?.solicitacoesAmizade;
     if (solicitacoes) {
       if (solicitacoes.length === 0) {
-        console.log("Você não tem solicitações de amizade");
+        console.log(`
+\x1b[33m╔══════════════════════════════════════════╗
+║                                          ║
+║     📭 Você não tem solicitações        ║
+║         de amizade                       ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
       } else {
         solicitacoes.forEach((perfil, index) => {
           console.log(`Id: ${index + 1} - Usuário: ${perfil}`);
@@ -1010,6 +1140,118 @@ class App {
     }
     
     getData("\nPressione Enter para continuar...");
+  }
+
+  private editarPerfilComum(): void {
+    if (PerfilAvancado.isPerfilAvancado(this._perfilAtual)) {
+      const apelido = getData("👤 Apelido do perfil a ser editado: ");
+      const perfil = this._redeSocial.buscarPerfil(apelido);
+
+      if (perfil) {
+        const novoApelido = getData("👤 Novo apelido: ");
+        const novoEmail = getData("📧 Novo email: ");
+        this._perfilAtual!.editarPerfilComum(perfil, novoApelido, novoEmail);
+        salvarDadosPerfis(this._redeSocial.listarPerfis());
+
+        console.log(`
+\x1b[32m╔══════════════════════════════════╗
+║                                          ║
+║     🎉 Perfil Comum editado com sucesso! ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+      } else {
+        console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Perfil não encontrado.               ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+      }
+    } else {
+      console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Apenas perfis avançados podem editar perfis comuns. ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    }
+  }
+
+  private excluirPerfilComum(): void {
+    if (PerfilAvancado.isPerfilAvancado(this._perfilAtual)) {
+      const apelido = getData("👤 Apelido do perfil a ser excluído: ");
+      const perfil = this._redeSocial.buscarPerfil(apelido);
+
+      if (perfil) {
+        this._redeSocial.removerPerfil(apelido);
+        salvarDadosPerfis(this._redeSocial.listarPerfis());
+
+        console.log(`
+\x1b[32m╔══════════════════════════════════╗
+║                                          ║
+║     �� Perfil Comum excluído com sucesso! ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+      } else {
+        console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Perfil não encontrado.               ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+      }
+    } else {
+      console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Apenas perfis avançados podem excluir perfis comuns. ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    }
+  }
+
+  private menuGerenciarPerfis(): void {
+    let opcao: string = "";
+    let gerenciarOn: boolean = true;
+
+    do {
+      clear();
+      this.exibirTitulo("Gerenciar Perfis");
+      
+      console.log(`
+\x1b[36m┌─────────────────────────────────────────┐
+│ 🔧 Gerenciar Perfis                     │
+├─────────────────────────────────────────┤
+│ \x1b[33m1\x1b[36m - \x1b[34mCriar Perfil Avançado       \x1b[36m│
+│ \x1b[33m2\x1b[36m - \x1b[34mCriar Perfil Comum          \x1b[36m│
+│ \x1b[33m3\x1b[36m - \x1b[34mEditar Perfil Comum         \x1b[36m│
+│ \x1b[33m4\x1b[36m - \x1b[34mExcluir Perfil Comum        \x1b[36m│
+│ \x1b[33m0\x1b[36m - \x1b[31m↪ Voltar                   \x1b[36m│
+└─────────────────────────────────────────┘\x1b[0m`);
+
+      opcao = getData("\n➤ Escolha uma opção: ");
+
+      switch (opcao) {
+        case "1":
+          this.criarNovoPerfilAvancado();
+          break;
+        case "2":
+          this.criarPerfilComum();
+          break;
+        case "3":
+          this.editarPerfilComum();
+          break;
+        case "4":
+          this.excluirPerfilComum();
+          break;
+        case "0":
+          gerenciarOn = false;
+          break;
+        default:
+          print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
+          break;
+      }
+    } while (gerenciarOn);
   }
 }
 

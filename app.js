@@ -4,17 +4,25 @@ var perfil_1 = require("./models/perfil");
 var redeSocial_1 = require("./models/redeSocial");
 var auxFunctions_1 = require("./utils/auxFunctions");
 var validations = require("./validations/validations");
+var perfilAvancado_1 = require("./models/perfilAvancado");
 var ulid_1 = require("ulid");
 var App = /** @class */ (function () {
     function App() {
         this._isLoggedIn = false;
         this._perfilAtual = null;
         this._redeSocial = new redeSocial_1.RedeSocial();
+        // Adiciona perfil de administrador se não existir
+        var perfilAdm = this._redeSocial.buscarPerfil("adm");
+        if (!perfilAdm) {
+            var novoPerfilAdm = perfilAvancado_1.PerfilAvancado.criarPerfilAdministrador();
+            this._redeSocial.adicionarPerfil(novoPerfilAdm);
+            (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+        }
     }
     App.prototype.start = function () {
         console.clear();
         console.log("\n\u001B[36m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551 \uD83C\uDF10 Bem-vindo \u00E0 Rede Social Interativa \uD83C\uDF10 \u2551\n\u2560\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2563\n\u2551                                          \u2551\n\u2551 \u001B[33m\u2728 Conecte-se, Compartilhe, Interaja! \u2728\u001B[36m \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
-        console.log("\n\u001B[34m\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 \uD83D\uDD10 Op\u00E7\u00F5es de Acesso                     \u2502\n\u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 \u001B[33m1\u001B[34m - \u001B[32mLogin                               \u001B[34m\u2502\n\u2502 \u001B[33m2\u001B[34m - \u001B[32mCriar Nova Conta                    \u001B[34m\u2502\n\u2502 \u001B[33m3\u001B[34m - \u001B[33mRecuperar Senha                     \u001B[34m\u2502\n\u2502 \u001B[33m0\u001B[34m - \u001B[31mSair                                \u001B[34m\u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\u001B[0m");
+        console.log("\n\u001B[34m\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 \uD83D\uDD10 Op\u00E7\u00F5es de Acesso                     \u2502\n\u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 \u001B[33m1\u001B[34m - \u001B[32mLogin                               \u001B[34m\u2502\n\u2502 \u001B[33m2\u001B[34m - \u001B[32mCriar Nova Conta                    \u001B[34m\u2502\n\u2502 \u001B[33m3\u001B[34m - \u001B[33mRecuperar Senha                     \u001B[34m\u2502\n\u2502 \u001B[33m4\u001B[34m - \u001B[35mLogin de Perfil Avan\u00E7ado            \u001B[34m\u2502\n\u2502 \u001B[33m0\u001B[34m - \u001B[31mSair                                \u001B[34m\u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\u001B[0m");
         while (!this._isLoggedIn) {
             var opcao = (0, auxFunctions_1.getData)("\n➤ Escolha uma opção: ");
             switch (opcao) {
@@ -29,16 +37,7 @@ var App = /** @class */ (function () {
                     this.recuperarSenha();
                     break;
                 case "4":
-                    console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83D\uDD75\uFE0F Modo de Login Secreto Ativado!     \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
-                    var perfil = this._redeSocial.buscarPerfil("1");
-                    if (perfil && perfil.stats) {
-                        console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83C\uDF89 Login autom\u00E1tico realizado!       \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
-                        this._perfilAtual = perfil;
-                        this._isLoggedIn = true;
-                    }
-                    else {
-                        console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551   \u26A0\uFE0F Perfil de teste n\u00E3o encontrado       \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
-                    }
+                    this.loginPerfilAvancado();
                     break;
                 case "0":
                     this.sairDoSistema();
@@ -114,6 +113,65 @@ var App = /** @class */ (function () {
             }
         }
     };
+    App.prototype.loginPerfilAvancado = function () {
+        console.log('\n\x1b[34m🔐 Login de Perfil Avançado \x1b[0m');
+        var apelido = (0, auxFunctions_1.getData)("👤 Nome de usuário: ");
+        var senha = (0, auxFunctions_1.getData)("🔑 Senha: ");
+        var perfil = this._redeSocial.buscarPerfil(apelido);
+        if (perfil && perfil.stats) {
+            // Verifica se é um PerfilAvancado
+            if (perfilAvancado_1.PerfilAvancado.isPerfilAvancado(perfil) &&
+                apelido === perfil.apelido &&
+                senha === perfil.senha) {
+                console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83C\uDF89 Login de Perfil Avan\u00E7ado         \u2551\n\u2551        Bem-vindo, Administrador!        \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+                this._perfilAtual = perfil;
+                this._isLoggedIn = true;
+                return;
+            }
+        }
+        console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551   \u26A0\uFE0F Acesso negado. Perfil n\u00E3o autorizado \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+    };
+    App.prototype.criarNovoPerfilAvancado = function () {
+        try {
+            if (perfilAvancado_1.PerfilAvancado.isPerfilAvancado(this._perfilAtual)) {
+                console.log('\n\x1b[34m📝 Criar Novo Perfil Avançado \x1b[0m');
+                var apelido = (0, auxFunctions_1.getData)("👤 Escolha um nome de usuário: ");
+                var email = (0, auxFunctions_1.getData)("📧 Digite seu email: ");
+                var senha = (0, auxFunctions_1.getData)("🔐 Escolha uma senha: ");
+                var novoPerfilAvancado = perfilAvancado_1.PerfilAvancado.criarNovoPerfilAvancado(apelido, email, senha);
+                this._redeSocial.adicionarPerfil(novoPerfilAvancado);
+                (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+                console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83C\uDF89 Perfil Avan\u00E7ado criado com sucesso! \u2551\n\u2551     Bem-vindo, ".concat(apelido, "!               \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m"));
+            }
+            else {
+                console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551   \u26A0\uFE0F Apenas perfis avan\u00E7ados podem criar outros perfis avan\u00E7ados. \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+            }
+        }
+        catch (error) {
+            console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551   \u274C Erro ao criar perfil avan\u00E7ado: ".concat(error.message, " \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m"));
+        }
+    };
+    App.prototype.criarPerfilComum = function () {
+        try {
+            if (perfilAvancado_1.PerfilAvancado.isPerfilAvancado(this._perfilAtual)) {
+                console.log('\n\x1b[34m📝 Criar Novo Perfil Comum \x1b[0m');
+                var apelido = (0, auxFunctions_1.getData)("👤 Escolha um nome de usuário: ");
+                var email = (0, auxFunctions_1.getData)("📧 Digite seu email: ");
+                var senha = (0, auxFunctions_1.getData)("🔐 Escolha uma senha: ");
+                var novoPerfilComum = new perfil_1.Perfil((0, ulid_1.ulid)(), apelido, email, "default.png", // Foto padrão
+                senha, true, [], [], []);
+                this._redeSocial.adicionarPerfil(novoPerfilComum);
+                (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+                console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83C\uDF89 Perfil Comum criado com sucesso!  \u2551\n\u2551     Bem-vindo, ".concat(apelido, "!               \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m"));
+            }
+            else {
+                console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551   \u26A0\uFE0F Apenas perfis avan\u00E7ados podem criar perfis comuns. \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+            }
+        }
+        catch (error) {
+            console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551   \u274C Erro ao criar perfil comum: ".concat(error.message, " \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m"));
+        }
+    };
     App.prototype.criarLinha = function (caractere, comprimento) {
         if (caractere === void 0) { caractere = '-'; }
         if (comprimento === void 0) { comprimento = 40; }
@@ -137,7 +195,7 @@ var App = /** @class */ (function () {
         do {
             (0, auxFunctions_1.clear)();
             this.exibirTitulo("Bem-vindo, ".concat((_a = this._perfilAtual) === null || _a === void 0 ? void 0 : _a.apelido));
-            console.log("\n\u001B[36m\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 \uD83C\uDFE0 Menu Principal                      \u2502\n\u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 \u001B[33m1\u001B[36m - \u001B[34mConfigurar Perfil            \u001B[36m\u2502\n\u2502 \u001B[33m2\u001B[36m - \u001B[34mPublica\u00E7\u00F5es                 \u001B[36m\u2502\n\u2502 \u001B[33m3\u001B[36m - \u001B[34mIntera\u00E7\u00F5es Sociais          \u001B[36m\u2502\n\u2502 \u001B[33m0\u001B[36m - \u001B[31m\u21AA Deslogar                  \u001B[36m\u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\u001B[0m");
+            console.log("\n\u001B[36m\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 \uD83C\uDFE0 Menu Principal                      \u2502\n\u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 \u001B[33m1\u001B[36m - \u001B[34mConfigurar Perfil            \u001B[36m\u2502\n\u2502 \u001B[33m2\u001B[36m - \u001B[34mPublica\u00E7\u00F5es                 \u001B[36m\u2502\n\u2502 \u001B[33m3\u001B[36m - \u001B[34mIntera\u00E7\u00F5es Sociais          \u001B[36m\u2502\n\u2502 \u001B[33m4\u001B[36m - \u001B[35mGerenciar Perfis            \u001B[36m\u2502\n\u2502 \u001B[33m0\u001B[36m - \u001B[31m\u21AA Deslogar                  \u001B[36m\u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\u001B[0m");
             opcao = (0, auxFunctions_1.getData)("\n➤ Escolha uma opção: ");
             switch (opcao) {
                 case "1":
@@ -148,6 +206,14 @@ var App = /** @class */ (function () {
                     break;
                 case "3":
                     this.menuInteracoesSociais();
+                    break;
+                case "4":
+                    if (perfilAvancado_1.PerfilAvancado.isPerfilAvancado(this._perfilAtual)) {
+                        this.menuGerenciarPerfis();
+                    }
+                    else {
+                        console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551   \u26A0\uFE0F Apenas perfis avan\u00E7ados podem acessar o gerenciamento de perfis. \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+                    }
                     break;
                 case "0":
                     console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83D\uDC4B Deslogado com sucesso!           \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
@@ -359,7 +425,7 @@ var App = /** @class */ (function () {
     App.prototype.visualizarSolicitacoes = function () {
         var solicitacoes = this._redeSocial.listarSolicitacoes(this._perfilAtual.apelido);
         if (solicitacoes.length === 0) {
-            console.log("\n\u001B[33m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83D\uDCED Voc\u00EA n\u00E3o tem solicita\u00E7\u00F5es        \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+            console.log("\n\u001B[33m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83D\uDCED Voc\u00EA n\u00E3o tem solicita\u00E7\u00F5es        \u2551\n\u2551         de amizade                       \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
         }
         else {
             console.log('\n👥 Solicitações de Amizade:');
@@ -374,7 +440,7 @@ var App = /** @class */ (function () {
         var solicitacoes = (_a = this._perfilAtual) === null || _a === void 0 ? void 0 : _a.solicitacoesAmizade;
         if (solicitacoes) {
             if (solicitacoes.length === 0) {
-                console.log("Você não tem solicitações de amizade");
+                console.log("\n\u001B[33m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83D\uDCED Voc\u00EA n\u00E3o tem solicita\u00E7\u00F5es        \u2551\n\u2551         de amizade                       \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
             }
             else {
                 solicitacoes.forEach(function (perfil, index) {
@@ -391,7 +457,7 @@ var App = /** @class */ (function () {
         var solicitacoes = (_a = this._perfilAtual) === null || _a === void 0 ? void 0 : _a.solicitacoesAmizade;
         if (solicitacoes) {
             if (solicitacoes.length === 0) {
-                console.log("Você não tem solicitações de amizade");
+                console.log("\n\u001B[33m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83D\uDCED Voc\u00EA n\u00E3o tem solicita\u00E7\u00F5es        \u2551\n\u2551         de amizade                       \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
             }
             else {
                 solicitacoes.forEach(function (perfil, index) {
@@ -618,6 +684,72 @@ var App = /** @class */ (function () {
             (0, auxFunctions_1.print)("\x1b[32m↩ Operação cancelada. ↩\x1b[0m");
         }
         (0, auxFunctions_1.getData)("\nPressione Enter para continuar...");
+    };
+    App.prototype.editarPerfilComum = function () {
+        if (perfilAvancado_1.PerfilAvancado.isPerfilAvancado(this._perfilAtual)) {
+            var apelido = (0, auxFunctions_1.getData)("👤 Apelido do perfil a ser editado: ");
+            var perfil = this._redeSocial.buscarPerfil(apelido);
+            if (perfil) {
+                var novoApelido = (0, auxFunctions_1.getData)("👤 Novo apelido: ");
+                var novoEmail = (0, auxFunctions_1.getData)("📧 Novo email: ");
+                this._perfilAtual.editarPerfilComum(perfil, novoApelido, novoEmail);
+                (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+                console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83C\uDF89 Perfil Comum editado com sucesso! \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+            }
+            else {
+                console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551   \u26A0\uFE0F Perfil n\u00E3o encontrado.               \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+            }
+        }
+        else {
+            console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551   \u26A0\uFE0F Apenas perfis avan\u00E7ados podem editar perfis comuns. \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+        }
+    };
+    App.prototype.excluirPerfilComum = function () {
+        if (perfilAvancado_1.PerfilAvancado.isPerfilAvancado(this._perfilAtual)) {
+            var apelido = (0, auxFunctions_1.getData)("👤 Apelido do perfil a ser excluído: ");
+            var perfil = this._redeSocial.buscarPerfil(apelido);
+            if (perfil) {
+                this._redeSocial.removerPerfil(apelido);
+                (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
+                console.log("\n\u001B[32m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uFFFD\uFFFD Perfil Comum exclu\u00EDdo com sucesso! \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+            }
+            else {
+                console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551   \u26A0\uFE0F Perfil n\u00E3o encontrado.               \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+            }
+        }
+        else {
+            console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551   \u26A0\uFE0F Apenas perfis avan\u00E7ados podem excluir perfis comuns. \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
+        }
+    };
+    App.prototype.menuGerenciarPerfis = function () {
+        var opcao = "";
+        var gerenciarOn = true;
+        do {
+            (0, auxFunctions_1.clear)();
+            this.exibirTitulo("Gerenciar Perfis");
+            console.log("\n\u001B[36m\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 \uD83D\uDD27 Gerenciar Perfis                     \u2502\n\u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 \u001B[33m1\u001B[36m - \u001B[34mCriar Perfil Avan\u00E7ado       \u001B[36m\u2502\n\u2502 \u001B[33m2\u001B[36m - \u001B[34mCriar Perfil Comum          \u001B[36m\u2502\n\u2502 \u001B[33m3\u001B[36m - \u001B[34mEditar Perfil Comum         \u001B[36m\u2502\n\u2502 \u001B[33m4\u001B[36m - \u001B[34mExcluir Perfil Comum        \u001B[36m\u2502\n\u2502 \u001B[33m0\u001B[36m - \u001B[31m\u21AA Voltar                   \u001B[36m\u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\u001B[0m");
+            opcao = (0, auxFunctions_1.getData)("\n➤ Escolha uma opção: ");
+            switch (opcao) {
+                case "1":
+                    this.criarNovoPerfilAvancado();
+                    break;
+                case "2":
+                    this.criarPerfilComum();
+                    break;
+                case "3":
+                    this.editarPerfilComum();
+                    break;
+                case "4":
+                    this.excluirPerfilComum();
+                    break;
+                case "0":
+                    gerenciarOn = false;
+                    break;
+                default:
+                    (0, auxFunctions_1.print)("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
+                    break;
+            }
+        } while (gerenciarOn);
     };
     return App;
 }());
