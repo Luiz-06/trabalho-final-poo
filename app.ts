@@ -344,6 +344,7 @@ export class App {
 ║                                                                               ║
 ╚═══════════════════════════════════════════════════════════════════════════════╝\x1b[0m`);
       }
+      this.delay(3000)
     } catch (error) {
       console.log(`
 \x1b[31m╔══════════════════════════════════════════╗
@@ -352,6 +353,7 @@ export class App {
 ║                                          ║
 ╚══════════════════════════════════════════╝\x1b[0m`);
     }
+    this.delay(3000)
   }
 
   private criarPerfilComum(): void {
@@ -391,6 +393,7 @@ export class App {
 ║   ⚠️ Apenas perfis avançados podem criar perfis comuns. ║
 ║                                          ║
 ╚══════════════════════════════════════════╝\x1b[0m`);
+this.delay(3000)
       }
     } catch (error) {
       console.log(`
@@ -466,6 +469,7 @@ export class App {
               ║   ⚠️  Apenas perfis avançados podem acessar o gerenciamento de perfis.   ║
               ║                                                                         ║
               ╚═════════════════════════════════════════════════════════════════════════╝\x1b[0m`);
+              this.delay(3000)
           }
           break;
         case "0":
@@ -567,6 +571,7 @@ export class App {
           break;
         case "2":
           this.fazerPublicacaoAvancada();
+          this.delay(3000)
           break;
         case "3":
           this.listarMinhasPublicacoes();
@@ -1279,6 +1284,7 @@ export class App {
 ║   ⚠️ Apenas perfis avançados podem editar perfis comuns. ║
 ║                                          ║
 ╚══════════════════════════════════════════╝\x1b[0m`);
+  this.delay(3000)
     }
   }
 
@@ -1305,6 +1311,7 @@ export class App {
 ║                                          ║
 ╚══════════════════════════════════════════╝\x1b[0m`);
       }
+      this.delay(3000)
     } else {
       console.log(`
 \x1b[31m╔══════════════════════════════════════════╗
@@ -1312,7 +1319,7 @@ export class App {
 ║   ⚠️ Apenas perfis avançados podem excluir perfis comuns. ║
 ║                                          ║
 ╚══════════════════════════════════════════╝\x1b[0m`);
-    }
+this.delay(3000)}
   }
 
   private menuGerenciarPerfis(): void {
@@ -1393,7 +1400,7 @@ export class App {
 ║   ⚠️ Apenas perfis avançados podem fazer publicações avançadas.   ║
 ║                                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝\x1b[0m`);
-      }
+this.delay(3000)}
     } catch (error) {
       console.log(`
 \x1b[31m╔══════════════════════════════════════════╗
@@ -1401,7 +1408,7 @@ export class App {
 ║   ❌ Erro ao criar publicação avançada: ${error.message} ║
 ║                                          ║
 ╚══════════════════════════════════════════╝\x1b[0m`);
-    }
+this.delay(3000)}
   }
 
   private interagirPublicacaoAvancada(): void {
@@ -1519,6 +1526,7 @@ export class App {
 ║   ⚠️ Apenas perfis avançados podem interagir com publicações. ║
 ║                                          ║
 ╚══════════════════════════════════════════╝\x1b[0m`);
+this.delay(3000)
       }
     } catch (error) {
       console.log(`
@@ -1527,6 +1535,13 @@ export class App {
 ║   ❌ Erro ao interagir com publicação: ${error.message} ║
 ║                                          ║
 ╚══════════════════════════════════════════╝\x1b[0m`);
+    }
+  }
+
+  delay(ms) {
+    const start = Date.now();
+    while (Date.now() - start < ms) {
+        // Espera ativamente
     }
   }
 }
