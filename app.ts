@@ -493,16 +493,22 @@ export class App {
           this.criarPublicacao();
           break;
         case "2":
-          this.listarMinhasPublicacoes();
+          this.fazerPublicacaoAvancada();
           break;
         case "3":
-          this.editarPublicacao();
+          this.listarMinhasPublicacoes();
           break;
         case "4":
-          this.excluirPublicacao();
+          this.editarPublicacao();
           break;
         case "5":
+          this.excluirPublicacao();
+          break;
+        case "6":
           this.verTodasPublicacoes();
+          break;
+        case "7":
+          this.interagirPublicacaoAvancada();
           break;
         case "0":
           print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
