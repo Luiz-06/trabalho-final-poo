@@ -20,6 +20,7 @@ export class Publicacao {
   }
 
   private validarConteudo(conteudo: string): void {
+    
     const MAX_CARACTERES = 180;
     
     if (conteudo.trim() === '') {

@@ -15,8 +15,11 @@ import {
 import * as validations from "./validations/validations";
 import * as vals from "./utils/validations";
 import { PerfilAvancado } from "./models/perfilAvancado";
+import { PublicacaoAvancada } from "./models/publicacaoAvancada";
 
 import { ulid } from "ulid";
+import { Interacao } from "./models/interacao";
+import { TipoInteracao } from "./models/tipoInteracao";
 
 export class App {
   private _isLoggedIn: boolean;
@@ -457,46 +460,54 @@ export class App {
     let opcao: string = "";
 
     do {
-        clear();
-        this.exibirTitulo('Gerenciamento de Publicações');
-        
-        console.log(`
+      clear();
+      this.exibirTitulo('Gerenciamento de Publicações');
+      
+      console.log(`
 \x1b[36m┌─────────────────────────────────────────┐
 │ 📝 Publicações                          │
 ├─────────────────────────────────────────┤
 │ \x1b[33m1\x1b[36m - \x1b[34m➕ Criar Publicação            \x1b[36m│
-│ \x1b[33m2\x1b[36m - \x1b[34m📋 Listar Minhas Publicações   \x1b[36m│
-│ \x1b[33m3\x1b[36m - \x1b[34m✏️  Editar Publicação          \x1b[36m│
-│ \x1b[33m4\x1b[36m - \x1b[31m🗑 Excluir Publicação         \x1b[36m│
-│ \x1b[33m5\x1b[36m - \x1b[34m👀 Ver Todas Publicações      \x1b[36m│
+│ \x1b[33m2\x1b[36m - \x1b[34m➕ Criar Publicação Avançada   \x1b[36m│
+│ \x1b[33m3\x1b[36m - \x1b[34m📋 Listar Minhas Publicações   \x1b[36m│
+│ \x1b[33m4\x1b[36m - \x1b[34m✏️  Editar Publicação          \x1b[36m│
+│ \x1b[33m5\x1b[36m - \x1b[31m🗑 Excluir Publicação         \x1b[36m│
+│ \x1b[33m6\x1b[36m - \x1b[34m👀 Ver Todas Publicações      \x1b[36m│
+│ \x1b[33m7\x1b[36m - \x1b[34m👥 Interagir com Publicação   \x1b[36m│
 │ \x1b[33m0\x1b[36m - \x1b[32m↩ Voltar                      \x1b[36m│
 └─────────────────────────────────────────┘\x1b[0m`);
 
-        opcao = getData("\n➤ Escolha uma opção: ");
+      opcao = getData("\n➤ Escolha uma opção: ");
 
-        switch (opcao) {
-            case "1":
-                this.criarPublicacao();
-                break;
-            case "2":
-                this.listarMinhasPublicacoes();
-                break;
-            case "3":
-                this.editarPublicacao();
-                break;
-            case "4":
-                this.excluirPublicacao();
-                break;
-            case "5":
-                this.verTodasPublicacoes();
-                break;
-            case "0":
-                print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
-                break;
-            default:
-                print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
-                break;
-        }
+      switch (opcao) {
+        case "1":
+          this.criarPublicacao();
+          break;
+        case "2":
+          this.fazerPublicacaoAvancada();
+          break;
+        case "3":
+          this.listarMinhasPublicacoes();
+          break;
+        case "4":
+          this.editarPublicacao();
+          break;
+        case "5":
+          this.excluirPublicacao();
+          break;  
+        case "6":
+          this.verTodasPublicacoes();
+          break;
+        case "7":
+          this.interagirPublicacaoAvancada();
+          break;
+        case "0":
+          print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
+          break;
+        default:
+          print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
+          break;
+      }
     } while (opcao !== "0");
   }
 
@@ -657,25 +668,40 @@ export class App {
   }
 
   private verTodasPublicacoes(): void {
-    const todasPublicacoes = this._redeSocial.listarTodasPublicacoes();
+    const publicacoes = this._redeSocial.listarTodasPublicacoes();
     
-    if (todasPublicacoes.length === 0) {
-        console.log(`
+    if (publicacoes.length === 0) {
+      console.log(`
 \x1b[33m╔══════════════════════════════════════════╗
 ║                                          ║
-║     📭 Não existem publicações          ║
+║     📭 Não existem publicações           ║
 ║                                          ║
 ╚══════════════════════════════════════════╝\x1b[0m`);
     } else {
-        console.log('\n🌐 Todas as Publicações:');
-        todasPublicacoes.forEach((pub, index) => {
-            const perfil = this._redeSocial.buscarPerfilPorID(pub.perfilAssociado);
-            console.log(`
-\x1b[34m${index + 1}. 👤 ${perfil?.apelido || 'Usuário Removido'}
-   📝 ${pub.conteudo}
+      console.log('\n🗒️  Todas as Publicações:');
+      publicacoes.forEach((pub, index) => {
+        console.log(`
+\x1b[34m${index + 1}. 📝 ${pub.conteudo}
    📅 ${pub.dataHora.toLocaleString()}
-            \x1b[0m`);
-        });
+   👤 Autor: ${this._redeSocial.buscarPerfilPorID(pub.perfilAssociado)?.apelido || 'Desconhecido'}
+      \x1b[0m`);
+
+        // Se for uma PublicacaoAvancada, mostrar interações
+        if (pub instanceof PublicacaoAvancada || PublicacaoAvancada.isPublicacaoAvancada(pub)) {
+          const publicacaoAvancada = pub instanceof PublicacaoAvancada 
+            ? pub 
+            : Object.assign(new PublicacaoAvancada(pub.id, pub.conteudo, pub.dataHora, pub.perfilAssociado), pub);
+          
+          const interacoes = publicacaoAvancada.listarInteracoesDetalhadas();
+          const contagemInteracoes = publicacaoAvancada.contarInteracoesPorTipo();
+
+          console.log('\n   📊 Resumo de Interações:');
+          console.log(`   👍 Curtir: ${contagemInteracoes[TipoInteracao.Curtir]}`);
+          console.log(`   👎 Não Curtir: ${contagemInteracoes[TipoInteracao.NaoCurtir]}`);
+          console.log(`   😂 Riso: ${contagemInteracoes[TipoInteracao.Riso]}`);
+          console.log(`   😮 Surpresa: ${contagemInteracoes[TipoInteracao.Surpresa]}`);
+        }
+      });
     }
     
     getData("\nPressione Enter para continuar...");
@@ -1189,7 +1215,7 @@ export class App {
         console.log(`
 \x1b[32m╔══════════════════════════════════╗
 ║                                          ║
-║     �� Perfil Comum excluído com sucesso! ║
+║     🗑 Perfil Comum excluído com sucesso! ║
 ║                                          ║
 ╚══════════════════════════════════════════╝\x1b[0m`);
       } else {
@@ -1226,6 +1252,7 @@ export class App {
 │ \x1b[33m2\x1b[36m - \x1b[34mCriar Perfil Comum          \x1b[36m│
 │ \x1b[33m3\x1b[36m - \x1b[34mEditar Perfil Comum         \x1b[36m│
 │ \x1b[33m4\x1b[36m - \x1b[34mExcluir Perfil Comum        \x1b[36m│
+│ \x1b[33m5\x1b[36m - \x1b[34mFazer Publicação Avançada   \x1b[36m│
 │ \x1b[33m0\x1b[36m - \x1b[31m↪ Voltar                   \x1b[36m│
 └─────────────────────────────────────────┘\x1b[0m`);
 
@@ -1244,6 +1271,9 @@ export class App {
         case "4":
           this.excluirPerfilComum();
           break;
+        case "5":
+          this.fazerPublicacaoAvancada();
+          break;
         case "0":
           gerenciarOn = false;
           break;
@@ -1253,6 +1283,153 @@ export class App {
       }
     } while (gerenciarOn);
   }
+
+  private fazerPublicacaoAvancada(): void {
+    try {
+      if (PerfilAvancado.isPerfilAvancado(this._perfilAtual)) {
+        console.log('\n\x1b[34m📝 Fazer Publicação Avançada \x1b[0m');
+        
+        const conteudo = getData("✍️ Digite o conteúdo da publicação: ");
+        const novaPublicacao = new PublicacaoAvancada(
+          "SUPER" + ulid(),
+          conteudo,
+          new Date(),
+          this._perfilAtual!.id
+        );
+
+        this._redeSocial.adicionarPublicacao(novaPublicacao);
+        salvarDadosPublicacoes(this._redeSocial.listarTodasPublicacoes());
+
+        console.log(`
+\x1b[32m╔══════════════════════════════════╗
+║                                          ║
+║     🎉 Publicação Avançada criada com sucesso! ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+      } else {
+        console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                              ║
+║   ⚠️ Apenas perfis avançados podem fazer publicações avançadas. ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+      }
+    } catch (error) {
+      console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ❌ Erro ao criar publicação avançada: ${error.message} ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    }
+  }
+
+  private interagirPublicacaoAvancada(): void {
+    try {
+      if (PerfilAvancado.isPerfilAvancado(this._perfilAtual)) {
+        console.log('\n\x1b[34m👥 Interagir com Publicação Avançada \x1b[0m');
+        
+        // Listar todas as publicações avançadas
+        const publicacoesAvancadas = this._redeSocial.listarTodasPublicacoes()
+          .filter(pub => pub instanceof PublicacaoAvancada || PublicacaoAvancada.isPublicacaoAvancada(pub));
+        
+        if (publicacoesAvancadas.length === 0) {
+          console.log(`
+\x1b[33m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Não existem publicações avançadas   ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+          return;
+        }
+
+        // Mostrar publicações avançadas disponíveis
+        console.log("\n📋 Publicações Avançadas Disponíveis:");
+        publicacoesAvancadas.forEach((pub, index) => {
+          console.log(`\x1b[34m${index + 1}. ${pub.conteudo.substring(0, 50)}...\x1b[0m`);
+        });
+
+        // Selecionar publicação para interagir
+        const escolhaPublicacao = getNumber("\n➤ Escolha o número da publicação: ") - 1;
+        
+        if (escolhaPublicacao < 0 || escolhaPublicacao >= publicacoesAvancadas.length) {
+          console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Publicação inválida                 ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+          return;
+        }
+
+        // Escolher tipo de interação
+        console.log(`
+\x1b[36m┌─────────────────────────────────────────┐
+│ 👍 Tipos de Interação                   │
+├─────────────────────────────────────────┤
+│ \x1b[33m1\x1b[36m - \x1b[34m👍 Curtir                        \x1b[36m│
+│ \x1b[33m2\x1b[36m - \x1b[34m👎 Não Curtir                   \x1b[36m│
+│ \x1b[33m3\x1b[36m - \x1b[34m😂 Riso                         \x1b[36m│
+│ \x1b[33m4\x1b[36m - \x1b[34m😮 Surpresa                     \x1b[36m│
+└─────────────────────────────────────────┘\x1b[0m`);
+
+        const escolhaInteracao = getNumber("\n➤ Escolha o tipo de interação: ");
+        
+        let tipoInteracao: TipoInteracao;
+        switch (escolhaInteracao) {
+          case 1: tipoInteracao = TipoInteracao.Curtir; break;
+          case 2: tipoInteracao = TipoInteracao.NaoCurtir; break;
+          case 3: tipoInteracao = TipoInteracao.Riso; break;
+          case 4: tipoInteracao = TipoInteracao.Surpresa; break;
+          default:
+            console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Interação inválida                  ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+            return;
+        }
+
+        // Criar interação
+        const novaInteracao = new Interacao(
+          ulid(), 
+          tipoInteracao, 
+          this._perfilAtual!.apelido
+        );
+
+        // Adicionar interação à publicação avançada
+        const publicacaoSelecionada = publicacoesAvancadas[escolhaPublicacao] as PublicacaoAvancada;
+        publicacaoSelecionada.adicionarInteracao(novaInteracao);
+
+        // Salvar publicações
+        salvarDadosPublicacoes(this._redeSocial.listarTodasPublicacoes());
+
+        console.log(`
+\x1b[32m╔══════════════════════════════════╗
+║                                          ║
+║     🎉 Interação adicionada com sucesso! ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+
+      } else {
+        console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ⚠️ Apenas perfis avançados podem interagir com publicações. ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+      }
+    } catch (error) {
+      console.log(`
+\x1b[31m╔══════════════════════════════════════════╗
+║                                          ║
+║   ❌ Erro ao interagir com publicação: ${error.message} ║
+║                                          ║
+╚══════════════════════════════════════════╝\x1b[0m`);
+    }
+  }
+
 }
 
 const app: App = new App();

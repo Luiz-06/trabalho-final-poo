@@ -14,30 +14,43 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 exports.__esModule = true;
 exports.PublicacaoAvancada = void 0;
 var publicacao_1 = require("./publicacao");
+var tipoInteracao_1 = require("./tipoInteracao");
 var PublicacaoAvancada = /** @class */ (function (_super) {
     __extends(PublicacaoAvancada, _super);
     function PublicacaoAvancada(id, conteudo, dataHora, perfilAssociado) {
         var _this = _super.call(this, id, conteudo, dataHora, perfilAssociado) || this;
-        _this._listaInteracoes = [];
+        _this._interacoes = [];
         return _this;
     }
     PublicacaoAvancada.prototype.adicionarInteracao = function (interacao) {
-        this._listaInteracoes.push(interacao);
+        this._interacoes.push(interacao);
     };
     PublicacaoAvancada.prototype.listarInteracoes = function () {
-        return __spreadArray([], this._listaInteracoes, true);
+        return this._interacoes;
+    };
+    PublicacaoAvancada.isPublicacaoAvancada = function (publicacao) {
+        return publicacao._id.slice(0, 5) === 'SUPER';
+    };
+    PublicacaoAvancada.prototype.listarInteracoesDetalhadas = function () {
+        return this._interacoes.map(function (interacao) {
+            return "".concat(interacao.tipo, " por ").concat(interacao.perfilAutor);
+        });
+    };
+    PublicacaoAvancada.prototype.contarInteracoesPorTipo = function () {
+        var _a;
+        var contagem = (_a = {},
+            _a[tipoInteracao_1.TipoInteracao.Curtir] = 0,
+            _a[tipoInteracao_1.TipoInteracao.NaoCurtir] = 0,
+            _a[tipoInteracao_1.TipoInteracao.Riso] = 0,
+            _a[tipoInteracao_1.TipoInteracao.Surpresa] = 0,
+            _a);
+        this._interacoes.forEach(function (interacao) {
+            contagem[interacao.tipo]++;
+        });
+        return contagem;
     };
     return PublicacaoAvancada;
 }(publicacao_1.Publicacao));

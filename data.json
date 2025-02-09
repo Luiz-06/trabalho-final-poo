@@ -63,6 +63,19 @@
         "_conteudo": "tchau cursor",
         "_dataHora": "2025-02-09T06:41:40.554Z",
         "_perfilAssociado": "01JKMNXN9FSPTBQAVZD9RFGJ4H"
+      },
+      {
+        "_id": "SUPER01JKPA1VYD017PCWBNAJ0TGHPX",
+        "_conteudo": "weewdwe",
+        "_dataHora": "2025-02-09T21:32:37.709Z",
+        "_perfilAssociado": "SUPER01JKMNW908P105TRH0A0XKE7CE",
+        "_interacoes": [
+          {
+            "_id": "01JKPA20CXJP1W3X7CJDDAXWCJ",
+            "_tipo": "😂",
+            "_perfilAutor": "adm"
+          }
+        ]
       }
     ]
   }
