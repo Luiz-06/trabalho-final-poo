@@ -10,6 +10,10 @@ var publicacaoAvancada_1 = require("./models/publicacaoAvancada");
 var ulid_1 = require("ulid");
 var interacao_1 = require("./models/interacao");
 var tipoInteracao_1 = require("./models/tipoInteracao");
+var child_process_1 = require("child_process");
+if (process.platform === "win32") {
+    (0, child_process_1.execSync)("chcp 65001 > nul");
+}
 var App = /** @class */ (function () {
     function App() {
         this._isLoggedIn = false;
@@ -320,35 +324,6 @@ var App = /** @class */ (function () {
                     (0, auxFunctions_1.print)("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
                     break;
             }
-            switch (opcao) {
-                case "1":
-                    this.criarPublicacao();
-                    break;
-                case "2":
-                    this.fazerPublicacaoAvancada();
-                    break;
-                case "3":
-                    this.listarMinhasPublicacoes();
-                    break;
-                case "4":
-                    this.editarPublicacao();
-                    break;
-                case "5":
-                    this.excluirPublicacao();
-                    break;
-                case "6":
-                    this.verTodasPublicacoes();
-                    break;
-                case "7":
-                    this.interagirPublicacaoAvancada();
-                    break;
-                case "0":
-                    (0, auxFunctions_1.print)("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
-                    break;
-                default:
-                    (0, auxFunctions_1.print)("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
-                    break;
-            }
         } while (opcao !== "0");
         console.clear();
     };
@@ -477,27 +452,6 @@ var App = /** @class */ (function () {
                     break;
             }
             (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
-            switch (opcao) {
-                case "1":
-                    this.visualizarSolicitacoes();
-                    break;
-                case "2":
-                    this.aceitarSolicitacao();
-                    break;
-                case "3":
-                    this.recusarSolicitacao();
-                    break;
-                case "4":
-                    this.enviarSolicitacao();
-                    break;
-                case "0":
-                    (0, auxFunctions_1.print)("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
-                    break;
-                default:
-                    (0, auxFunctions_1.print)("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
-                    break;
-            }
-            (0, auxFunctions_1.salvarDadosPerfis)(this._redeSocial.listarPerfis());
         } while (opcao !== "0");
     };
     App.prototype.visualizarSolicitacoes = function () {
@@ -580,29 +534,6 @@ var App = /** @class */ (function () {
             this.exibirTitulo("Alterar Perfil");
             console.log("\n\u001B[36m\u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510\n\u2502 \uD83D\uDEE0\uFE0F  Configura\u00E7\u00F5es de Perfil              \u2502\n\u251C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524\n\u2502 \u001B[33m1\u001B[36m - \u001B[34m\uD83D\uDC64 Alterar Apelido                  \u001B[36m\u2502\n\u2502 \u001B[33m2\u001B[36m - \u001B[34m\uD83D\uDCE7 Alterar Email                    \u001B[36m\u2502\n\u2502 \u001B[33m3\u001B[36m - \u001B[34m\uD83D\uDDBC\uFE0F  Alterar Foto                     \u001B[36m\u2502\n\u2502 \u001B[33m4\u001B[36m - \u001B[34m\uD83D\uDD10 Alterar Senha                    \u001B[36m\u2502\n\u2502 \u001B[33m5\u001B[36m - \u001B[31m\u274C Desativar Conta                  \u001B[36m\u2502\n\u2502 \u001B[33m0\u001B[36m - \u001B[32m\u21A9 Voltar                            \u001B[36m\u2502\n\u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518\u001B[0m");
             opcao = (0, auxFunctions_1.getData)("\n➤ Escolha uma opção: ");
-            switch (opcao) {
-                case "1":
-                    this.alterarApelido();
-                    break;
-                case "2":
-                    this.alterarEmail();
-                    break;
-                case "3":
-                    this.alterarFoto();
-                    break;
-                case "4":
-                    this.alterarSenha();
-                    break;
-                case "5":
-                    this.desativarConta();
-                    break;
-                case "0":
-                    (0, auxFunctions_1.print)("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
-                    break;
-                default:
-                    (0, auxFunctions_1.print)("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
-                    break;
-            }
             switch (opcao) {
                 case "1":
                     this.alterarApelido();

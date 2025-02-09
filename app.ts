@@ -590,35 +590,6 @@ export class App {
           print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
           break;
       }
-      switch (opcao) {
-        case "1":
-          this.criarPublicacao();
-          break;
-        case "2":
-          this.fazerPublicacaoAvancada();
-          break;
-        case "3":
-          this.listarMinhasPublicacoes();
-          break;
-        case "4":
-          this.editarPublicacao();
-          break;
-        case "5":
-          this.excluirPublicacao();
-          break;
-        case "6":
-          this.verTodasPublicacoes();
-          break;
-        case "7":
-          this.interagirPublicacaoAvancada();
-          break;
-        case "0":
-          print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
-          break;
-        default:
-          print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
-          break;
-      }
     } while (opcao !== "0");
     console.clear();
   }
@@ -858,28 +829,6 @@ export class App {
       }
 
       salvarDadosPerfis(this._redeSocial.listarPerfis());
-      switch (opcao) {
-        case "1":
-          this.visualizarSolicitacoes();
-          break;
-        case "2":
-          this.aceitarSolicitacao();
-          break;
-        case "3":
-          this.recusarSolicitacao();
-          break;
-        case "4":
-          this.enviarSolicitacao();
-          break;
-        case "0":
-          print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
-          break;
-        default:
-          print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
-          break;
-      }
-
-      salvarDadosPerfis(this._redeSocial.listarPerfis());
     } while (opcao !== "0");
   }
 
@@ -1035,29 +984,6 @@ export class App {
 
       opcao = getData("\n➤ Escolha uma opção: ");
 
-      switch (opcao) {
-        case "1":
-          this.alterarApelido();
-          break;
-        case "2":
-          this.alterarEmail();
-          break;
-        case "3":
-          this.alterarFoto();
-          break;
-        case "4":
-          this.alterarSenha();
-          break;
-        case "5":
-          this.desativarConta();
-          break;
-        case "0":
-          print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
-          break;
-        default:
-          print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
-          break;
-      }
       switch (opcao) {
         case "1":
           this.alterarApelido();
