@@ -1,28 +1,22 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Interacao = void 0;
 var Interacao = /** @class */ (function () {
-    function Interacao(id, tipoInteracao, perfilAutor) {
+    function Interacao(id, tipo, perfilAutor) {
         this._id = id;
-        this._tipoInteracao = tipoInteracao;
+        this._tipo = tipo;
         this._perfilAutor = perfilAutor;
     }
     Object.defineProperty(Interacao.prototype, "id", {
         get: function () {
             return this._id;
         },
-        set: function (value) {
-            this._id = value;
-        },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(Interacao.prototype, "tipoInteracao", {
+    Object.defineProperty(Interacao.prototype, "tipo", {
         get: function () {
-            return this._tipoInteracao;
-        },
-        set: function (value) {
-            this._tipoInteracao = value;
+            return this._tipo;
         },
         enumerable: false,
         configurable: true
@@ -30,9 +24,6 @@ var Interacao = /** @class */ (function () {
     Object.defineProperty(Interacao.prototype, "perfilAutor", {
         get: function () {
             return this._perfilAutor;
-        },
-        set: function (value) {
-            this._perfilAutor = value;
         },
         enumerable: false,
         configurable: true

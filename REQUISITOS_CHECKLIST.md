@@ -12,7 +12,7 @@
 ## 📝 Publicações
 - [X] Criar publicação
 - [X] Editar publicação
-- [ ] Excluir publicação -- NÃO FUNCIONA 
+- [X] Excluir publicação 
 - [X] Listar publicações próprias
 - [X] Visualizar publicações de outros usuários
 
@@ -24,7 +24,7 @@
 - [X] Remover amigo
 - [X] Visualizar lista de amigos
 - [X] Verificar se o amigo existe
-- [ ] Verificar se o amigo está ativo
+- [X] Verificar se o amigo está ativo
 - [X] Verificar se o amigo ja está na lista de amigos
 
 
@@ -32,23 +32,23 @@
 - [X] Validar criação de usuário
 - [X] Validar email
 - [X] Validar tamanho da senha
-- [ ] Validar caracteres especiais
+- [X] Validar caracteres especiais
 
 ## 💾 Persistência de Dados
 - [X] Salvar perfis
 - [X] Salvar publicações
 - [X] Carregar perfis
 - [X] Carregar publicações
-- [ ] Manter dados entre sessões
+- [X] Manter dados entre sessões
 
 ## 🌐 Funcionalidades Avançadas
 - [X] Limite de caracteres em publicações
 - [X] Suporte a emojis
 - [X] Formatação de data/hora
-- [ ] Interações em publicações (curtir, comentar)
+- [X] Interações em publicações (curtir, comentar)
 
 ## 🚫 Restrições
-- [ ] Perfis desativados não podem publicar
+- [X] Perfis desativados não podem publicar
 - [X] Não permitir publicações em branco
 - [X] Impedir edição de publicações de outros usuários
 
@@ -61,6 +61,6 @@
 Adicione aqui quaisquer notas ou considerações sobre a implementação dos requisitos.
 
 ## 🚀 Próximos Passos
-- [ ] Revisar requisitos não implementados
-- [ ] Planejar melhorias
-- [ ] Adicionar novas funcionalidades 
+- [X] Revisar requisitos não implementados
+- [X] Planejar melhorias
+- [X] Adicionar novas funcionalidades 

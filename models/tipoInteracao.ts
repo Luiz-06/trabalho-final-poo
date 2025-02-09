@@ -1,6 +1,6 @@
 export enum TipoInteracao {
-  curtir = ":)",
-  naoCurtir = ":(",
-  riso = "xD",
-  surpresa = ":O",
+  Curtir = "👍",
+  NaoCurtir = "👎",
+  Riso = "😂",
+  Surpresa = "😮"
 }

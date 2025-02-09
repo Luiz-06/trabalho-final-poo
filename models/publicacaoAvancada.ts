@@ -5,7 +5,7 @@ import { Publicacao } from "./publicacao";
 import { TipoInteracao } from "./tipoInteracao";
 
 export class PublicacaoAvancada extends Publicacao {
-  private _listaInteracoes: TipoInteracao[];
+  private _interacoes: Interacao[];
 
   constructor(
     id: string,
@@ -14,14 +14,39 @@ export class PublicacaoAvancada extends Publicacao {
     perfilAssociado: string
   ) {
     super(id, conteudo, dataHora, perfilAssociado);
-    this._listaInteracoes = [];
+    this._interacoes = [];
   }
 
-  public adicionarInteracao(interacao: TipoInteracao): void {
-    this._listaInteracoes.push(interacao);
+  public adicionarInteracao(interacao: Interacao): void {
+    this._interacoes.push(interacao);
   }
 
-  public listarInteracoes(): TipoInteracao[] {
-    return [...this._listaInteracoes];
+  public listarInteracoes(): Interacao[] {
+    return this._interacoes;
+  }
+
+  public static isPublicacaoAvancada(publicacao: any): boolean {
+    return publicacao._id.slice(0, 5) === 'SUPER'; 
+  }
+
+  public listarInteracoesDetalhadas(): string[] | any {
+    return this._interacoes.map(interacao => 
+      `${interacao.tipo} por ${interacao.perfilAutor}`
+    );
+  }
+
+  public contarInteracoesPorTipo(): { [key in TipoInteracao]: number } {
+    const contagem = {
+      [TipoInteracao.Curtir]: 0,
+      [TipoInteracao.NaoCurtir]: 0,
+      [TipoInteracao.Riso]: 0,
+      [TipoInteracao.Surpresa]: 0
+    };
+
+    this._interacoes.forEach(interacao => {
+      contagem[interacao.tipo]++;
+    });
+
+    return contagem;
   }
 }

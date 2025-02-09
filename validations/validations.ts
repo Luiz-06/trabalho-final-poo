@@ -25,14 +25,18 @@ function validationTrocarApelido(apelido: string) : void | boolean{
     return true
 }
 
-
+function existEmail(email: string): boolean {
+    const perfisSalvos = aux.lerDadosPerfis();
+    return perfisSalvos.some(perfil => perfil["_email"] === email);
+}
 function validationEmail(email: string) : void | boolean{
-    if (exist(email)){
+    if (existEmail(email)){
         console.error(`O email "${email}" já está em uso. Por favor, escolha outro.`);
         return false
     }
     return true
 }
+
 
 function possiveisErrosUsername(apelido: string){
     if (exist(apelido))

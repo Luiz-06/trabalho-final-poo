@@ -50,7 +50,7 @@ function removeList<T>(colecao: T[], item: T): T[] {
 }
 
 function clear(): void {
-  getData("Pressione Enter para sair");
+  //getData("Pressione Enter para sair");
   console.clear();
 }
 

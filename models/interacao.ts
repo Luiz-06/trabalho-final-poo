@@ -1,35 +1,25 @@
-import { Perfil } from "./perfil";
 import { TipoInteracao } from "./tipoInteracao";
 
 export class Interacao {
-  private _id: number;
-  private _tipoInteracao: TipoInteracao;
-  private _perfilAutor: Perfil;
+  private _id: string;
+  private _tipo: TipoInteracao;
+  private _perfilAutor: string;
 
-  constructor(id: number, tipoInteracao: TipoInteracao, perfilAutor: Perfil) {
+  constructor(id: string, tipo: TipoInteracao, perfilAutor: string) {
     this._id = id;
-    this._tipoInteracao = tipoInteracao;
+    this._tipo = tipo;
     this._perfilAutor = perfilAutor;
   }
 
-  public get id(): number {
+  public get id(): string {
     return this._id;
   }
-  public set id(value: number) {
-    this._id = value;
+
+  public get tipo(): TipoInteracao {
+    return this._tipo;
   }
 
-  public get tipoInteracao(): TipoInteracao {
-    return this._tipoInteracao;
-  }
-  public set tipoInteracao(value: TipoInteracao) {
-    this._tipoInteracao = value;
-  }
-  
-  public get perfilAutor(): Perfil {
+  public get perfilAutor(): string {
     return this._perfilAutor;
-  }
-  public set perfilAutor(value: Perfil) {
-    this._perfilAutor = value;
   }
 }
