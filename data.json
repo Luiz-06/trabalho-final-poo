@@ -3,12 +3,15 @@
     "perfil": [
       {
         "_id": "SUPER01JKMNW908P105TRH0A0XKE7CE",
-        "_apelido": "adm",
+        "_apelido": "adms",
         "_email": "administrador@redesocial.com",
         "_foto": "admin.png",
         "_senha": "adm",
         "_stats": true,
-        "_amigos": ["pedro", "gisele"],
+        "_amigos": [
+          "pedro",
+          "gisele"
+        ],
         "_publicacoes": [],
         "_solicitacoesAmizade": []
       },
@@ -19,9 +22,13 @@
         "_foto": "default.png",
         "_senha": "pedro",
         "_stats": true,
-        "_amigos": ["adm"],
+        "_amigos": [
+          "adm"
+        ],
         "_publicacoes": [],
-        "_solicitacoesAmizade": ["gisele"]
+        "_solicitacoesAmizade": [
+          "gisele"
+        ]
       },
       {
         "_id": "01JKMP715PZTEEPHVSTZWQZ67F",
@@ -30,7 +37,9 @@
         "_foto": "😃",
         "_senha": "2",
         "_stats": true,
-        "_amigos": ["adm"],
+        "_amigos": [
+          "adm"
+        ],
         "_publicacoes": [
           {
             "_id": "01JKMP7VMZSBV4FN4GZ730RHB7",
@@ -80,6 +89,28 @@
         "_email": "l",
         "_foto": "🙂",
         "_senha": "l",
+        "_stats": true,
+        "_amigos": [],
+        "_publicacoes": [],
+        "_solicitacoesAmizade": []
+      },
+      {
+        "_id": "SUPER01JKPE972Q2YC9CP2EME6VF64R",
+        "_apelido": "adm",
+        "_email": "administrador@redesocial.com",
+        "_foto": "admin.png",
+        "_senha": "adm",
+        "_stats": true,
+        "_amigos": [],
+        "_publicacoes": [],
+        "_solicitacoesAmizade": []
+      },
+      {
+        "_id": "01JKPEDZYN1CATXKY322XS8R8B",
+        "_apelido": "ze",
+        "_email": "ze",
+        "_foto": "😃",
+        "_senha": "ze",
         "_stats": true,
         "_amigos": [],
         "_publicacoes": [],
