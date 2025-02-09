@@ -1,6 +1,18 @@
 "use strict";
-exports.__esModule = true;
-exports.lerDadosPerfis = exports.salvarDadosPublicacoes = exports.salvarDadosPerfis = exports.carregarDadosPublicacoes = exports.carregarDadosPerfis = exports.choosePhoto = exports.clear = exports.getNegativeNumber = exports.removeList = exports.addList = exports.mapList = exports.filterList = exports.getPositiveNumber = exports.getNaturalNumber = exports.print = exports.getNumber = exports.getData = exports.salvarPublicacoes = void 0;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.salvarDadosPublicacoes = exports.salvarDadosPerfis = exports.carregarDadosPublicacoes = exports.carregarDadosPerfis = exports.choosePhoto = exports.salvarPublicacoes = void 0;
+exports.getData = getData;
+exports.getNumber = getNumber;
+exports.print = print;
+exports.getNaturalNumber = getNaturalNumber;
+exports.getPositiveNumber = getPositiveNumber;
+exports.filterList = filterList;
+exports.mapList = mapList;
+exports.addList = addList;
+exports.removeList = removeList;
+exports.getNegativeNumber = getNegativeNumber;
+exports.clear = clear;
+exports.lerDadosPerfis = lerDadosPerfis;
 var readline_sync_1 = require("readline-sync");
 var fs = require("fs");
 var path = require("path");
@@ -9,55 +21,44 @@ var publicacao_1 = require("../models/publicacao");
 function print(mensagem) {
     console.log(mensagem);
 }
-exports.print = print;
 function getNumber(mensagem) {
     return Number((0, readline_sync_1.question)(mensagem));
 }
-exports.getNumber = getNumber;
 function getData(mensagem) {
     return (0, readline_sync_1.question)(mensagem);
 }
-exports.getData = getData;
 function getNaturalNumber(numero) {
     if (numero >= 0)
         return numero;
     throw new Error("Apenas valores positivos");
 }
-exports.getNaturalNumber = getNaturalNumber;
 function getPositiveNumber(numero) {
     if (numero > 0)
         return numero;
     throw new Error("Apenas valores positivos");
 }
-exports.getPositiveNumber = getPositiveNumber;
 function getNegativeNumber(numero) {
     if (numero < 0)
         return numero;
     throw new Error("Apenas valores negativos");
 }
-exports.getNegativeNumber = getNegativeNumber;
 function filterList(colecao, criterio) {
     return colecao.filter(criterio);
 }
-exports.filterList = filterList;
 function mapList(colecao, criterio) {
     return colecao.map(criterio);
 }
-exports.mapList = mapList;
 function addList(colecao, item) {
     colecao.push(item);
     return colecao;
 }
-exports.addList = addList;
 function removeList(colecao, item) {
     return colecao.filter(function (i) { return i !== item; });
 }
-exports.removeList = removeList;
 function clear() {
-    getData("Pressione Enter para sair");
+    //getData("Pressione Enter para sair");
     console.clear();
 }
-exports.clear = clear;
 var choosePhoto = function () {
     var emojisArray = [
         "\ud83d\ude00",
@@ -113,7 +114,6 @@ function lerDadosPerfis() {
         return []; // Se houver erro, retorna um array vazio
     }
 }
-exports.lerDadosPerfis = lerDadosPerfis;
 var salvarDadosPublicacoes = function (publicacoes) {
     var filePath = path.join(process.cwd(), "data.json");
     var jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
