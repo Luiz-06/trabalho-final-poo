@@ -18,7 +18,7 @@ import { PerfilAvancado } from "./models/perfilAvancado";
 
 import { ulid } from "ulid";
 
-class App {
+export class App {
   private _isLoggedIn: boolean;
   private _perfilAtual: Perfil | null | PerfilAvancado | any;
   private _redeSocial: RedeSocial;
