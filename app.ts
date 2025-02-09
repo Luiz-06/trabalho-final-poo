@@ -21,6 +21,12 @@ import { ulid } from "ulid";
 import { Interacao } from "./models/interacao";
 import { TipoInteracao } from "./models/tipoInteracao";
 
+import { execSync } from "child_process";
+
+if (process.platform === "win32") {
+  execSync("chcp 65001 > nul");
+}
+
 export class App {
   private _isLoggedIn: boolean;
   private _perfilAtual: Perfil | null | PerfilAvancado | any;
