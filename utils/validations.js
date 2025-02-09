@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.validationSenha = void 0;
 var validationSenha = function (senha) {
     if (senha.length < 8) {

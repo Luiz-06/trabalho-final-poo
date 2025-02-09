@@ -12,7 +12,7 @@
 ## 📝 Publicações
 - [X] Criar publicação
 - [X] Editar publicação
-- [ ] Excluir publicação -- NÃO FUNCIONA 
+- [X] Excluir publicação 
 - [X] Listar publicações próprias
 - [X] Visualizar publicações de outros usuários
 

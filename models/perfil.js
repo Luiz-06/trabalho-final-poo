@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Perfil = void 0;
 var publicacao_1 = require("./publicacao");
 var Perfil = /** @class */ (function () {

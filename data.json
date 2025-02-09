@@ -49,6 +49,50 @@
           }
         ],
         "_solicitacoesAmizade": []
+      },
+      {
+        "_id": "01JKP1JEHT4KDDXW8YEHSNRX9C",
+        "_apelido": "b",
+        "_email": "b",
+        "_foto": "😃",
+        "_senha": "b",
+        "_stats": false,
+        "_amigos": [],
+        "_publicacoes": [],
+        "_solicitacoesAmizade": []
+      },
+      {
+        "_id": "01JKP57HKEP7GKE9BZ9C4SE5DN",
+        "_apelido": "teste2",
+        "_email": "teste2",
+        "_foto": "😴",
+        "_senha": "teste2",
+        "_stats": true,
+        "_amigos": [],
+        "_publicacoes": [],
+        "_solicitacoesAmizade": []
+      },
+      {
+        "_id": "01JKP5QPRX57ATDQZ62FAF9VED",
+        "_apelido": "adalto",
+        "_email": "adalto",
+        "_foto": "🥰",
+        "_senha": "adalto",
+        "_stats": false,
+        "_amigos": [],
+        "_publicacoes": [],
+        "_solicitacoesAmizade": []
+      },
+      {
+        "_id": "01JKP7N5WNAMBFWVJQ2XFF4JVA",
+        "_apelido": "l",
+        "_email": "l",
+        "_foto": "🙂",
+        "_senha": "l",
+        "_stats": true,
+        "_amigos": [],
+        "_publicacoes": [],
+        "_solicitacoesAmizade": []
       }
     ],
     "publicacao": [
@@ -63,6 +107,12 @@
         "_conteudo": "tchau cursor",
         "_dataHora": "2025-02-09T06:41:40.554Z",
         "_perfilAssociado": "01JKMNXN9FSPTBQAVZD9RFGJ4H"
+      },
+      {
+        "_id": "01JKP1P3BEFXCQ254QX4T6SJ42",
+        "_conteudo": "teste",
+        "_dataHora": "2025-02-09T19:06:26.501Z",
+        "_perfilAssociado": "01JKP1JEHT4KDDXW8YEHSNRX9C"
       }
     ]
   }
