@@ -110,7 +110,7 @@ Siga as opções do menu interativo para explorar as funcionalidades do sistema.
 
 | Em desenvolvimento
 
-Confira o vídeo de apresentação do projeto [](). 🎬
+Confira o vídeo de apresentação do projeto [aqui](https://youtu.be/3aDnmQe_oH8?si=W1GCJFVxqHPmrG9X) 🎬
 
 ---
 
