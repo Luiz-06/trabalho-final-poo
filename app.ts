@@ -172,23 +172,30 @@ export class App {
       console.log(`\x1b[31m⚠️ ${error.message}\x1b[0m`);
       return;
     }
-    const senha = getData("🔐 Escolha uma senha: ");
+
+    let senha: string;
+    do {
+        senha = getData("🔐 Escolha uma senha (mínimo 8 caracteres): ");
+        try {
+            vals.validationSenha(senha);
+            break;
+        } catch (error) {
+            console.log(error.message);
+        }
+    } while (true);
 
 
-    // let senha: string;
-    // do {
-    //     senha = getData("🔐 Escolha uma senha (mínimo 8 caracteres): ");
-    //     try {
-    //         vals.validationSenha(senha);
-    //         break;
-    //     } catch (error) {
-    //         console.log(error.message);
-    //     }
-    // } while (true);
-
-    const email = getData("📧 Digite seu email: ");
-
-    console.log("\n🖼️ Escolha sua foto de perfil:");
+    
+    let email: string;
+    do {
+      email = getData("📧 Digite seu email: ");
+      
+      if (validations.existEmail(email)){
+        console.log("Email indísponivel! ")
+      } else {
+        break
+      }
+    } while (true);
 
     console.log("\n🖼️ Escolha sua foto de perfil:");
     const foto = choosePhoto();
@@ -495,52 +502,6 @@ this.delay(3000)
     this.start();
   }
 
-  private menuPerfil(): void {
-    let opcao: string = "";
-
-    do {
-      clear();
-      this.exibirTitulo("Configurações do Perfil");
-      console.log(`
-\x1b[36m┌─────────────────────────────────┐
-│ 👤 Opções de Perfil             │
-├─────────────────────────────────┤
-│ \x1b[33m1\x1b[36m - \x1b[34mVisualizar Perfil        \x1b[36m│
-│ \x1b[33m2\x1b[36m - \x1b[34mAlterar Perfil           \x1b[36m│
-│ \x1b[33m3\x1b[36m - \x1b[31mDeletar Perfil           \x1b[36m│
-│ \x1b[33m0\x1b[36m - \x1b[32mVoltar                   \x1b[36m│
-└─────────────────────────────────┘\x1b[0m`);
-
-      opcao = getData("\n➤ Escolha uma opção: ");
-
-      switch (opcao) {
-        case "1":
-          this.acessarPerfil();
-          break;
-        case "2":
-          this.menuAlterarPerfil();
-          break;
-        case "3":
-          if (validations.validationTrocarSenha(this._perfilAtual!.senha)) {
-            print("\x1b[31m🗑 Deletando perfil... 🗑\x1b[0m");
-            this._redeSocial.desativarPerfil(this._perfilAtual!.apelido);
-            this._perfilAtual = null;
-            this._isLoggedIn = false;
-            salvarDadosPerfis(this._redeSocial.listarPerfis());
-            print("\x1b[31m✘ Perfil Deletado! ✘\x1b[0m");
-            this.start();
-          }
-          return;
-        case "0":
-          print("\x1b[32m↩ Voltando ao Menu Principal... ↩\x1b[0m");
-          break;
-        default:
-          print("\x1b[33m⚠ Opção inválida! Tente novamente. ⚠\x1b[0m");
-          break;
-      }
-    } while (opcao !== "0");
-  }
-
   private menuPublicacoes(): void {
     let opcao: string = "";
 
@@ -782,10 +743,6 @@ this.delay(3000)
     getData("\nPressione Enter para continuar...");
   }
 
-
-
-
-
   private verTodasPublicacoes(): void {
     const publicacoes = this._redeSocial.listarTodasPublicacoes();
     
@@ -825,23 +782,6 @@ this.delay(3000)
     
     getData("\nPressione Enter para continuar...");
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   private menuSolicitacoes(): void {
     let opcao: string = "";
@@ -1013,12 +953,6 @@ this.delay(3000)
     getData("\nPressione Enter para continuar...");
   }
 
-  private acessarPerfil(): void {
-    if (this._perfilAtual) {
-      print(this._perfilAtual.toString());
-    }
-  }
-
   private menuAlterarPerfil(): void {
     let opcao: string = "";
 
@@ -1067,7 +1001,6 @@ this.delay(3000)
     console.clear();
   }
 
-  // Métodos auxiliares para cada alteração
   private alterarApelido(): void {
     const novoApelido = getData("\x1b[34m👤 Insira o novo apelido: \x1b[0m");
 
@@ -1137,9 +1070,22 @@ this.delay(3000)
   }
 
   private alterarSenha(): void {
-    if (validations.validationTrocarSenha(this._perfilAtual!.senha)) {
-      const novaSenha = getData("\x1b[34m🔐 Insira a nova senha: \x1b[0m");
 
+
+    
+
+    if (validations.validationTrocarSenha(this._perfilAtual!.senha)) {
+
+      let novaSenha: string;
+      do {
+        novaSenha = getData("🔐 Escolha uma novaSenha (mínimo 8 caracteres): ");
+          try {
+              vals.validationSenha(novaSenha);
+              break;
+          } catch (error) {
+              console.log(error.message);
+          }
+      } while (true);
 
       this._perfilAtual!.senha = novaSenha;
       salvarDadosPerfis(this._redeSocial.listarPerfis());
