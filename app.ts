@@ -667,11 +667,26 @@ this.delay(3000)
     }
 
     console.log("\n🗒️  Escolha a publicação para editar:");
+
+    
     publicacoes.forEach((pub, index) => {
       console.log(`\x1b[34m${index + 1}. ${pub.conteudo}\x1b[0m`);
     });
 
-    const escolha = getNumber("\n➤ Digite o número da publicação: ") - 1;
+    let escolha
+
+    while (true) {
+      escolha = getNumber("\n➤ Escolha o número da publicação: ") - 1;
+  
+      // Verificar se a entrada é um número e maior ou igual a zero
+      if (!isNaN(escolha) && escolha >= 0) {
+          break; // Sai do loop se a entrada for válida
+      } else {
+          console.log("Por favor, insira um número válido.");
+      }
+  }
+
+
 
     if (escolha < 0 || escolha >= publicacoes.length) {
       print("\x1b[31m⚠️ Publicação inválida! ⚠️\x1b[0m");
@@ -1480,8 +1495,19 @@ this.delay(3000)}
         });
 
         // Selecionar publicação para interagir
-        const escolhaPublicacao =
-          getNumber("\n➤ Escolha o número da publicação: ") - 1;
+        let escolhaPublicacao
+
+        while (true) {
+          escolhaPublicacao = getNumber("\n➤ Escolha o número da publicação: ") - 1;
+      
+          // Verificar se a entrada é um número e maior ou igual a zero
+          if (!isNaN(escolhaPublicacao) && escolhaPublicacao >= 0) {
+              break; // Sai do loop se a entrada for válida
+          } else {
+              console.log("Por favor, insira um número válido.");
+          }
+      }
+        
 
         if (
           escolhaPublicacao < 0 ||

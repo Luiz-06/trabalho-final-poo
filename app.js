@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 var perfil_1 = require("./models/perfil");
 var redeSocial_1 = require("./models/redeSocial");
@@ -366,7 +366,17 @@ var App = /** @class */ (function () {
         publicacoes.forEach(function (pub, index) {
             console.log("\u001B[34m".concat(index + 1, ". ").concat(pub.conteudo, "\u001B[0m"));
         });
-        var escolha = (0, auxFunctions_1.getNumber)("\n➤ Digite o número da publicação: ") - 1;
+        var escolha;
+        while (true) {
+            escolha = (0, auxFunctions_1.getNumber)("\n➤ Escolha o número da publicação: ") - 1;
+            // Verificar se a entrada é um número e maior ou igual a zero
+            if (!isNaN(escolha) && escolha >= 0) {
+                break; // Sai do loop se a entrada for válida
+            }
+            else {
+                console.log("Por favor, insira um número válido.");
+            }
+        }
         if (escolha < 0 || escolha >= publicacoes.length) {
             (0, auxFunctions_1.print)("\x1b[31m⚠️ Publicação inválida! ⚠️\x1b[0m");
             return;
@@ -827,7 +837,17 @@ var App = /** @class */ (function () {
                     console.log("\u001B[34m".concat(index + 1, ". ").concat(pub.conteudo.substring(0, 50), "...\u001B[0m"));
                 });
                 // Selecionar publicação para interagir
-                var escolhaPublicacao = (0, auxFunctions_1.getNumber)("\n➤ Escolha o número da publicação: ") - 1;
+                var escolhaPublicacao = void 0;
+                while (true) {
+                    escolhaPublicacao = (0, auxFunctions_1.getNumber)("\n➤ Escolha o número da publicação: ") - 1;
+                    // Verificar se a entrada é um número e maior ou igual a zero
+                    if (!isNaN(escolhaPublicacao) && escolhaPublicacao >= 0) {
+                        break; // Sai do loop se a entrada for válida
+                    }
+                    else {
+                        console.log("Por favor, insira um número válido.");
+                    }
+                }
                 if (escolhaPublicacao < 0 ||
                     escolhaPublicacao >= publicacoesAvancadas.length) {
                     console.log("\n\u001B[31m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551   \u26A0\uFE0F Publica\u00E7\u00E3o inv\u00E1lida                 \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
