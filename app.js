@@ -416,15 +416,28 @@ var App = /** @class */ (function () {
     };
     App.prototype.verTodasPublicacoes = function () {
         var _this = this;
-        var todasPublicacoes = this._redeSocial.listarTodasPublicacoes();
-        if (todasPublicacoes.length === 0) {
+        var publicacoes = this._redeSocial.listarTodasPublicacoes();
+        if (publicacoes.length === 0) {
             console.log("\n\u001B[33m\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\n\u2551                                          \u2551\n\u2551     \uD83D\uDCED N\u00E3o existem publica\u00E7\u00F5es           \u2551\n\u2551                                          \u2551\n\u255A\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255D\u001B[0m");
         }
         else {
-            console.log("\n🌐 Todas as Publicações:");
-            todasPublicacoes.forEach(function (pub, index) {
-                var perfil = _this._redeSocial.buscarPerfilPorID(pub.perfilAssociado);
-                console.log("\n\u001B[34m".concat(index + 1, ". \uD83D\uDC64 ").concat((perfil === null || perfil === void 0 ? void 0 : perfil.apelido) || "Usuário Removido", "\n   \uD83D\uDCDD ").concat(pub.conteudo, "\n   \uD83D\uDCC5 ").concat(pub.dataHora.toLocaleString(), "\n            \u001B[0m"));
+            console.log('\n🗒️  Todas as Publicações:');
+            publicacoes.forEach(function (pub, index) {
+                var _a;
+                console.log("\n\u001B[34m".concat(index + 1, ". \uD83D\uDCDD ").concat(pub.conteudo, "\n   \uD83D\uDCC5 ").concat(pub.dataHora.toLocaleString(), "\n   \uD83D\uDC64 Autor: ").concat(((_a = _this._redeSocial.buscarPerfilPorID(pub.perfilAssociado)) === null || _a === void 0 ? void 0 : _a.apelido) || 'Desconhecido', "\n      \u001B[0m"));
+                // Se for uma PublicacaoAvancada, mostrar interações
+                if (pub instanceof publicacaoAvancada_1.PublicacaoAvancada || publicacaoAvancada_1.PublicacaoAvancada.isPublicacaoAvancada(pub)) {
+                    var publicacaoAvancada = pub instanceof publicacaoAvancada_1.PublicacaoAvancada
+                        ? pub
+                        : Object.assign(new publicacaoAvancada_1.PublicacaoAvancada(pub.id, pub.conteudo, pub.dataHora, pub.perfilAssociado), pub);
+                    var interacoes = publicacaoAvancada.listarInteracoesDetalhadas();
+                    var contagemInteracoes = publicacaoAvancada.contarInteracoesPorTipo();
+                    console.log('\n   📊 Resumo de Interações:');
+                    console.log("   \uD83D\uDC4D Curtir: ".concat(contagemInteracoes[tipoInteracao_1.TipoInteracao.Curtir]));
+                    console.log("   \uD83D\uDC4E N\u00E3o Curtir: ".concat(contagemInteracoes[tipoInteracao_1.TipoInteracao.NaoCurtir]));
+                    console.log("   \uD83D\uDE02 Riso: ".concat(contagemInteracoes[tipoInteracao_1.TipoInteracao.Riso]));
+                    console.log("   \uD83D\uDE2E Surpresa: ".concat(contagemInteracoes[tipoInteracao_1.TipoInteracao.Surpresa]));
+                }
             });
         }
         (0, auxFunctions_1.getData)("\nPressione Enter para continuar...");

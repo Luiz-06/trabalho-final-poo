@@ -767,10 +767,14 @@ this.delay(3000)
     getData("\nPressione Enter para continuar...");
   }
 
-  private verTodasPublicacoes(): void {
-    const todasPublicacoes = this._redeSocial.listarTodasPublicacoes();
 
-    if (todasPublicacoes.length === 0) {
+
+
+
+  private verTodasPublicacoes(): void {
+    const publicacoes = this._redeSocial.listarTodasPublicacoes();
+    
+    if (publicacoes.length === 0) {
       console.log(`
 \x1b[33m╔══════════════════════════════════════════╗
 ║                                          ║
@@ -778,19 +782,51 @@ this.delay(3000)
 ║                                          ║
 ╚══════════════════════════════════════════╝\x1b[0m`);
     } else {
-      console.log("\n🌐 Todas as Publicações:");
-      todasPublicacoes.forEach((pub, index) => {
-        const perfil = this._redeSocial.buscarPerfilPorID(pub.perfilAssociado);
+      console.log('\n🗒️  Todas as Publicações:');
+      publicacoes.forEach((pub, index) => {
         console.log(`
-\x1b[34m${index + 1}. 👤 ${perfil?.apelido || "Usuário Removido"}
-   📝 ${pub.conteudo}
+\x1b[34m${index + 1}. 📝 ${pub.conteudo}
    📅 ${pub.dataHora.toLocaleString()}
-            \x1b[0m`);
+   👤 Autor: ${this._redeSocial.buscarPerfilPorID(pub.perfilAssociado)?.apelido || 'Desconhecido'}
+      \x1b[0m`);
+
+        // Se for uma PublicacaoAvancada, mostrar interações
+        if (pub instanceof PublicacaoAvancada || PublicacaoAvancada.isPublicacaoAvancada(pub)) {
+          const publicacaoAvancada = pub instanceof PublicacaoAvancada 
+            ? pub 
+            : Object.assign(new PublicacaoAvancada(pub.id, pub.conteudo, pub.dataHora, pub.perfilAssociado), pub);
+          
+          const interacoes = publicacaoAvancada.listarInteracoesDetalhadas();
+          const contagemInteracoes = publicacaoAvancada.contarInteracoesPorTipo();
+
+          console.log('\n   📊 Resumo de Interações:');
+          console.log(`   👍 Curtir: ${contagemInteracoes[TipoInteracao.Curtir]}`);
+          console.log(`   👎 Não Curtir: ${contagemInteracoes[TipoInteracao.NaoCurtir]}`);
+          console.log(`   😂 Riso: ${contagemInteracoes[TipoInteracao.Riso]}`);
+          console.log(`   😮 Surpresa: ${contagemInteracoes[TipoInteracao.Surpresa]}`);
+        }
       });
     }
-
+    
     getData("\nPressione Enter para continuar...");
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   private menuSolicitacoes(): void {
     let opcao: string = "";
